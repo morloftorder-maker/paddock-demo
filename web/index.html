@@ -151,6 +151,9 @@ body.out nav.bot,body.out .top .ib{display:none}
 .nt{display:flex;gap:10px;align-items:flex-start;padding:12px 4px;border-bottom:1px solid var(--line);text-decoration:none}
 .nt.un{background:var(--clb);background:color-mix(in srgb,var(--yel) 12%,transparent)}
 .nt .d{width:10px;height:10px;border-radius:50%;background:var(--red);margin-top:7px;flex:none}.nt .d.o{background:transparent}
+.post{overflow:hidden}.pm{display:block;width:calc(100% + 30px);max-width:none;margin:-15px -15px 10px;max-height:520px;object-fit:cover;background:#000}video.pm{object-fit:contain}.pm.fm{width:100%;margin:8px 0 0;border-radius:10px}
+.top3{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}.rk{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 15px var(--cf);background:var(--line);flex:none}.rk1{background:var(--yel);color:#111}.rk2{background:#cfd3d8;color:#111}.rk3{background:#d9925b;color:#111}
+.stats.rev b{font-size:21px}
 .updbar{position:fixed;left:8px;right:8px;bottom:calc(66px + env(safe-area-inset-bottom));z-index:35;max-width:544px;margin:0 auto;background:var(--yel);color:#111;border-radius:12px;padding:8px 8px 8px 14px;display:flex;align-items:center;gap:10px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.3)}.updbar span{flex:1}
 @media(prefers-reduced-motion:reduce){.sheet,.drawer{animation:none}.dayz{transition:none!important}}
 </style></head><body>
@@ -289,8 +292,17 @@ const BE=[
 ['x4','2027-01-30','','Défi Glace — manche 2','tlg','Association Glace Lac-Saint-Jean','gl','Défi Glace',0,[1,15,5],60,['f4','f9'],[],'',['defi']],
 ['e20','2027-02-12','2027-02-14','Grand Prix Ski-Doo de Valcourt (45e édition)','tyd','Gestion GPV inc.','mn','Snocross AMSOIL · ovale de glace',1,[0],0,['f3','f12'],[],'grandprixvalcourt.com',['gpv']]
 ].map(([id,date,end,t,tr,o,d,s,real,b,ins,p,res,url,sr,x])=>({id,date,end,t,tr,o,d,s,real,b,ins,p,res,url,sr:sr||[],cancel:!!(x&&x.cancel),dl:x&&x.dl||''}));
+/* Publications et donateurs des pilotes fictifs : [date, texte, j'aime] et [nom, montant] */
+const SEEDPOSTS={f1:[['2026-11-23','Les nouveaux pneus sont arrivés. Merci aux 31 donateurs qui ont rendu ça possible!',24],['2026-11-15','Deuxième place au Drift de la Toussaint à Lévis. On se reprend vendredi le 27 sous les lumières!',41]],
+f2:[['2026-11-15','Premier podium en Coupe Capitale! Merci à toute l’équipe.',33]],
+f3:[['2026-11-22','Machine prête pour le 45e Grand Prix de Valcourt!',18]],
+f4:[['2026-11-20','Moteur sur le banc d’essai cette semaine.',9],['2026-11-08','Victoire au Rallye-sprint d’automne à Saint-Georges!',27]],
+f6:[['2026-11-24','Entraînement sur neige ce week-end au Motoparc, venez voir!',15],['2026-11-15','Victoire au Drift de la Toussaint!',52]],
+f7:[['2026-11-15','Victoire en Coupe Capitale! On garde le rythme cet hiver.',38]],
+f13:[['2026-11-22','Tall Pines terminé : la Subaru a tenu jusqu’au bout.',12]]};
+const SEEDDON={f1:[['Pneus Sirois',600],['Marc-André Tremblay',250],['Anonyme',180]],f2:[['Quincaillerie Morin',300],['Grand-papa Gagnon',200],['Anonyme',95]],f3:[['Garage Fortin',400],['Steve Dion',150],['Anonyme',100]],f4:[['Pneus Sirois',500],['Julie Roy',220],['Anonyme',150]],f5:[['Anonyme',120],['Marie Bouchard',100],['Éric Lessard',50]],f6:[['Garage Fortin',350],['Anonyme',120],['Kevin Lalonde',80]],f7:[['Anonyme',300],['Patrick Pelletier',200],['Club Karting Québec',150]],f8:[['Pneus Sirois',250],['Anonyme',90],['Annie Côté',60]],f9:[['Quincaillerie Morin',400],['Anonyme',120],['Luc Tremblay',75]],f10:[['Anonyme',100],['Sophie Gagné',75],['Alex Morin',50]],f11:[['Anonyme',200],['Sylvie Fortin',150],['Jean Boucher',100]],f12:[['Garage Fortin',300],['Anonyme',100],['Nadia Roy',50]],f13:[['Anonyme',150],['Félix Bouchard',100],['Garage Rimouski',75]]};
 
-const APPV=5;
+const APPV=6;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Math.round(n).toLocaleString('fr-CA')+' $';
@@ -322,14 +334,27 @@ const LS='paddock-db-v3';
 let db=null;
 try{db=JSON.parse(localStorage.getItem(LS)||'null')}catch(e){}
 if(!db||typeof db!=='object'||!db.accounts)db={accounts:{},cur:null,don:{},ev:[],ven:{},off:[],conf:{},notifs:{},feed:[],seq:1};
+for(const k of ['ledger','wd','donors','likes'])db[k]=db[k]||{};
+for(const a of Object.values(db.accounts))if(a.pilote){if(!a.pilote.posts){a.pilote.posts=a.pilote.post?[{id:'p0',txt:a.pilote.post,dt:a.created||'2026-11-25'}]:[]}if(!db.ledger[a.id]){const t=(a.pilote.obj||[]).reduce((x,o)=>x+(+o[2]||0),0);db.ledger[a.id]=t?[{k:'don',l:'Dons reçus avant la version 6',g:t,n:t*.95,dt:a.created||'2026-11-25'}]:[]}}
 const persist=()=>{try{localStorage.setItem(LS,JSON.stringify(db));return true}catch(e){toast('Mémoire du téléphone pleine pour la démo : retirez une photo.');return false}};
 const nid=()=>(db.seq++).toString(36);
 const me=()=>db.cur?db.accounts[db.cur]:null;
 const notify=(accId,txt,link)=>{if(!db.accounts[accId])return;(db.notifs[accId]=db.notifs[accId]||[]).unshift({txt,link:link||'',dt:key(TODAY),read:0});db.notifs[accId]=db.notifs[accId].slice(0,60)};
-const post=(d,h,p)=>{db.feed.unshift({d,h,p:p||'',dt:key(TODAY),user:1});db.feed=db.feed.slice(0,80)};
+const post=(d,h,p,m)=>{db.feed.unshift({d,h,p:p||'',m:m||null,dt:key(TODAY),user:1});db.feed=db.feed.slice(0,80)};
 const pidOf=a=>'u'+a.id;
 const newAcc=()=>({id:'',nom:'',email:'',pw:'',ville:'Québec',naissance:'',photo:'',roles:{pilote:0,org:0,com:0},pilote:null,org:null,com:null,
   set:{theme:'auto',notif:{conf:1,near:1,obj:1,off:1,push:1,email:0},priv:{pub:1,lvl:1,anon:0}},cards:[],follow:{},sub:{},hist:[],total:0,visits:{},created:key(TODAY)});
+
+const ledger=(id,k,l,g,n)=>{(db.ledger[id]=db.ledger[id]||[]).unshift({k,l,g:+g,n:+n,dt:key(TODAY)})};
+const earn=id=>{const L=db.ledger[id]||[],W=db.wd[id]||[],by=k=>L.filter(x=>x.k===k).reduce((a,x)=>a+x.n,0),w=W.reduce((a,x)=>a+x.a,0),tot=L.reduce((a,x)=>a+x.n,0);return {don:by('don'),abo:by('abo'),bil:by('bil')+by('ins'),tot,w,dispo:Math.max(0,tot-w)}};
+const topDon=pid=>{const m={};for(const [n,a] of SEEDDON[pid]||[])m['s:'+n]={n:esc(n),a,anon:n==='Anonyme'};for(const [k,v] of Object.entries(db.donors[pid]||{}))m[k]={n:v.anon?'Anonyme':esc(v.n),a:(m[k]?m[k].a:0)+v.a,anon:v.anon};return Object.values(m).sort((x,y)=>y.a-x.a).slice(0,3)};
+let idb=null;const murl={};
+const idbOpen=()=>new Promise((res,rej)=>{if(idb)return res(idb);if(!window.indexedDB)return rej('no');const r=indexedDB.open('paddock-media',1);r.onupgradeneeded=()=>r.result.createObjectStore('m');r.onsuccess=()=>{idb=r.result;res(idb)};r.onerror=()=>rej(r.error)});
+const mediaPut=(id,b)=>idbOpen().then(d=>new Promise((res,rej)=>{const t=d.transaction('m','readwrite');t.objectStore('m').put(b,id);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)}));
+const mediaGet=id=>idbOpen().then(d=>new Promise(res=>{const r=d.transaction('m').objectStore('m').get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>res(null)}));
+const mediaDel=id=>idbOpen().then(d=>{d.transaction('m','readwrite').objectStore('m').delete(id)}).catch(()=>{});
+function hydrateMedia(){document.querySelectorAll('[data-mid]').forEach(el=>{const id=el.dataset.mid;if(murl[id]){el.src=murl[id];return}mediaGet(id).then(b=>{if(b){murl[id]=URL.createObjectURL(b);el.src=murl[id]}}).catch(()=>{})})}
+const mediaEl=m=>m?(m.t==='v'?`<video class="pm" controls playsinline preload="metadata" data-mid="${m.id}"></video>`:`<img class="pm" data-mid="${m.id}" alt="">`):'';
 
 /* ---------- Hydratation: données de base + contenus créés ---------- */
 let P,E,EV,T,C,M,MD,Q;
@@ -341,10 +366,11 @@ function hydrate(){
     if(a.roles.pilote&&a.pilote){const pl=a.pilote;
       P[pidOf(a)]={nom:esc(a.nom),ville:esc(a.ville),d:D[pl.d]?pl.d:'ra',v:1,user:a.id,photo:okImg(a.photo),minor:pl.parent?esc(pl.parent):'',
         ser:[[D[pl.d]?D[pl.d][0]:'Rallye',esc(pl.serie||'—'),esc(pl.classe||'—'),pl.num===''||pl.num==null?null:esc(pl.num)]],eqt:esc(pl.eq||''),com:[],ab:0,suiv:0,bio:esc(pl.bio||''),
+        posts:(pl.posts||[]).map(x=>({id:x.id,txt:esc(x.txt||''),dt:x.dt,m:x.m&&/^m[0-9a-z]+$/.test(x.m.id)?{id:x.m.id,t:x.m.t==='v'?'v':'i'}:null,seed:0})).reverse(),
         obj:(pl.obj||[]).map(o=>[esc(o[0]),+o[1],+o[2],(o[3]||[]).map(r=>[esc(r[0]),esc(r[1]),esc(r[2]),okImg(r[3])])]),res:[],post:esc(pl.post||''),pub:a.set.priv.pub}}
     if(a.roles.com&&a.com)C['uc'+a.id]={nom:esc(a.com.nom),ville:esc(a.ville),sect:esc(a.com.sect),desc:esc(a.com.desc||''),user:a.id};
   }
-  for(const p of Object.values(P)){p.suiv=p.suiv||0;p.ab=p.ab||0}
+  for(const [k,p] of Object.entries(P)){p.suiv=p.suiv||0;p.ab=p.ab||0;if(!p.user)p.posts=(SEEDPOSTS[k]||[]).map((x,i)=>({id:'s'+i,txt:x[1],dt:x[0],seed:x[2],m:null}))}
   for(const a of Object.values(db.accounts)){for(const k in a.follow||{})if(P[k])P[k].suiv++;for(const k in a.sub||{})if(P[k])P[k].ab++}
   for(const o of db.off)if(C[o.c])M.push({c:o.c,t:esc(o.t),d:esc(o.d),n:esc(o.n),x:esc(o.x),user:1,id:o.id});
   E=BE.map(e=>({...e,p:e.p.slice()}));
@@ -459,7 +485,7 @@ function checkRoleForms(d,minor){
   return '';
 }
 function applyRoles(a,d){
-  if(d.pil){a.roles.pilote=1;a.pilote=Object.assign(a.pilote||{obj:[],post:''},{d:d.p_d||'ra',serie:d.p_serie,classe:d.p_classe||'',num:d.p_num||'',eq:d.p_eq||'',bio:d.p_bio||'',parent:age(a.naissance)<18?d.p_par:'',parentEmail:age(a.naissance)<18?d.p_parm:''})}
+  if(d.pil){a.roles.pilote=1;a.pilote=Object.assign(a.pilote||{obj:[],posts:[]},{d:d.p_d||'ra',serie:d.p_serie,classe:d.p_classe||'',num:d.p_num||'',eq:d.p_eq||'',bio:d.p_bio||'',parent:age(a.naissance)<18?d.p_par:'',parentEmail:age(a.naissance)<18?d.p_parm:''})}
   if(d.org){a.roles.org=1;a.org={nom:d.o_nom,site:d.o_site||''}}
   if(d.com){a.roles.com=1;a.com={nom:d.c_nom,sect:d.c_sect,desc:d.c_desc||''}}
 }
@@ -517,7 +543,7 @@ function feed(){
   it.sort((x,y)=>sc(y)-sc(x));
   const soon=E.filter(e=>!past(e)).slice(0,3);
   return `<h1>Votre fil</h1><p class="sm mut" style="margin:0">${top.length?`Trié selon vos visites (${top.join(', ')}) et les pilotes que vous suivez.`:'Visitez des pilotes et des événements : votre fil s’adapte à vos habitudes.'}</p>
-  ${it.map(i=>{const ec=i.d==='any'||!D[i.d]?'var(--yel)':D[i.d][1],lab=i.d==='any'||!D[i.d]?'Paddock':D[i.d][0];return `<div class="card fc" style="--ec:${ec}">${i.p&&P[i.p]?`<a class="row" href="#p-${i.p}" style="text-decoration:none;margin-bottom:8px">${P[i.p].photo?`<img class="av" src="${P[i.p].photo}" alt="">`:plate(i.p,1)}<span class="sm mut">${lab} · ${ago(i.dt)}</span><span class="sp">${tagOf(i)}</span></a>`:`<div class="row sm mut" style="margin-bottom:6px"><span>${lab} · ${ago(i.dt)}</span><span class="sp">${tagOf(i)}</span></div>`}<p>${i.h}</p></div>`}).join('')}
+  ${it.map(i=>{const ec=i.d==='any'||!D[i.d]?'var(--yel)':D[i.d][1],lab=i.d==='any'||!D[i.d]?'Paddock':D[i.d][0];return `<div class="card fc" style="--ec:${ec}">${i.p&&P[i.p]?`<a class="row" href="#p-${i.p}" style="text-decoration:none;margin-bottom:8px">${P[i.p].photo?`<img class="av" src="${P[i.p].photo}" alt="">`:plate(i.p,1)}<span class="sm mut">${lab} · ${ago(i.dt)}</span><span class="sp">${tagOf(i)}</span></a>`:`<div class="row sm mut" style="margin-bottom:6px"><span>${lab} · ${ago(i.dt)}</span><span class="sp">${tagOf(i)}</span></div>`}<p>${i.h}</p>${i.m&&/^m[0-9a-z]+$/.test(i.m.id)?mediaEl(i.m).replace('class="pm"','class="pm fm"'):''}</div>`}).join('')}
   <h2>Prochains événements</h2>${soon.map(e=>erow(e)).join('')||'<p class="mut">Aucun.</p>'}`;
 }
 
@@ -579,26 +605,28 @@ function pilot(id){
   <div class="card claim sm"><b>Profil public non réclamé.</b> Bâti à partir de résultats publiés. Ce pilote n’est pas inscrit sur Paddock : les dons et abonnements s’activent seulement quand il réclame son profil et fait vérifier son identité.</div>
   <div class="row" style="margin:12px 0">${fol}<button class="btn yel" data-act="claim">C’est moi : réclamer ce profil</button></div>
   ${series}${results}${up.length?`<h2>Événements à venir</h2>${up.map(e=>erow(e)).join('')}`:''}${pastList(id)}`;
-  const [c,am]=tot(p);
+  const [c,am]=tot(p),td=topDon(id);
+  const likeN=po=>po.seed+Object.keys(db.likes[id+':'+po.id]||{}).length,liked=po=>!!(db.likes[id+':'+po.id]||{})[a.id];
+  const posts=`<h2>Publications</h2>${mine?'<button class="btn yel w" data-act="newpost">+ Publier une photo, une vidéo ou un texte</button>':''}${p.posts.length?p.posts.map(po=>`<div class="card post">${mediaEl(po.m)}${po.txt?`<p>${po.txt}</p>`:''}<div class="row sm mut"><span>${ago(po.dt)}</span><button class="btn sm2 sp${liked(po)?' on':''}" data-act="like" data-k="${id}:${po.id}" aria-label="J’aime">♥ ${likeN(po)}</button>${mine?`<button class="btn sm2 dan" data-act="delpost" data-i="${po.id}">Supprimer</button>`:''}</div></div>`).join(''):`<p class="mut">${mine?'Vous n’avez encore rien publié.':'Aucune publication pour l’instant.'}</p>`}`;
   return `${head}
   ${p.minor?`<div class="card sm" style="background:var(--rs);border-color:transparent">Compte de pilote mineur géré par un parent : <b>${p.minor}</b>. Les fonds sont versés au compte du parent.</div>`:''}
   ${!p.v?`<div class="card sm">Vérification d’identité en cours. Les dons seront possibles une fois le compte vérifié.</div>`:''}
   ${p.bio?`<p>${p.bio}</p>`:''}
   <div class="row" style="margin:12px 0">${fol}${mine?'':`<button class="btn yel" data-act="sub" data-id="${id}" ${p.v?'':'disabled'}>${sub?'Abonné · '+fmt(sub)+'/mois':'S’abonner'}</button><button class="btn" data-act="contact" data-id="${id}">Message</button>`}</div>
   <div class="stats"><div><b>${p.suiv}</b><span>suiveurs</span></div><div><b>${p.ab}</b><span>abonnés</span></div><div><b>${p.res.length+up.length}</b><span>courses</span></div><div><b>${p.res.filter(r=>/^1/.test(r[2])).length}</b><span>victoires</span></div></div>
+  ${posts}
   ${series}
   <h2>Commanditaires</h2>${p.com.length?`<div class="row" style="gap:6px">${p.com.map(k=>`<a class="chip" href="#c-${k}">${C[k].nom}</a>`).join('')}</div>`:'<p class="mut">Aucun pour l’instant. <a href="#marche">Voir le marché des commandites</a></p>'}
   <h2>Besoins pour la saison</h2>
   ${p.obj.length?`<div class="card"><div class="row"><b style="font:700 30px var(--cf)">${fmt(am)}</b><span class="mut">sur ${fmt(c)}</span><span class="sp tag">${pct(am,c)} %</span></div><div class="bar" style="margin-top:8px"><i style="width:${pct(am,c)}%"></i></div>
-  <p class="sm mut">Le pilote reçoit tout ce qui est amassé, même si l’objectif n’est pas atteint, moins 5 % de frais de gestion. Chaque dépense est appuyée par une preuve.</p></div>
+  <p class="sm mut">Le pilote reçoit tout ce qui est amassé, même si l’objectif n’est pas atteint, moins 5 % de frais de gestion (sauf si le donateur les paie). Chaque dépense est appuyée par une preuve.</p>
+  ${td.length?`<div class="top3"><div class="sm" style="font-weight:700;margin-bottom:4px">Top 3 des donateurs</div>${td.map((d,i)=>`<div class="row" style="flex-wrap:nowrap;padding:5px 0"><span class="rk rk${i+1}">${i+1}</span><span style="flex:1">${d.n}</span><b>${fmt(d.a)}</b></div>`).join('')}</div>`:''}</div>
   ${p.obj.map((o,i)=>`<div class="card"><div class="row"><h3>${o[0]}</h3><span class="sp sm mut">${fmt(o[2])} / ${fmt(o[1])}</span></div><div class="bar" style="margin:8px 0"><i style="width:${pct(o[2],o[1])}%"></i></div>
    ${o[3].map(pr=>`<div class="proof">${pr[3]?`<img src="${pr[3]}" alt="">`:ic('f').replace('<svg','<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"')}<div><b>Preuve de dépense</b> · ${pr[0]} · ${pr[1]}<div class="mut">${pr[2]}</div></div></div>`).join('')}
    <div class="row" style="margin-top:8px">${o[2]>=o[1]?'<span class="sm" style="color:var(--grn);font-weight:600">Objectif atteint</span>':''}${mine?`<button class="btn sp sm2" data-act="proof" data-i="${i}">+ Preuve</button>`:`<button class="btn sp${p.v?' pri':''}" data-act="don" data-id="${id}" data-i="${i}" ${p.v?'':'disabled'}>Donner</button>`}</div></div>`).join('')}`:`<p class="mut">${mine?'Vous n’avez pas encore d’objectif. ':'Aucun objectif publié pour l’instant.'}${mine?'<a href="#moi">Créer ma cagnotte</a>':''}</p>`}
   <h2>Événements à venir</h2>${up.length?up.map(e=>erow(e)).join(''):'<p class="mut">Aucune présence confirmée.</p>'}
-  ${pastList(id)}${results}
-  ${p.post?`<h2>Publications</h2><div class="card"><div class="sm mut">${p.nom}</div><p>${p.post}</p></div>`:''}`;
+  ${pastList(id)}${results}`;
 }
-
 const pastList=id=>{const l=E.filter(e=>e.p.includes(id)&&past(e)&&!e.cancel).reverse();return l.length?`<h2>Événements passés</h2>${l.map(e=>{const r=e.res.find(x=>x[0]===id);return erow(e,r?`<div style="margin-top:6px"><span class="tag f">${r[1]}</span></div>`:'')}).join('')}`:''};
 
 /* ---------- Séries ---------- */
@@ -719,6 +747,19 @@ function mePage(){
   ${!a.roles.pilote||!a.roles.org||!a.roles.com?`<h2>Ajouter un rôle</h2><div class="row">${!a.roles.pilote?'<button class="btn" data-act="addrole" data-r="pil">Pilote</button>':''}${!a.roles.org?'<button class="btn" data-act="addrole" data-r="org">Organisateur</button>':''}${!a.roles.com?'<button class="btn" data-act="addrole" data-r="com">Commanditaire</button>':''}</div>`:''}`;
 }
 
+/* ---------- Revenus ---------- */
+function revenus(){const a=me(),g=earn(a.id),pid=pidOf(a),subs=Object.values(db.accounts).filter(x=>x.sub[pid]),mens=subs.reduce((t,x)=>t+x.sub[pid],0);
+  const hist=(db.ledger[a.id]||[]).map(x=>({dt:x.dt,l:x.l,v:x.n,g:x.g})).concat((db.wd[a.id]||[]).map(w=>({dt:w.dt,l:'Retrait vers '+w.to,v:-w.a}))).sort((x,y)=>x.dt<y.dt?1:x.dt>y.dt?-1:0);
+  return `${back}<h1>Revenus</h1><p class="mut sm" style="margin:0">Montants nets, après les frais de gestion de 5 % (sauf quand le donateur les a payés).</p>
+  <div class="lv"><div><div class="sm" style="color:#d5d8dc">Disponible à retirer</div><div style="font:800 46px/1 var(--cf);color:var(--yel)">${money(g.dispo)}</div><div class="sm" style="color:#d5d8dc">${money(g.tot)} gagnés au total · ${money(g.w)} déjà retirés</div></div></div>
+  <button class="btn pri w" data-act="wd" ${g.dispo<1?'disabled':''}>Retirer mes revenus</button>
+  ${a.pilote&&a.pilote.parent?`<p class="sm">Compte de pilote mineur : les retraits sont versés au compte du parent, ${esc(a.pilote.parent)}.</p>`:''}
+  <div class="stats rev" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div><b>${fmt(g.don)}</b><span>cagnottes</span></div><div><b>${fmt(g.abo)}</b><span>abonnements</span></div><div><b>${fmt(g.bil)}</b><span>billets et inscriptions</span></div></div>
+  ${a.roles.pilote?`<div class="card sm">${subs.length} abonné(s) actif(s) : ${money(mens*.95)} net par mois. Les abonnements sont prélevés chaque mois.</div>`:''}
+  ${!a.roles.pilote&&!a.roles.org?'<div class="card">Les revenus apparaissent quand vous êtes pilote (cagnottes et abonnements) ou organisateur (billets et inscriptions). <a href="#moi">Ajouter un rôle</a></div>':''}
+  <h2>Historique</h2>${hist.length?`<div class="card" style="padding:4px 12px"><table>${hist.map(h=>`<tr><td>${esc(h.l)}<div class="sm mut">${esc(dl(h.dt,{day:'numeric',month:'short',year:'numeric'}))}${h.g&&h.g!==h.v?' · payé '+money(h.g):''}</div></td><td class="r" style="color:${h.v<0?'var(--red)':'var(--grn)'};font-weight:700">${h.v<0?'−':'+'}${money(Math.abs(h.v))}</td></tr>`).join('')}</table></div>`:'<p class="mut">Aucun revenu pour l’instant.</p>'}
+  <p class="note">Démo : aucun argent réel n’est versé.</p>`}
+
 /* ---------- Notifications ---------- */
 function notifs(){const a=me(),l=db.notifs[a.id]||[];const h=`${back}<div class="row"><h1 style="flex:1">Notifications</h1>${l.length?'<button class="btn sm2" data-act="clrn">Tout effacer</button>':''}</div>
   ${l.length?l.map((n,i)=>`<a class="nt${n.read?'':' un'}" href="${n.link||'#notifs'}"><span class="d${n.read?' o':''}"></span><span style="flex:1">${n.txt}<br><span class="sm mut">${ago(n.dt)}</span></span></a>`).join(''):'<p class="mut">Aucune notification. Suivez des pilotes pour être averti quand ils confirment leur présence.</p>'}`;
@@ -745,6 +786,7 @@ function settings(){
    ${sw('priv.lvl',s.priv.lvl,'Afficher mon niveau de partisan')}
    ${sw('priv.anon',s.priv.anon,'Dons anonymes par défaut')}</div>
   <div class="gt">Paiements</div><div class="grp">
+   ${lia('p','Revenus et retraits','#revenus',money(earn(a.id).dispo))}
    ${li('p','Moyens de paiement','data-act="cards"',cards)}
    ${lia('f','Historique des encouragements','#moi',fmt(a.total))}</div>
   <div class="gt">Préférences</div><div class="grp">
@@ -766,7 +808,7 @@ function settings(){
 }
 function drawerHTML(){const a=me(),un=(db.notifs[a.id]||[]).filter(n=>!n.read).length;
   return `<div class="bd" data-act="cs"></div><nav class="drawer" aria-label="Menu"><div class="dh"><div class="row">${avatar(a,1)}<div><div style="font:700 24px/1.1 var(--cf)">${esc(a.nom)}</div><div class="sm" style="color:#d5d8dc">${esc(a.email)}</div><div class="sm" style="color:var(--yel);font-weight:600">Partisan niveau ${lvl(a.total)}</div></div></div></div>
-  ${lia('u','Mon profil','#moi')}${a.roles.pilote?lia('s','Ma page pilote','#p-'+pidOf(a)):''}${a.roles.org?lia('c','Créer un événement','#creer-evenement'):''}${a.roles.com?lia('m','Mon entreprise','#c-uc'+a.id):''}
+  ${lia('u','Mon profil','#moi')}${lia('p','Revenus','#revenus',money(earn(a.id).dispo))}${a.roles.pilote?lia('s','Ma page pilote','#p-'+pidOf(a)):''}${a.roles.org?lia('c','Créer un événement','#creer-evenement'):''}${a.roles.com?lia('m','Mon entreprise','#c-uc'+a.id):''}
   ${lia('b','Notifications','#notifs',un?`<span class="tag">${un}</span>`:'')}${lia('m','Marché des commandites','#marche')}${lia('g','Paramètres','#parametres')}${li('h','Centre d’aide','data-act="help"')}
   ${li('r','Changer de compte','data-act="switch"')}${li('o','Se déconnecter','data-act="logout"','','dan')}</nav>`}
 
@@ -780,12 +822,13 @@ function draw(){
     html=h==='connexion'?login():h==='inscription'?signup():welcome();n=''}
   else if(OPEN.includes(h)){location.replace('#fil');return}
   else if(h==='fil'||!h)html=feed(),n='fil';else if(h==='calendrier')html=cal();else if(h==='decouvrir')html=discover();else if(h==='moi')html=mePage();
-  else if(h==='marche')html=market(),n='decouvrir';else if(h==='notifs')html=notifs(),n='';else if(h==='parametres')html=settings(),n='';
+  else if(h==='marche')html=market(),n='decouvrir';else if(h==='notifs')html=notifs(),n='';else if(h==='parametres')html=settings(),n='';else if(h==='revenus')html=revenus(),n='';
   else if(h==='creer-evenement'){html=u.roles.org?newEvent():notfound();n='calendrier'}
   else if(a==='p'){html=pilot(b);n='decouvrir';if(P[b]&&P[b].user!==u.id){u.visits[P[b].d]=(u.visits[P[b].d]||0)+1;persist()}}
   else if(a==='e'){html=event(b);n='calendrier';if(EV[b]){u.visits[EV[b].d]=(u.visits[EV[b].d]||0)+1;persist()}}
   else if(a==='s')html=seriesPage(b),n='decouvrir';else if(a==='t')html=track(b),n='decouvrir';else if(a==='q')html=team(b),n='decouvrir';else if(a==='c')html=sponsor(b),n='decouvrir';else html=notfound(),n='';
   $('#view').innerHTML=html;document.querySelectorAll('nav.bot a').forEach(x=>x.classList.toggle('on',x.dataset.n===n));
+  hydrateMedia();
   const c=$('#cnt');if(u){const un=(db.notifs[u.id]||[]).filter(x=>!x.read).length;c.hidden=!un;c.textContent=un>9?'9+':un}else c.hidden=true;
 }
 function render(){closeDay(true);closeSheet();UI.err='';draw();scrollTo(0,0)}
@@ -805,6 +848,7 @@ function toast(t){document.querySelectorAll('.toast').forEach(x=>x.remove());con
 function openSheet(h){$('#ov').innerHTML=`<div class="bd" data-act="cs"></div><div class="sheet" role="dialog" aria-modal="true">${h}</div>`}
 function closeSheet(){$('#ov').innerHTML=''}
 const sum=(amt,who)=>`<div class="sum"><div><span>Montant</span><b>${fmt(amt)}</b></div><div class="mut"><span>Frais de gestion (5 %)</span><b>${money(amt*.05)}</b></div><div><span>${who} reçoit</span><b>${money(amt*.95)}</b></div></div>`;
+const sumDon=(a,f)=>f?`<div class="sum"><div><span>Votre don</span><b>${money(a)}</b></div><div class="mut"><span>Frais de gestion payés par vous</span><b>${money(a/.95-a)}</b></div><div><span>Total payé</span><b>${money(a/.95)}</b></div><div><span>Le pilote reçoit</span><b>${money(a)}</b></div></div>`:sum(a,'Le pilote');
 const lvlUp=b=>{const x=lvl(b),y=lvl(me().total);return y>x?` Vous passez au niveau ${y}!`:''};
 const payLine=()=>{const c=me().cards;return `<p class="sm mut" style="margin:4px 0">Payer avec : <b>${c.length?esc(c[0].brand)+' •••• '+esc(c[0].last4):'carte de démonstration'}</b></p>`};
 const sheetH=(t,sub)=>`<h2 style="margin-top:0">${t}</h2>${sub?`<p class="mut sm" style="margin-top:-4px">${sub}</p>`:''}`;
@@ -815,9 +859,10 @@ function donSheet(){const p=P[don.id],o=p.obj[don.i];
   openSheet(`${sheetH('Donner à '+p.nom,'Pour : '+o[0]+' · reste '+fmt(Math.max(0,o[1]-o[2])))}
   <div class="amts">${[10,20,50,100].map(x=>`<button class="btn${don.a===x?' on':''}" data-amt="${x}">${x} $</button>`).join('')}</div>
   <label class="f">Autre montant<input type="number" id="ca" min="2" step="1" inputmode="numeric" value="${[10,20,50,100].includes(don.a)?'':don.a}"></label>
-  <div id="sm">${sum(don.a,'Le pilote')}</div>${payLine()}
+  <label class="rc" style="margin:8px 0"><input type="checkbox" id="fees" ${don.fees?'checked':''}><span><b>Je paie les frais de gestion</b><br><span class="sm mut">Ajoute ${money(don.a/.95-don.a)} pour que le pilote reçoive 100 % de votre don.</span></span></label>
+  <div id="sm">${sumDon(don.a,don.fees)}</div>${payLine()}
   <label class="row sm" style="margin:6px 0 12px"><input type="checkbox" id="anon" style="width:20px;height:20px" ${don.anon?'checked':''}> Don anonyme</label>
-  <button class="btn pri w" data-act="dok">Donner ${fmt(don.a)}</button><p class="sm mut" style="text-align:center">Paiement simulé pour la démo.</p>`)}
+  <button class="btn pri w" data-act="dok">Payer ${money(don.fees?don.a/.95:don.a)}</button><p class="sm mut" style="text-align:center">Paiement simulé pour la démo.</p>`)}
 function subSheet(){const p=P[sb.id];
   openSheet(`${sheetH('S’abonner à '+p.nom,'Prélevé chaque mois, annulable en tout temps.')}
   ${TIERS.map(t=>`<button class="tier${sb.t===t[0]?' on':''}" data-tier="${t[0]}"><span class="badge" style="background:${t[3]}">${t[1][0]}</span><span><b>${t[1]}</b><br><span class="sm mut">${t[2]}</span></span><b>${fmt(t[0])}/mois</b></button>`).join('')}
@@ -834,6 +879,11 @@ function proofSheet(){const o=me().pilote.obj[pf.i];
   <label class="f">Montant ($)<input type="number" id="pr_m" min="1" inputmode="numeric"></label>
   <div class="row">${pf.photo?`<img src="${pf.photo}" alt="" style="width:72px;height:72px;object-fit:cover;border-radius:8px">`:''}<label class="btn">${pf.photo?'Changer la photo':'Photo de la facture'}<input type="file" accept="image/*" data-photo="proof" hidden></label></div>
   <button class="btn pri w" data-act="prok">Publier la preuve</button></div>`)}
+function postSheet(txt){const pm=UI.pm;
+  openSheet(`${sheetH('Nouvelle publication','Visible sur votre profil et dans le fil de vos suiveurs.')}${errBox}<div class="fl">
+  <textarea id="po" maxlength="500" placeholder="Quoi de neuf? Résultat, préparation, remerciements…">${esc(txt)}</textarea>
+  ${pm?`<div style="position:relative">${pm.t==='v'?`<video src="${pm.url}" controls playsinline style="width:100%;max-height:300px;border-radius:10px;background:#000"></video>`:`<img src="${pm.url}" alt="" style="width:100%;max-height:300px;object-fit:cover;border-radius:10px">`}</div><button class="btn" data-act="nomedia">Retirer ${pm.t==='v'?'la vidéo':'la photo'}</button>`:`<label class="btn w">Ajouter une photo ou une vidéo<input type="file" accept="image/*,video/*" data-photo="post" hidden></label>`}
+  <button class="btn pri w" data-act="postok">Publier</button></div>`)}
 function profSheet(){const a=me();
   openSheet(`${sheetH('Modifier mon profil')}${errBox}<div class="fl">
   <div class="row">${avatar(Object.assign({},a,{photo:UI.ph??a.photo}),1)}<label class="btn">Changer la photo<input type="file" accept="image/*" data-photo="prof" hidden></label>${(UI.ph??a.photo)?'<button class="btn" data-act="nophoto">Retirer</button>':''}</div>
@@ -843,8 +893,9 @@ function profSheet(){const a=me();
 
 /* ---------- Actions ---------- */
 function readPhoto(file,max,cb){if(!file||!/^image\//.test(file.type))return toast('Choisissez une image.');const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const s=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',.82))};img.onerror=()=>toast('Image illisible.');img.src=r.result};r.readAsDataURL(file)}
-function giveTo(pid,i,amt,anon){const p=P[pid],a=me();
-  if(p.user){const ow=db.accounts[p.user];ow.pilote.obj[i][2]=(+ow.pilote.obj[i][2]||0)+amt;notify(ow.id,`${anon?'Un donateur anonyme':esc(a.nom)} a donné ${fmt(amt)} pour « ${esc(ow.pilote.obj[i][0])} » (vous recevez ${money(amt*.95)}).`,'#p-'+pid);
+function giveTo(pid,i,amt,anon,fees){const p=P[pid],a=me(),net=fees?amt:amt*.95,paid=fees?amt/.95:amt;
+  const dk=(anon?'anon:':'acc:')+a.id,dd=(db.donors[pid]=db.donors[pid]||{});dd[dk]={n:a.nom,a:(dd[dk]?dd[dk].a:0)+amt,anon:!!anon};
+  if(p.user){const ow=db.accounts[p.user];ow.pilote.obj[i][2]=(+ow.pilote.obj[i][2]||0)+amt;ledger(ow.id,'don',`Don ${anon?'anonyme':'de '+a.nom} — ${ow.pilote.obj[i][0]}`,paid,net);notify(ow.id,`${anon?'Un donateur anonyme':esc(a.nom)} a donné ${fmt(amt)} pour « ${esc(ow.pilote.obj[i][0])} » (vous recevez ${money(net)}${fees?', frais payés par le donateur':''}).`,'#revenus');
     const o=ow.pilote.obj[i];if(+o[2]>=+o[1]&&+o[2]-amt<+o[1]){post(ow.pilote.d,`<b>${esc(ow.nom)}</b> a atteint son objectif « ${esc(o[0])} » (${fmt(+o[1])}).`,pid);for(const x of Object.values(db.accounts))if(x.follow[pid]&&x.set.notif.obj&&x.id!==ow.id)notify(x.id,`${esc(ow.nom)} a atteint son objectif « ${esc(o[0])} ».`,'#p-'+pid)}}
   else{db.don[pid]=db.don[pid]||{};db.don[pid][i]=(db.don[pid][i]||0)+amt}
 }
@@ -866,7 +917,7 @@ document.addEventListener('click',ev=>{
   if(t.dataset.th){a.set.theme=t.dataset.th;persist();applyTheme();rerender();return}
   if(t.dataset.fd){const k=t.dataset.fd,ds=UI.f.ds;UI.f.ds=ds.includes(k)?ds.filter(x=>x!==k):[...ds,k];rerender();return}
   if(t.dataset.tab){UI.tab=t.dataset.tab;rerender();return}
-  if(t.dataset.amt){don.a=+t.dataset.amt;don.anon=$('#anon').checked;donSheet();return}
+  if(t.dataset.amt){don.a=+t.dataset.amt;don.anon=$('#anon').checked;don.fees=$('#fees').checked;donSheet();return}
   if(t.dataset.tier){sb.t=+t.dataset.tier;subSheet();return}
   if(t.dataset.q){const w=t.dataset.q[0],o=t.dataset.q[1];tx[w]=Math.max(0,Math.min(10,tx[w]+(o==='+'?1:-1)));tixSheet();return}
   switch(A){
@@ -895,18 +946,18 @@ document.addEventListener('click',ev=>{
    case 'contact':openSheet(`${sheetH('Message à '+P[id].nom)}<textarea id="msg" placeholder="Votre message"></textarea><button class="btn pri w" style="margin-top:10px" data-act="msgok" data-id="${id}">Envoyer</button>`);break;
    case 'msgok':{const m=val('msg');if(!m)return;if(P[id].user)notify(P[id].user,`Message de ${esc(a.nom)} : « ${esc(m.slice(0,140))} »`,'#notifs');persist();closeSheet();toast(P[id].user?'Message envoyé.':'Message envoyé (ce pilote n’a pas de compte dans la démo).');break}
    case 'sub':sb={id,t:a.sub[id]||10};subSheet();break;
-   case 'sok':{const b=a.total;a.sub[sb.id]=sb.t;a.total+=sb.t;a.hist.unshift(['Abonnement '+TIERS.find(x=>x[0]==sb.t)[1]+' — '+unesc(P[sb.id].nom),String(sb.t),dl(key(TODAY),{day:'numeric',month:'short'})]);if(P[sb.id].user)notify(P[sb.id].user,`${esc(a.nom)} s’est abonné à votre profil (${fmt(sb.t)}/mois).`,'#moi');persist();closeSheet();toast('Abonnement confirmé : '+fmt(sb.t)+'/mois.'+lvlUp(b));rerender();break}
+   case 'sok':{const b=a.total;a.sub[sb.id]=sb.t;a.total+=sb.t;a.hist.unshift(['Abonnement '+TIERS.find(x=>x[0]==sb.t)[1]+' — '+unesc(P[sb.id].nom),String(sb.t),dl(key(TODAY),{day:'numeric',month:'short'})]);if(P[sb.id].user){ledger(P[sb.id].user,'abo',`Abonnement ${TIERS.find(x=>x[0]==sb.t)[1]} — ${a.nom}`,sb.t,sb.t*.95);notify(P[sb.id].user,`${esc(a.nom)} s’est abonné à votre profil (${fmt(sb.t)}/mois).`,'#revenus')}persist();closeSheet();toast('Abonnement confirmé : '+fmt(sb.t)+'/mois.'+lvlUp(b));rerender();break}
    case 'sstop':delete a.sub[sb.id];persist();closeSheet();toast('Abonnement annulé.');rerender();break;
-   case 'don':don={id,i:+t.dataset.i,a:20,anon:!!a.set.priv.anon};donSheet();break;
-   case 'dok':{const b=a.total,an=$('#anon').checked,o=P[don.id].obj[don.i];giveTo(don.id,don.i,don.a,an);a.total+=don.a;a.hist.unshift(['Don à '+unesc(P[don.id].nom)+' — '+unesc(o[0])+(an?' (anonyme)':''),String(don.a),dl(key(TODAY),{day:'numeric',month:'short'})]);persist();closeSheet();toast('Merci! Le pilote reçoit '+money(don.a*.95)+'.'+lvlUp(b));rerender();break}
+   case 'don':don={id,i:+t.dataset.i,a:20,anon:!!a.set.priv.anon,fees:false};donSheet();break;
+   case 'dok':{const b=a.total,an=$('#anon').checked,fe=$('#fees').checked,paid=Math.round((fe?don.a/.95:don.a)*100)/100,o=P[don.id].obj[don.i];giveTo(don.id,don.i,don.a,an,fe);a.total+=paid;a.hist.unshift(['Don à '+unesc(P[don.id].nom)+' — '+unesc(o[0])+(an?' (anonyme)':'')+(fe?' · frais payés':''),String(paid),dl(key(TODAY),{day:'numeric',month:'short'})]);persist();closeSheet();toast('Merci! Le pilote reçoit '+money(fe?don.a:don.a*.95)+'.'+lvlUp(b));rerender();break}
    /* événements */
    case 'tix':tx={id,a:2,k:0};tixSheet();break;
-   case 'tok':{const e=EV[tx.id],amt=tx.a*e.b[1]+tx.k*e.b[2],b=a.total;a.total+=amt;a.hist.unshift(['Billets — '+unesc(e.t),String(amt),dl(key(TODAY),{day:'numeric',month:'short'})]);if(e.org)notify(e.org,`${esc(a.nom)} a acheté ${tx.a+tx.k} billet(s) pour ${e.t} (${fmt(amt)}).`,'#e-'+e.id);persist();closeSheet();toast((tx.a+tx.k)+' billet(s) achetés. Code QR envoyé par courriel (démo).'+lvlUp(b));rerender();break}
+   case 'tok':{const e=EV[tx.id],amt=tx.a*e.b[1]+tx.k*e.b[2],b=a.total;a.total+=amt;a.hist.unshift(['Billets — '+unesc(e.t),String(amt),dl(key(TODAY),{day:'numeric',month:'short'})]);if(e.org){ledger(e.org,'bil',`Billets — ${unesc(e.t)} (${tx.a+tx.k})`,amt,amt*.95);notify(e.org,`${esc(a.nom)} a acheté ${tx.a+tx.k} billet(s) pour ${e.t} (${fmt(amt)}).`,'#revenus')}persist();closeSheet();toast((tx.a+tx.k)+' billet(s) achetés. Code QR envoyé par courriel (démo).'+lvlUp(b));rerender();break}
    case 'ext':toast('Redirection vers la billetterie de l’organisateur : désactivée dans la démo.');break;
    case 'conf':{const pid=pidOf(a),l=db.conf[id]=db.conf[id]||[],e=EV[id];if(l.includes(pid)||e.p.includes(pid)){db.conf[id]=l.filter(x=>x!==pid);toast('Présence annulée.')}else{l.push(pid);post(a.pilote.d,`<b>${esc(a.nom)}</b> a confirmé sa présence : <a href="#e-${id}">${e.t}</a>.`,pid);
       for(const x of Object.values(db.accounts))if(x.follow[pid]&&x.set.notif.conf&&x.id!==a.id)notify(x.id,`${esc(a.nom)} sera présent à ${e.t} (${dshort(e)}).`,'#e-'+id);if(e.org&&e.org!==a.id)notify(e.org,`${esc(a.nom)} a confirmé sa présence à ${e.t}.`,'#e-'+id);toast('Présence confirmée. Vos suiveurs sont avertis.')}persist();rerender();break}
    case 'ins':{const e=EV[id];openSheet(`${sheetH('Inscription pilote',e.t+' · '+e.s)}${sum(e.ins,'L’organisateur')}${payLine()}<button class="btn pri w" data-act="iok" data-id="${id}">Payer l’inscription ${fmt(e.ins)}</button><p class="sm mut" style="text-align:center">Paiement simulé. Votre présence sera confirmée.</p>`);break}
-   case 'iok':{const e=EV[id],pid=pidOf(a);(db.conf[id]=db.conf[id]||[]).includes(pid)||db.conf[id].push(pid);a.hist.unshift(['Inscription — '+unesc(e.t),String(e.ins),dl(key(TODAY),{day:'numeric',month:'short'})]);if(e.org)notify(e.org,`${esc(a.nom)} a payé son inscription à ${e.t} (${fmt(e.ins)}).`,'#e-'+id);
+   case 'iok':{const e=EV[id],pid=pidOf(a);(db.conf[id]=db.conf[id]||[]).includes(pid)||db.conf[id].push(pid);a.hist.unshift(['Inscription — '+unesc(e.t),String(e.ins),dl(key(TODAY),{day:'numeric',month:'short'})]);if(e.org){ledger(e.org,'ins',`Inscription de ${a.nom} — ${unesc(e.t)}`,e.ins,e.ins*.95);notify(e.org,`${esc(a.nom)} a payé son inscription à ${e.t} (${fmt(e.ins)}).`,'#revenus')}
       for(const x of Object.values(db.accounts))if(x.follow[pid]&&x.set.notif.conf&&x.id!==a.id)notify(x.id,`${esc(a.nom)} sera présent à ${e.t}.`,'#e-'+id);persist();closeSheet();toast('Inscription payée et présence confirmée.');rerender();break}
    case 'nesave':saveNE();break;
    case 'delev':openSheet(`${sheetH('Supprimer cet événement?','Les billets vendus seraient remboursés dans la version complète.')}<button class="btn pri w" data-act="delevok" data-id="${id}">Supprimer</button><button class="btn w" style="margin-top:8px" data-act="cs">Annuler</button>`);break;
@@ -923,8 +974,17 @@ document.addEventListener('click',ev=>{
    case 'proof':pf={i:+t.dataset.i,photo:''};proofSheet();break;
    case 'prok':{const d=val('pr_d'),m=Math.round(+val('pr_m'));if(!d||!(m>0))return serr('Ajoutez une description et un montant.');const o=a.pilote.obj[pf.i];o[3].push([d,fmt(m),dl(key(TODAY),{day:'numeric',month:'short',year:'numeric'}),pf.photo]);post(a.pilote.d,`<b>${esc(a.nom)}</b> a publié une preuve de dépense : ${esc(d)} (${fmt(m)}).`,pidOf(a));
       for(const x of Object.values(db.accounts))if(x.follow[pidOf(a)]&&x.set.notif.obj&&x.id!==a.id)notify(x.id,`${esc(a.nom)} a publié une preuve de dépense.`,'#p-'+pidOf(a));if(!persist()){o[3][o[3].length-1][3]='';persist()}closeSheet();toast('Preuve publiée.');rerender();break}
-   case 'newpost':openSheet(`${sheetH('Publier une nouvelle')}<textarea id="po" maxlength="300" placeholder="Ex. Moteur prêt pour la saison!"></textarea><button class="btn pri w" style="margin-top:10px" data-act="postok">Publier</button>`);break;
-   case 'postok':{const m=val('po');if(!m)return;a.pilote.post=m;post(a.pilote.d,`<b>${esc(a.nom)}</b> : « ${esc(m)} »`,pidOf(a));persist();closeSheet();toast('Publié dans le fil.');rerender();break}
+   case 'newpost':UI.pm=null;postSheet('');break;
+   case 'nomedia':UI.pm=null;postSheet(val('po')||'');break;
+   case 'postok':{a.pilote.posts=a.pilote.posts||[];const txt=val('po')||'';if(!txt&&!UI.pm)return serr('Ajoutez un texte, une photo ou une vidéo.');const po={id:'p'+nid(),txt,dt:key(TODAY)},pm=UI.pm,pid=pidOf(a);
+     const fin=()=>{a.pilote.posts.push(po);post(a.pilote.d,`<b>${esc(a.nom)}</b> ${po.m?(po.m.t==='v'?'a publié une vidéo':'a publié une photo'):'a publié'}${txt?' : « '+esc(txt)+' »':'.'}`,pid,po.m||null);
+       for(const x of Object.values(db.accounts))if(x.follow[pid]&&x.id!==a.id)notify(x.id,`${esc(a.nom)} a publié ${po.m?(po.m.t==='v'?'une vidéo':'une photo'):'une nouvelle'}.`,'#p-'+pid);
+       if(!persist()){a.pilote.posts.pop();return serr('Mémoire pleine.')}UI.pm=null;closeSheet();toast('Publié sur votre profil et dans le fil.');rerender()};
+     if(pm){const mid='m'+nid();const btn=t;btn.disabled=true;btn.textContent='Enregistrement…';mediaPut(mid,pm.blob).then(()=>{murl[mid]=pm.url;po.m={id:mid,t:pm.t};fin()}).catch(()=>{btn.disabled=false;btn.textContent='Publier';serr('Impossible d’enregistrer ce média sur le téléphone. Essayez un fichier plus léger.')})}else fin();break}
+   case 'delpost':{const l=a.pilote.posts,ix=l.findIndex(x=>x.id===t.dataset.i);if(ix<0)break;const po=l[ix];l.splice(ix,1);if(po.m){mediaDel(po.m.id);db.feed=db.feed.filter(f=>!(f.m&&f.m.id===po.m.id))}persist();toast('Publication supprimée.');rerender();break}
+   case 'like':{const k=t.dataset.k,L=(db.likes[k]=db.likes[k]||{});if(L[a.id])delete L[a.id];else{L[a.id]=1;const ow=P[k.split(':')[0]];if(ow&&ow.user&&ow.user!==a.id)notify(ow.user,`${esc(a.nom)} aime votre publication.`,'#p-'+k.split(':')[0])}persist();rerender();break}
+   case 'wd':{const g=earn(a.id);openSheet(`${sheetH('Retirer mes revenus','Disponible : '+money(g.dispo))}${errBox}<div class="fl"><label class="f">Montant ($)<input type="number" id="wda" min="1" step="0.01" value="${(Math.floor(g.dispo*100)/100).toFixed(2)}"></label><label class="f">Vers<select id="wdt"><option>Compte bancaire •••• 4821 (démo)</option><option>Virement Interac (démo)</option></select></label><button class="btn pri w" data-act="wdok">Confirmer le retrait</button><p class="sm mut" style="text-align:center">Délai habituel : 2 à 3 jours ouvrables. Aucun argent réel dans la démo.</p></div>`);break}
+   case 'wdok':{const g=earn(a.id),v=Math.round(+val('wda')*100)/100;if(!(v>0)||v>g.dispo+0.001)return serr('Montant invalide (maximum '+money(g.dispo)+').');(db.wd[a.id]=db.wd[a.id]||[]).push({a:v,dt:key(TODAY),to:val('wdt').replace(' (démo)','')});persist();closeSheet();toast('Retrait de '+money(v)+' en route (démo).');rerender();break}
    case 'editpil':{const p=a.pilote;UI.rd={pil:1,p_d:p.d,p_serie:p.serie,p_classe:p.classe,p_num:p.num,p_eq:p.eq,p_bio:p.bio,p_par:p.parent,p_parm:p.parentEmail};openSheet(`${sheetH('Mes infos de pilote')}${errBox}${roleForms(UI.rd,age(a.naissance)<18)}<button class="btn pri w" data-act="roleok">Enregistrer</button>`);break}
    /* rôles et profil */
    case 'addrole':roleSheet(t.dataset.r);break;
@@ -952,13 +1012,17 @@ document.addEventListener('click',ev=>{
    case 'updapply':window.PaddockApp.applyUpdate();break;
    case 'clrn':db.notifs[a.id]=[];persist();rerender();break;
    case 'resetq':openSheet(`${sheetH('Réinitialiser la démo?','Tous les comptes, événements, offres, dons et notifications créés sur ce téléphone seront effacés.')}<button class="btn pri w" data-act="resetok">Tout effacer</button><button class="btn w" style="margin-top:8px" data-act="cs">Annuler</button>`);break;
-   case 'resetok':try{localStorage.removeItem(LS)}catch(e){}db={accounts:{},cur:null,don:{},ev:[],ven:{},off:[],conf:{},notifs:{},feed:[],seq:1};closeSheet();applyTheme();location.hash='bienvenue';draw();toast('Démo réinitialisée.');break;
+   case 'resetok':try{localStorage.removeItem(LS)}catch(e){}db={accounts:{},cur:null,don:{},ev:[],ven:{},off:[],conf:{},notifs:{},feed:[],seq:1,ledger:{},wd:{},donors:{},likes:{}};try{indexedDB.deleteDatabase('paddock-media')}catch(e){}idb=null;closeSheet();applyTheme();location.hash='bienvenue';draw();toast('Démo réinitialisée.');break;
    case 'delaccq':openSheet(`${sheetH('Supprimer mon compte?','Votre profil, vos événements et vos offres seront effacés de cet appareil.')}<button class="btn pri w" data-act="delaccok">Supprimer définitivement</button><button class="btn w" style="margin-top:8px" data-act="cs">Annuler</button>`);break;
-   case 'delaccok':{const pid=pidOf(a);db.ev=db.ev.filter(e=>e.org!==a.id);db.off=db.off.filter(o=>o.c!=='uc'+a.id);for(const k in db.conf)db.conf[k]=db.conf[k].filter(x=>x!==pid);db.feed=db.feed.filter(f=>f.p!==pid);for(const x of Object.values(db.accounts)){delete x.follow[pid];delete x.sub[pid]}delete db.notifs[a.id];delete db.accounts[a.id];db.cur=null;persist();closeSheet();applyTheme();location.hash='bienvenue';toast('Compte supprimé.');break}
+   case 'delaccok':{const pid=pidOf(a);db.ev=db.ev.filter(e=>e.org!==a.id);db.off=db.off.filter(o=>o.c!=='uc'+a.id);for(const k in db.conf)db.conf[k]=db.conf[k].filter(x=>x!==pid);db.feed=db.feed.filter(f=>f.p!==pid);for(const x of Object.values(db.accounts)){delete x.follow[pid];delete x.sub[pid]}delete db.notifs[a.id];delete db.ledger[a.id];delete db.wd[a.id];delete db.accounts[a.id];db.cur=null;persist();closeSheet();applyTheme();location.hash='bienvenue';toast('Compte supprimé.');break}
   }
 });
 document.addEventListener('change',ev=>{const t=ev.target,a=me();
   if(t.dataset.set&&a){const [g,k]=t.dataset.set.split('.');a.set[g][k]=t.checked?1:0;persist();if(g==='priv'&&k==='pub')toast(t.checked?'Profil public.':'Profil masqué de Découvrir.');return}
+  if(t.dataset.photo==='post'){const f=t.files&&t.files[0],txt=val('po')||'';if(!f)return;
+    if(/^video\//.test(f.type)){if(f.size>60e6)return toast('Vidéo trop lourde pour la démo (60 Mo maximum).');UI.pm={blob:f,t:'v',url:URL.createObjectURL(f)};postSheet(txt);return}
+    if(!/^image\//.test(f.type))return toast('Choisissez une photo ou une vidéo.');
+    const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const k=Math.min(1,1280/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);c.toBlob(b=>{if(!b)return toast('Image illisible.');UI.pm={blob:b,t:'i',url:URL.createObjectURL(b)};postSheet(txt)},'image/jpeg',.85)};img.onerror=()=>toast('Image illisible.');img.src=r.result};r.readAsDataURL(f);return}
   if(t.dataset.photo){const f=t.files&&t.files[0],w=t.dataset.photo;readPhoto(f,w==='proof'?720:360,url=>{if(w==='su'){UI.su.d.photo=url;draw()}else if(w==='prof'){UI.ph=url;profSheet()}else if(w==='proof'){const d=val('pr_d'),m=val('pr_m');pf.photo=url;proofSheet();$('#pr_d').value=d||'';$('#pr_m').value=m||''}});return}
   if(t.id==='fd')rerender();if(t.id==='fc'){UI.f.cap=+t.value;rerender()}if(t.id==='fp'){UI.f.per=t.value;rerender()}
   if(t.id==='n_tr'){$('#n_newv').style.display=t.value==='_new'?'':'none'}
@@ -968,7 +1032,7 @@ document.addEventListener('change',ev=>{const t=ev.target,a=me();
 document.addEventListener('input',ev=>{const t=ev.target;
   if(t.id==='fd'){UI.f.dist=+t.value;$('#dv').textContent=t.value>=5000?'partout':'jusqu’à '+(+t.value).toLocaleString('fr-CA')+' km'}
   if(t.id==='q'){UI.q=t.value;const pos=t.selectionStart;rerender();const n=$('#q');n.focus();n.setSelectionRange(pos,pos)}
-  if(t.id==='ca'){const v=Math.round(+t.value||0);if(v>=2){don.a=v;$('#sm').innerHTML=sum(v,'Le pilote');document.querySelector('[data-act=dok]').textContent='Donner '+fmt(v);document.querySelectorAll('[data-amt]').forEach(b=>b.classList.remove('on'))}}
+  if(t.id==='ca'){const v=Math.round(+t.value||0);if(v>=2){don.a=v;don.fees=$('#fees').checked;$('#sm').innerHTML=sumDon(v,don.fees);document.querySelector('[data-act=dok]').textContent='Payer '+money(don.fees?v/.95:v);document.querySelectorAll('[data-amt]').forEach(b=>b.classList.remove('on'))}}
 });
 document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){closeSheet();closeDay()}});
 addEventListener('hashchange',render);

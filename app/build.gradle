@@ -10,8 +10,8 @@ android {
         applicationId 'ca.paddock.demo'
         minSdk 24
         targetSdk 34
-        versionCode 4
-        versionName '0.4-demo'
+        versionCode 6
+        versionName '0.6-demo'
     }
 
     // Clé fixe de la démo : chaque nouvel APK peut s'installer par-dessus le précédent.

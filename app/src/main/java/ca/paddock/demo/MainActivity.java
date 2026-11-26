@@ -87,9 +87,26 @@ public class MainActivity extends Activity {
                 fileCallback = callback;
                 Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                 i.addCategory(Intent.CATEGORY_OPENABLE);
-                i.setType("image/*");
+                // Accepte les photos et, si la page le demande, les vidéos.
+                java.util.ArrayList<String> types = new java.util.ArrayList<>();
+                if (params != null && params.getAcceptTypes() != null) {
+                    for (String t : params.getAcceptTypes()) {
+                        for (String part : t.split(",")) {
+                            String x = part.trim();
+                            if (!x.isEmpty()) types.add(x);
+                        }
+                    }
+                }
+                if (types.size() == 1) {
+                    i.setType(types.get(0));
+                } else if (types.size() > 1) {
+                    i.setType("*/*");
+                    i.putExtra(Intent.EXTRA_MIME_TYPES, types.toArray(new String[0]));
+                } else {
+                    i.setType("image/*");
+                }
                 try {
-                    startActivityForResult(Intent.createChooser(i, "Choisir une photo"), PICK_IMAGE);
+                    startActivityForResult(Intent.createChooser(i, "Choisir une photo ou une vidéo"), PICK_IMAGE);
                 } catch (Exception e) {
                     fileCallback = null;
                     return false;
