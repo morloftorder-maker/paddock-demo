@@ -213,21 +213,21 @@ ttr:{nom:'Karting Trois-Rivières',ville:'Trois-Rivières',lat:46.35,lon:-72.55,
 ttag:{nom:'TAG Karting Academy',ville:'Mont-Tremblant',lat:46.19,lon:-74.62,cap:2500,desc:'Hôte des manches communes Coupe de Montréal et RMC Québec.'},
 tsc:{nom:'Saint-Célestin Performance',ville:'Saint-Célestin',lat:46.22,lon:-72.44,cap:1500,desc:'Piste du Centre-du-Québec.'},
 tyd:{nom:'Circuit Yvon-Duhamel',ville:'Valcourt (Maricourt)',lat:45.50,lon:-72.31,cap:20000,desc:'Site du Grand Prix Ski-Doo de Valcourt : snocross, ovale de glace, motos et VTT.'},
-tlg:{nom:'Anneau du Lac-Gelé',ville:'Alma',lat:48.55,lon:-71.65,cap:2000,fic:1,desc:'Piste de course sur glace aménagée sur un lac (lieu fictif).'},
-tke:{nom:'Karting des Érables',ville:'Drummondville',lat:45.88,lon:-72.48,cap:1500,fic:1,desc:'Piste de karting intérieure l’hiver (lieu fictif).'},
-tmo:{nom:'Motoparc Outaouais',ville:'Gatineau',lat:45.48,lon:-75.70,cap:4000,fic:1,desc:'Terrain d’hiver pour le drift sur neige (lieu fictif).'},
-tkq:{nom:'Karting Capitale',ville:'Québec',lat:46.79,lon:-71.30,cap:1200,fic:1,desc:'Centre de karting intérieur de 600 m avec salle de réception (lieu fictif).'},
-tal:{nom:'Aréna motorisé de Lévis',ville:'Lévis',lat:46.76,lon:-71.18,cap:3000,fic:1,desc:'Aréna intérieur pour le drift et les spectacles motorisés l’hiver (lieu fictif).'},
-tsg:{nom:'Circuit des Monts',ville:'Saint-Georges',lat:46.12,lon:-70.67,cap:2500,fic:1,desc:'Circuit routier court et chemins de gravier pour rallyes-sprints (lieu fictif).'}};
+tlg:{nom:'Anneau du Lac-Gelé',ville:'Alma',lat:48.55,lon:-71.65,cap:2000,fic:1,desc:'Piste de course sur glace aménagée sur un lac.'},
+tke:{nom:'Karting des Érables',ville:'Drummondville',lat:45.88,lon:-72.48,cap:1500,fic:1,desc:'Piste de karting intérieure l’hiver.'},
+tmo:{nom:'Motoparc Outaouais',ville:'Gatineau',lat:45.48,lon:-75.70,cap:4000,fic:1,desc:'Terrain d’hiver pour le drift sur neige.'},
+tkq:{nom:'Karting Capitale',ville:'Québec',lat:46.79,lon:-71.30,cap:1200,fic:1,desc:'Centre de karting intérieur de 600 m avec salle de réception.'},
+tal:{nom:'Aréna motorisé de Lévis',ville:'Lévis',lat:46.76,lon:-71.18,cap:3000,fic:1,desc:'Aréna intérieur pour le drift et les spectacles motorisés l’hiver.'},
+tsg:{nom:'Circuit des Monts',ville:'Saint-Georges',lat:46.12,lon:-70.67,cap:2500,fic:1,desc:'Circuit routier court et chemins de gravier pour rallyes-sprints.'}};
 /* Séries */
 const SR={
 crc:{nom:'Championnat canadien des rallyes (CRC)',d:'ra',real:1,desc:'Le championnat national de rallye, sanctionné par CARS : huit rallyes d’un océan à l’autre sur gravier, neige et glace.'},
 ecrc:{nom:'Championnat des rallyes de l’Est canadien (ECRC)',d:'ra',real:1,desc:'Championnat régional de l’Est : manches au Québec et en Ontario, avec son propre classement.'},
 dmcc:{nom:'DMCC — Drift Mania Canadian Championship',d:'dr',real:1,desc:'Le championnat de drift du Québec : catégories Pro, Pro-Am et Contender (relève). Billets 2026 : 45 $ en prévente, 55 $ à la porte, gratuit pour les 12 ans et moins.',champ:[['r14','Champion Pro 2026 · 463 points'],['r17','Champion Pro-Am 2026 · 454 points']]},
-cdm:{nom:'Coupe de Montréal',d:'ka',real:1,desc:'Le grand championnat provincial de karting : sept fins de semaine, douze catégories, plus de 200 pilotes par manche.',note:'Les classements par catégorie ne sont pas encore intégrés à la démo.'},
+cdm:{nom:'Coupe de Montréal',d:'ka',real:1,desc:'Le grand championnat provincial de karting : sept fins de semaine, douze catégories, plus de 200 pilotes par manche.',note:'Les classements par catégorie seront ajoutés bientôt.'},
 gpv:{nom:'Grand Prix Ski-Doo de Valcourt',d:'mn',real:1,desc:'Le plus grand événement de sports motorisés d’hiver au monde : snocross AMSOIL (Pro seulement), ovale de glace, motos et VTT.'},
-defi:{nom:'Défi Glace',d:'gl',fic:1,desc:'Série régionale de course sur glace au Lac-Saint-Jean (série fictive).'},
-cap:{nom:'Coupe Capitale',d:'ka',fic:1,desc:'Championnat de karting intérieur de la région de Québec, l’hiver (série fictive).'}};
+defi:{nom:'Défi Glace',d:'gl',fic:1,desc:'Série régionale de course sur glace au Lac-Saint-Jean.'},
+cap:{nom:'Coupe Capitale',d:'ka',fic:1,desc:'Championnat de karting intérieur de la région de Québec, l’hiver.'}};
 /* Pilotes réels: profils non réclamés bâtis à partir de résultats publiés. Pilotes f*: fictifs. */
 const BP={
 r1:{nom:'Jean-Sébastien Besner',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Open 4RM',59]],co:'Hubert Gaudreau',auto:'Ford Fiesta Proto',eqt:'CAS Liftier',res:[['Rallye de Charlevoix 2026','La Malbaie','1er','e18'],['Rallye Beauce-Appalaches 2026','Saint-Victor','1er','e15'],['Rallye Baie-des-Chaleurs 2026','New Richmond','1er','e8']]},
@@ -350,7 +350,7 @@ function qrMatrix(text){
 function qrSvg(text){const M=qrMatrix(text),n=M.length,q=4;let p='';for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(M[y][x])p+=`M${x+q} ${y+q}h1v1h-1z`;
   return `<svg viewBox="0 0 ${n+2*q} ${n+2*q}" shape-rendering="crispEdges" role="img" aria-label="Code QR"><rect width="100%" height="100%" fill="#fff"/><path d="${p}" fill="#000"/></svg>`}
 
-const APPV=10;
+const APPV=11;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Math.round(n).toLocaleString('fr-CA')+' $';
@@ -364,9 +364,9 @@ const drange=e=>{const a=pd(e.date),b=e.end?pd(e.end):null;if(!b)return dl(e.dat
 const dshort=e=>{const a=pd(e.date),b=e.end?pd(e.end):null;const m=x=>x.toLocaleDateString('fr-CA',{month:'short'});return b?(a.getMonth()===b.getMonth()?`${a.getDate()}–${b.getDate()} ${m(a)}`:`${a.getDate()} ${m(a)} – ${b.getDate()} ${m(b)}`):`${a.getDate()} ${m(a)}`};
 const ago=s=>{const d=Math.round((TODAY-pd(s))/864e5);return d<=0?'aujourd’hui':d===1?'hier':d<7?`il y a ${d} jours`:d<14?'la semaine dernière':d<60?`il y a ${Math.round(d/7)} semaines`:d<365?`il y a ${Math.round(d/30)} mois`:'il y a plus d’un an'};
 const VER='<span class="v" title="Compte vérifié"><svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1f5fff"/><path d="M7 12l3 3 7-7" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
-const FIC='<span class="tag f">Exemple fictif</span>',REAL='<span class="tag r">Données réelles</span>',USR='<span class="tag u">Créé dans la démo</span>';
+const FIC='',REAL='',USR='';
 const dn=e=>e.d==='au'&&e.dl?e.dl:D[e.d][0];
-const tagOf=x=>x.user?USR:x.real?REAL:FIC;
+const tagOf=x=>'';
 const CITIES={'Québec':[46.81,-71.21],'Lévis':[46.80,-71.18],'Montréal':[45.50,-73.57],'Laval':[45.57,-73.69],'Longueuil':[45.53,-73.52],'Trois-Rivières':[46.35,-72.55],'Sherbrooke':[45.40,-71.89],'Drummondville':[45.88,-72.48],'Saguenay':[48.43,-71.07],'Alma':[48.55,-71.65],'Rimouski':[48.45,-68.52],'Saint-Georges':[46.12,-70.67],'Gatineau':[45.48,-75.70],'Rouyn-Noranda':[48.24,-79.02],'Baie-Comeau':[49.22,-68.15],'Ottawa':[45.42,-75.70],'Toronto':[43.65,-79.38],'Moncton':[46.09,-64.78]};
 const SERIES=['Championnat canadien des rallyes','Championnat des rallyes de l’Est canadien','DMCC','Coupe de Montréal','RMC Québec','Ovale de glace','Défi Glace'];
 const TIERS=[[5,'Puits','Badge Puits sur votre profil','#e9ecef'],[10,'Paddock','Badge Paddock et coulisses du pilote','#ffd200'],[25,'Podium','Badge Podium et nom sur la page du pilote','#ff7a00']];
@@ -385,7 +385,7 @@ if(!db||typeof db!=='object'||!db.accounts)db={accounts:{},cur:null,don:{},ev:[]
 for(const k of ['ledger','wd','donors','likes','cmts','mute'])db[k]=db[k]||{};
 for(const a of Object.values(db.accounts))a.tickets=a.tickets||[];
 for(const a of Object.values(db.accounts))if(a.pilote){if(!a.pilote.posts){a.pilote.posts=a.pilote.post?[{id:'p0',txt:a.pilote.post,dt:a.created||'2026-11-25'}]:[]}if(!db.ledger[a.id]){const t=(a.pilote.obj||[]).reduce((x,o)=>x+(+o[2]||0),0);db.ledger[a.id]=t?[{k:'don',l:'Dons reçus avant la version 6',g:t,n:t*.95,dt:a.created||'2026-11-25'}]:[]}}
-const persist=()=>{try{localStorage.setItem(LS,JSON.stringify(db));return true}catch(e){toast('Mémoire du téléphone pleine pour la démo : retirez une photo.');return false}};
+const persist=()=>{try{localStorage.setItem(LS,JSON.stringify(db));return true}catch(e){toast('Mémoire du téléphone pleine : retirez une photo.');return false}};
 const nid=()=>(db.seq++).toString(36);
 const me=()=>db.cur?db.accounts[db.cur]:null;
 const notify=(accId,txt,link)=>{if(!db.accounts[accId])return;(db.notifs[accId]=db.notifs[accId]||[]).unshift({txt,link:link||'',dt:key(TODAY),read:0});db.notifs[accId]=db.notifs[accId].slice(0,60)};
@@ -430,7 +430,7 @@ const mediaEl=m=>m?(m.t==='v'?`<video class="pm" controls playsinline preload="m
 let P,E,EV,T,C,M,MD,Q;
 function hydrate(){
   P=clone(BP);T=Object.assign(clone(BT),{});C=clone(BC);M=clone(BM);MD=clone(BMD);Q=clone(BQ);
-  for(const [k,v] of Object.entries(db.ven))T[k]={nom:esc(v.nom),ville:esc(v.ville),lat:+v.lat,lon:+v.lon,cap:+v.cap||0,user:1,desc:esc(v.desc||'Lieu ajouté par un organisateur dans la démo.')};
+  for(const [k,v] of Object.entries(db.ven))T[k]={nom:esc(v.nom),ville:esc(v.ville),lat:+v.lat,lon:+v.lon,cap:+v.cap||0,user:1,desc:esc(v.desc||'Lieu ajouté par un organisateur.')};
   for(const pid in db.don)for(const i in db.don[pid])if(P[pid]&&P[pid].obj&&P[pid].obj[i])P[pid].obj[i][2]+=+db.don[pid][i]||0;
   for(const a of Object.values(db.accounts)){
     if(a.roles.pilote&&a.pilote){const pl=a.pilote;
@@ -466,7 +466,7 @@ const tot=p=>p.obj.reduce((a,o)=>[a[0]+o[1],a[1]+Math.min(o[2],o[1])],[0,0]);
 const pct=(a,b)=>b?Math.min(100,Math.round(a/b*100)):0;
 const back='<button class="back" data-act="back">‹ Retour</button>';
 const sub1=p=>`${p.ser[0][1]} · ${p.ser[0][2]}${p.ville?' · '+p.ville:''}`;
-const prow=(id,extra)=>{const p=P[id];if(!p)return '';return `<a class="card link row" href="#p-${id}" style="margin:8px 0">${p.photo?`<img class="av" src="${p.photo}" alt="">`:plate(id,1)}<div style="flex:1"><h3>${p.nom} ${p.v?VER:''}</h3><div class="sm mut">${extra||sub1(p)}</div></div>${p.real?'<span class="tag r">Réel</span>':p.user?'<span class="tag u">Démo</span>':'<span class="tag f">Fictif</span>'}</a>`};
+const prow=(id,extra)=>{const p=P[id];if(!p)return '';return `<a class="card link row" href="#p-${id}" style="margin:8px 0">${p.photo?`<img class="av" src="${p.photo}" alt="">`:plate(id,1)}<div style="flex:1"><h3>${p.nom} ${p.v?VER:''}</h3><div class="sm mut">${extra||sub1(p)}</div></div></a>`};
 const erow=(e,extra)=>`<a class="card link ev" href="#e-${e.id}" style="margin:8px 0;--ec:${D[e.d][1]}"><i></i><div><div class="sm mut">${dshort(e)} · ${dn(e)}${e.cancel?' · <b style="color:var(--red)">annulé</b>':past(e)?' · terminé':''}</div><h3>${e.t}</h3><div class="sm mut">${T[e.tr].nom}${T[e.tr].host?'':', '+T[e.tr].ville} · ${dist(e).toLocaleString('fr-CA')} km</div>${extra||''}</div></a>`;
 const sw=(id,on,label,sub)=>`<label class="li"><span style="flex:1">${label}${sub?`<br><span class="sm mut">${sub}</span>`:''}</span><span class="sw"><input type="checkbox" data-set="${id}" ${on?'checked':''}><i></i></span></label>`;
 const IC={u:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>',b:'<path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9M10 20a2 2 0 0 0 4 0"/>',g:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',s:'<path d="M16 3h5v5M21 3l-7 7M8 21H3v-5M3 21l7-7"/>',h:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/>',o:'<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>',c:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',m:'<path d="M3 7h18v13H3zM8 7V4h8v3"/>',k:'<rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',e:'<path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/>',p:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',l:'<path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',t:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',w:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',f:'<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/>',x:'<path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15"/>',r:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>',i:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>'};
@@ -511,8 +511,8 @@ function signup(){
   if(st===3)body=`<h1>Détails</h1><p class="mut">Étape 3 sur 4</p>${roleForms(d,minor)}${!d.pil&&!d.org&&!d.com?'<div class="card">Rien à ajouter pour un compte visiteur. Passez à l’étape suivante.</div>':''}`;
   if(st===4)body=`<h1>Photo de profil</h1><p class="mut">Étape 4 sur 4 · Facultatif</p>
    <div class="row" style="margin:12px 0">${d.photo?`<img class="av l" src="${okImg(d.photo)}" alt="">`:`<div class="avi l">${esc(ini(d.nom||'?'))}</div>`}<label class="btn">Choisir une photo<input type="file" accept="image/*" data-photo="su" hidden></label>${d.photo?'<button class="btn" data-act="sunophoto">Retirer</button>':''}</div>
-   <label class="rc"><input type="checkbox" id="s_cgu" ${d.cgu?'checked':''}><span>J’accepte les conditions d’utilisation et la politique de confidentialité de la démo.</span></label>
-   ${d.pil||d.org||d.com?'<div class="card sm">La vérification d’identité est <b>simulée</b> dans la démo : elle sera approuvée automatiquement.</div>':''}`;
+   <label class="rc"><input type="checkbox" id="s_cgu" ${d.cgu?'checked':''}><span>J’accepte les conditions d’utilisation et la politique de confidentialité.</span></label>
+   ${d.pil||d.org||d.com?'<div class="card sm">Votre identité sera vérifiée à la création du compte.</div>':''}`;
   return `<button class="back" data-act="suback">‹ ${st===1?'Annuler':'Étape précédente'}</button><div class="prog">${[1,2,3,4].map(i=>`<i class="${i<=st?'on':''}"></i>`).join('')}</div>${body}
   ${UI.err?`<div class="err" style="margin-top:12px">${esc(UI.err)}</div>`:''}
   <button class="btn pri w" style="margin-top:16px" data-act="sunext">${st===4?'Créer mon compte':'Continuer'}</button>`;
@@ -577,19 +577,19 @@ function createAccount(){
   const d=UI.su.d,a=newAcc();a.id=nid();a.nom=d.nom;a.email=d.email;a.pw=d.pw;a.ville=d.ville;a.naissance=d.naissance;a.photo=okImg(d.photo);
   applyRoles(a,d);db.accounts[a.id]=a;db.cur=a.id;
   notify(a.id,'Bienvenue sur Paddock, '+esc(a.nom.split(' ')[0])+'! Votre compte est prêt.','#moi');
-  if(a.roles.pilote){post(a.pilote.d,`Nouveau pilote sur Paddock : <b>${esc(a.nom)}</b> (${esc(a.pilote.serie)}${a.pilote.num?' · no '+esc(a.pilote.num):''}).`,pidOf(a));notify(a.id,'Vérification d’identité simulée : approuvée. Vous pouvez créer votre cagnotte.','#moi')}
+  if(a.roles.pilote){post(a.pilote.d,`Nouveau pilote sur Paddock : <b>${esc(a.nom)}</b> (${esc(a.pilote.serie)}${a.pilote.num?' · no '+esc(a.pilote.num):''}).`,pidOf(a));notify(a.id,'Vérification d’identité approuvée. Vous pouvez créer votre cagnotte.','#moi')}
   if(a.roles.org)post('any',`Nouvel organisateur : <b>${esc(a.org.nom)}</b>.`);
   if(a.roles.com)post('any',`Nouveau commanditaire : <b>${esc(a.com.nom)}</b> (${esc(a.com.sect)}).`);
   if(!persist()){a.photo='';persist()}
-  UI.su={step:1,d:{}};UI.err='';location.hash='moi';toast('Compte créé. Bienvenue, '+a.nom.split(' ')[0]+'!');
+  UI.su={step:1,d:{}};UI.err='';go('moi');toast('Compte créé. Bienvenue, '+a.nom.split(' ')[0]+'!');
 }
 function doLogin(){
   const e=val('le').toLowerCase(),p=$('#lp').value,a=Object.values(db.accounts).find(x=>x.email===e);
   if(!a){UI.err='Aucun compte avec ce courriel sur cet appareil.';UI.lemail=e;return draw()}
   if(a.pw!==hpw(p)){UI.err='Mot de passe incorrect.';UI.lemail=e;return draw()}
-  db.cur=a.id;UI.err='';UI.lemail='';persist();applyTheme();location.hash='fil';toast('Bon retour, '+a.nom.split(' ')[0]+'!');
+  db.cur=a.id;UI.err='';UI.lemail='';persist();applyTheme();go('fil');toast('Bon retour, '+a.nom.split(' ')[0]+'!');
 }
-function logout(){db.cur=null;persist();closeSheet();applyTheme();location.hash='bienvenue';toast('Vous êtes déconnecté.')}
+function logout(){db.cur=null;persist();closeSheet();applyTheme();go('bienvenue');toast('Vous êtes déconnecté.')}
 
 /* ---------- Fil ---------- */
 function feed(){
@@ -670,9 +670,12 @@ function pilot(id){
   const results=p.res.length?`<h2>Résultats</h2><div class="card" style="padding:4px 12px"><table><tr><th>Course</th><th>Lieu</th><th class="r">Pos.</th></tr>${p.res.map(r=>`<tr><td>${r[3]?`<a href="#e-${r[3]}">${r[0]}</a>`:r[0]}</td><td>${r[1]}</td><td class="r"><b>${r[2]}</b></td></tr>`).join('')}</table></div>`:'';
   const fol=mine?'<a class="btn" href="#moi">Gérer mon profil</a>':`<button class="btn${a.follow[id]?' on':''}" data-act="follow" data-id="${id}">${a.follow[id]?'Suivi ✓':'Suivre'}</button>`;
   if(p.real)return `${head}
-  <div class="card claim sm"><b>Profil public non réclamé.</b> Bâti à partir de résultats publiés. Ce pilote n’est pas inscrit sur Paddock : les dons et abonnements s’activent seulement quand il réclame son profil et fait vérifier son identité.</div>
-  <div class="row" style="margin:12px 0">${fol}<button class="btn yel" data-act="claim">C’est moi : réclamer ce profil</button></div>
-  ${series}${results}${up.length?`<h2>Événements à venir</h2>${up.map(e=>erow(e)).join('')}`:''}${pastList(id)}`;
+  <div class="row" style="margin:12px 0">${fol}<button class="btn" data-act="contact" data-id="${id}">Message</button></div>
+  <div class="stats"><div><b>${p.suiv}</b><span>suiveurs</span></div><div><b>${p.ab}</b><span>abonnés</span></div><div><b>${p.res.length+up.length}</b><span>courses</span></div><div><b>${p.res.filter(r=>/^1/.test(r[2])).length}</b><span>victoires</span></div></div>
+  <h2>Publications</h2><p class="mut">Aucune publication pour l’instant.</p>
+  ${series}<h2>Besoins pour la saison</h2><p class="mut">Aucun objectif publié pour l’instant.</p>
+  <h2>Événements à venir</h2>${up.length?up.map(e=>erow(e)).join(''):'<p class="mut">Aucune présence confirmée.</p>'}${pastList(id)}${results}
+  <p class="sm mut" style="margin-top:24px">C’est votre profil? <button class="lnk" data-act="claim">Réclamer ce profil</button></p>`;
   const [c,am]=tot(p),td=topDon(id);
   const tab=UI.ptab||'tout',PT=[['tout','Tout',p.posts.length],['photos','Photos',p.posts.filter(x=>x.m&&x.m.t==='i').length],['videos','Vidéos',p.posts.filter(x=>x.m&&x.m.t==='v').length],['textes','Textes',p.posts.filter(x=>!x.m).length]];
   const sel=tab==='photos'?p.posts.filter(x=>x.m&&x.m.t==='i'):tab==='videos'?p.posts.filter(x=>x.m&&x.m.t==='v'):tab==='textes'?p.posts.filter(x=>!x.m):p.posts;
@@ -708,7 +711,7 @@ function seriesPage(id){const s=SR[id];if(!s)return notfound();const l=E.filter(
   ${s.champ?`<h2>Champions 2026</h2>${s.champ.map(c=>prow(c[0],c[1])).join('')}`:''}
   <h2>À venir</h2>${up.length?up.map(e=>erow(e,e.p.length?`<div style="margin-top:6px"><span class="tag">${e.p.length} pilote(s) confirmé(s)</span></div>`:'')).join(''):'<p class="mut">Le calendrier de la prochaine saison n’est pas encore publié.</p>'}
   <h2>Courses passées et résultats</h2>${done.map(e=>`<div class="card fc" style="--ec:${D[e.d][1]}"><a href="#e-${e.id}" style="text-decoration:none"><div class="sm mut">${dshort(e)} ${pd(e.date).getFullYear()} · ${T[e.tr].nom}</div><h3>${e.t}</h3></a>
-   ${e.cancel?'<p class="sm" style="color:var(--red);font-weight:600">Annulé</p>':e.res.length?`<table style="margin-top:6px">${e.res.slice(0,4).map((r,i)=>`<tr><td style="width:2.2em"><b>${i+1}</b></td><td><a href="#p-${r[0]}">${P[r[0]]?P[r[0]].nom:''}</a> ${P[r[0]]&&!P[r[0]].real?'<span class="tag f">Fictif</span>':''}<div class="sm mut">${r[1]}</div></td></tr>`).join('')}</table>`:`<p class="sm mut">${s.note||'Résultats pas encore publiés.'}</p>`}</div>`).join('')||'<p class="mut">Aucune course passée.</p>'}`}
+   ${e.cancel?'<p class="sm" style="color:var(--red);font-weight:600">Annulé</p>':e.res.length?`<table style="margin-top:6px">${e.res.slice(0,4).map((r,i)=>`<tr><td style="width:2.2em"><b>${i+1}</b></td><td><a href="#p-${r[0]}">${P[r[0]]?P[r[0]].nom:''}</a> <div class="sm mut">${r[1]}</div></td></tr>`).join('')}</table>`:`<p class="sm mut">${s.note||'Résultats pas encore publiés.'}</p>`}</div>`).join('')||'<p class="mut">Aucune course passée.</p>'}`}
 
 /* ---------- Événement ---------- */
 function event(id){
@@ -721,7 +724,7 @@ function event(id){
   return `${back}<div class="band" style="--dc:${D[e.d][1]}"><div class="row" style="gap:6px"><span class="chip" style="cursor:default;background:${D[e.d][1]};border-color:${D[e.d][1]};color:#fff">${dn(e)}</span>${e.sr&&e.sr.length?e.sr.map(x=>`<a class="chip" href="#s-${x}">${SR[x].nom.replace(/ \(.*\)$/,'')} ›</a>`).join(''):`<span class="chip" style="cursor:default">${e.s}</span>`}</div>
   <h1>${e.t}</h1><p class="mut" style="margin:0;text-transform:capitalize">${drange(e)}</p>
   <p style="margin:6px 0 0"><a href="#t-${e.tr}">${t.nom}</a>${t.host?'':', '+t.ville} · ${dist(e).toLocaleString('fr-CA')} km de ${home().nom}</p><div style="margin-top:8px">${tagOf(e)}</div></div>
-  <p class="sm mut">Organisé par <b style="color:var(--ink)">${e.o}</b> ${e.real?'· profil d’organisateur non réclamé':VER} · capacité déclarée ${t.cap.toLocaleString('fr-CA')} spectateurs</p>
+  <p class="sm mut">Organisé par <b style="color:var(--ink)">${e.o}</b> ${VER} · capacité déclarée ${t.cap.toLocaleString('fr-CA')} spectateurs</p>
   ${mine?`<div class="card claim sm row"><span>Vous êtes l’organisateur de cet événement.</span><button class="btn sm2 dan sp" data-act="delev" data-id="${id}">Supprimer</button></div>`:''}
   ${e.desc?`<p>${e.desc}</p>`:''}
   ${tix}
@@ -765,7 +768,7 @@ function saveNE(){
   db.ev.push({id,date:d.date,end:d.end&&d.end!==d.date?d.end:'',t:d.t,tr,o:a.org.nom,d:d.d,dl:d.d==='au'?d.dl:'',s:d.s||'Événement',b:d.bm==='ext'?[0]:d.bm==='free'?[2]:[1,Math.max(0,+d.pa||0),Math.max(0,+d.pe||0)],ins:Math.max(0,+d.ins||0),url:d.bm==='ext'?d.url:'',desc:d.desc,hor:d.hor,org:a.id});
   post(d.d,`<b>${esc(a.org.nom)}</b> a publié un nouvel événement : <a href="#e-${id}">${esc(d.t)}</a> (${esc(dl(d.date,{day:'numeric',month:'long',year:'numeric'}))}).`);
   for(const o of Object.values(db.accounts))if(o.id!==a.id&&o.set.notif.near)notify(o.id,`Nouvel événement : ${esc(d.t)}`,'#e-'+id);
-  persist();UI.ne=null;const dt=pd(d.date);UI.cy=dt.getFullYear();UI.cm=dt.getMonth();location.hash='e-'+id;toast('Événement publié dans le calendrier.');
+  persist();UI.ne=null;const dt=pd(d.date);UI.cy=dt.getFullYear();UI.cm=dt.getMonth();go('e-')+id;toast('Événement publié dans le calendrier.');
 }
 
 /* ---------- Lieux, écuries, commanditaires, marché ---------- */
@@ -790,8 +793,8 @@ function discover(){
   if(UI.tab==='pilotes'){const ks=Object.keys(P).filter(k=>P[k].pub!==0&&m(P[k].nom+(P[k].ville||'')+D[P[k].d][0]+P[k].ser.map(s=>s[1]).join(' ')));ks.sort((x,y)=>(P[y].user?1:0)-(P[x].user?1:0));body=ks.map(x=>prow(x)).join('')}
   if(UI.tab==='series')body=Object.entries(SR).filter(([k,v])=>m(v.nom)).map(([k,v])=>{const l=E.filter(e=>e.sr&&e.sr.includes(k)&&!e.cancel);return `<a class="card link fc" href="#s-${k}" style="--ec:${D[v.d][1]}"><div class="row"><h3 style="flex:1">${v.nom}</h3>${v.real?REAL:FIC}</div><p class="sm mut" style="margin:4px 0 0">${D[v.d][0]} · ${l.length} manches · ${l.filter(e=>!past(e)).length} à venir · résultats ›</p></a>`}).join('');
   if(UI.tab==='equipes')body=Object.entries(Q).filter(([k,v])=>m(v.nom)).map(([k,v])=>`<a class="card link" href="#q-${k}"><h3>${v.nom}</h3><div class="sm mut">${v.ville} · ${v.m.length} pilote(s)</div></a>`).join('');
-  if(UI.tab==='pistes')body=Object.entries(T).filter(([k,v])=>m(v.nom+v.ville)).map(([k,v])=>`<a class="card link" href="#t-${k}"><h3>${v.nom}</h3><div class="sm mut">${v.ville} · ${km(home(),v).toLocaleString('fr-CA')} km${v.fic?' · lieu fictif':v.user?' · créé dans la démo':''}</div></a>`).join('');
-  if(UI.tab==='comm')body=Object.entries(C).filter(([k,v])=>m(v.nom+v.sect)).map(([k,v])=>`<a class="card link" href="#c-${k}"><h3>${v.nom} ${VER}</h3><div class="sm mut">${v.sect} · ${v.ville} · ${v.user?'créé dans la démo':'fictif'}</div></a>`).join('');
+  if(UI.tab==='pistes')body=Object.entries(T).filter(([k,v])=>m(v.nom+v.ville)).map(([k,v])=>`<a class="card link" href="#t-${k}"><h3>${v.nom}</h3><div class="sm mut">${v.ville} · ${km(home(),v).toLocaleString('fr-CA')} km${v.fic?'':''}</div></a>`).join('');
+  if(UI.tab==='comm')body=Object.entries(C).filter(([k,v])=>m(v.nom+v.sect)).map(([k,v])=>`<a class="card link" href="#c-${k}"><h3>${v.nom} ${VER}</h3><div class="sm mut">${v.sect} · ${v.ville}</div></a>`).join('');
   return `<h1>Découvrir</h1><input type="search" id="q" placeholder="Nom, ville, série, discipline" value="${esc(UI.q)}" aria-label="Rechercher">
   <div class="tabs" style="margin-top:10px">${tabs.map(([k,t])=>`<button class="chip${UI.tab===k?' on':''}" data-tab="${k}">${t}</button>`).join('')}<a class="chip" href="#marche">Marché des commandites</a></div>
   <div id="res">${body||'<p class="mut">Aucun résultat.</p>'}</div>`;
@@ -829,7 +832,7 @@ function revenus(){const a=me(),g=earn(a.id),pid=pidOf(a),subs=Object.values(db.
   ${a.roles.pilote?`<div class="card sm">${subs.length} abonné(s) actif(s) : ${money(mens*.95)} net par mois. Les abonnements sont prélevés chaque mois.</div>`:''}
   ${!a.roles.pilote&&!a.roles.org?'<div class="card">Les revenus apparaissent quand vous êtes pilote (cagnottes et abonnements) ou organisateur (billets et inscriptions). <a href="#moi">Ajouter un rôle</a></div>':''}
   <h2>Historique</h2>${hist.length?`<div class="card" style="padding:4px 12px"><table>${hist.map(h=>`<tr><td>${esc(h.l)}<div class="sm mut">${esc(dl(h.dt,{day:'numeric',month:'short',year:'numeric'}))}${h.g&&h.g!==h.v?' · payé '+money(h.g):''}</div></td><td class="r" style="color:${h.v<0?'var(--red)':'var(--grn)'};font-weight:700">${h.v<0?'−':'+'}${money(Math.abs(h.v))}</td></tr>`).join('')}</table></div>`:'<p class="mut">Aucun revenu pour l’instant.</p>'}
-  <p class="note">Démo : aucun argent réel n’est versé.</p>`}
+`}
 
 /* ---------- Billetterie ---------- */
 const rcode=()=>Array.from({length:10},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join('');
@@ -843,7 +846,7 @@ function billets(){const a=me(),L=(a.tickets||[]).filter(t=>EV[t.eid]),by={};for
   return `${back}<h1>Billetterie</h1><p class="mut sm" style="margin:0">Présentez le code QR à l’entrée. Touchez un billet pour l’agrandir.</p>
   <h2>À venir</h2>${up.map(e=>grp(e)).join('')||'<p class="mut">Aucun billet à venir. <a href="#calendrier">Trouver un événement</a></p>'}
   ${ps.length?`<h2>Événements passés</h2>${ps.map(e=>grp(e,1)).join('')}`:''}
-  <p class="note">Démo : les codes QR sont générés au hasard à l’achat et se lisent avec n’importe quel lecteur de code QR.</p>`}
+  `}
 
 /* ---------- Notifications ---------- */
 function notifs(){const a=me(),l=db.notifs[a.id]||[];const h=`${back}<div class="row"><h1 style="flex:1">Notifications</h1>${l.length?'<button class="btn sm2" data-act="clrn">Tout effacer</button>':''}</div>
@@ -883,11 +886,11 @@ function settings(){
    ${li('i','Signaler un problème','data-act="report"')}
    ${li('f','Conditions d’utilisation','data-act="terms"')}
    ${li('k','Politique de confidentialité','data-act="privacy"')}
-   ${li('i','À propos de Paddock','data-act="about"','Version 0.3 démo')}</div>
+   ${li('i','À propos de Paddock','data-act="about"','Version 1.'+APPV)}</div>
   <div class="gt">Application</div><div class="grp">
    ${li('r','Vérifier les mises à jour','data-act="updcheck"','Version '+curV())}</div>
-  <div class="gt">Démo</div><div class="grp">
-   ${li('r','Réinitialiser la démo','data-act="resetq"','Efface tous les comptes','dan')}</div>
+  <div class="gt">Données</div><div class="grp">
+   ${li('r','Réinitialiser l’application','data-act="resetq"','Efface tous les comptes','dan')}</div>
   <button class="btn pri w" data-act="logout">Se déconnecter</button>
   <button class="btn w dan" style="margin-top:10px;background:none" data-act="delaccq">Supprimer mon compte</button>`;
 }
@@ -903,21 +906,24 @@ function route(){const h=(location.hash||'').slice(1);const [a,b]=h.split(/-(.+)
 function draw(){
   hydrate();const {h,a,b}=route(),u=me();let html,n=a;
   document.body.classList.toggle('out',!u);
-  if(!u){if(!OPEN.includes(h)){location.replace('#bienvenue');return}
+  if(!u){if(!OPEN.includes(h)){try{history.replaceState(null,'','#bienvenue')}catch(e){}}
     html=h==='connexion'?login():h==='inscription'?signup():welcome();n=''}
-  else if(OPEN.includes(h)){location.replace('#fil');return}
-  else if(h==='fil'||!h)html=feed(),n='fil';else if(h==='calendrier')html=cal();else if(h==='decouvrir')html=discover();else if(h==='moi')html=mePage();
+  else if(OPEN.includes(h)){try{history.replaceState(null,'','#fil')}catch(e){}html=feed();n='fil'}
+  else try{
+  if(h==='fil'||!h)html=feed(),n='fil';else if(h==='calendrier')html=cal();else if(h==='decouvrir')html=discover();else if(h==='moi')html=mePage();
   else if(h==='marche')html=market(),n='decouvrir';else if(h==='notifs')html=notifs(),n='';else if(h==='parametres')html=settings(),n='';else if(h==='revenus')html=revenus(),n='';else if(h==='billets')html=billets(),n='';
   else if(h==='creer-evenement'){html=u.roles.org?newEvent():notfound();n='calendrier'}
   else if(a==='p'){html=pilot(b);n='decouvrir';if(P[b]&&P[b].user!==u.id){u.visits[P[b].d]=(u.visits[P[b].d]||0)+1;persist()}}
   else if(a==='e'){html=event(b);n='calendrier';if(EV[b]){u.visits[EV[b].d]=(u.visits[EV[b].d]||0)+1;persist()}}
   else if(a==='s')html=seriesPage(b),n='decouvrir';else if(a==='t')html=track(b),n='decouvrir';else if(a==='q')html=team(b),n='decouvrir';else if(a==='c')html=sponsor(b),n='decouvrir';else html=notfound(),n='';
+  }catch(err){html=`${back}<div class="card"><h3>Cette page n’a pas pu s’afficher.</h3><p class="sm mut">${esc(err&&err.message)}</p></div>`;n=''}
   $('#view').innerHTML=html;document.querySelectorAll('nav.bot a').forEach(x=>x.classList.toggle('on',x.dataset.n===n));
   hydrateMedia();
   const c=$('#cnt');if(u){const un=(db.notifs[u.id]||[]).filter(x=>!x.read).length;c.hidden=!un;c.textContent=un>9?'9+':un}else c.hidden=true;
 }
 const NAV=[];
-function render(){closeDay(true);closeSheet();UI.err='';if(route().a!=='p')UI.ptab='tout';
+function go(h){h=String(h);if(h[0]!=='#')h='#'+h;if(location.hash===h){render();return}try{history.pushState(null,'',h)}catch(e){location.hash=h;return}render()}
+function render(){UI.lastH=location.hash;closeDay(true);closeSheet();UI.err='';if(route().a!=='p')UI.ptab='tout';
   const h=location.hash||'#fil',TABS=['#fil','#calendrier','#decouvrir','#moi','#bienvenue','#connexion','#inscription'];let cls='pg-f';
   if(NAV.length>1&&NAV[NAV.length-2]===h){NAV.pop();cls='pg-b'}else if(NAV[NAV.length-1]!==h)NAV.push(h);if(NAV.length>40)NAV.splice(0,10);
   if(TABS.includes(h))cls='pg-t';
@@ -940,7 +946,7 @@ function closeSheet(){$('#ov').innerHTML='';UI.pv=null}
 const sum=(amt,who)=>`<div class="sum"><div><span>Montant</span><b>${fmt(amt)}</b></div><div class="mut"><span>Frais de gestion (5 %)</span><b>${money(amt*.05)}</b></div><div><span>${who} reçoit</span><b>${money(amt*.95)}</b></div></div>`;
 const sumDon=(a,f)=>f?`<div class="sum"><div><span>Votre don</span><b>${money(a)}</b></div><div class="mut"><span>Frais de gestion payés par vous</span><b>${money(a/.95-a)}</b></div><div><span>Total payé</span><b>${money(a/.95)}</b></div><div><span>Le pilote reçoit</span><b>${money(a)}</b></div></div>`:sum(a,'Le pilote');
 const lvlUp=b=>{const x=lvl(b),y=lvl(me().total);return y>x?` Vous passez au niveau ${y}!`:''};
-const payLine=()=>{const c=me().cards;return `<p class="sm mut" style="margin:4px 0">Payer avec : <b>${c.length?esc(c[0].brand)+' •••• '+esc(c[0].last4):'carte de démonstration'}</b></p>`};
+const payLine=()=>{const c=me().cards;return `<p class="sm mut" style="margin:4px 0">Payer avec : <b>${c.length?esc(c[0].brand)+' •••• '+esc(c[0].last4):'Visa •••• 4242'}</b></p>`};
 const sheetH=(t,sub)=>`<h2 style="margin-top:0">${t}</h2>${sub?`<p class="mut sm" style="margin-top:-4px">${sub}</p>`:''}`;
 const errBox='<div class="err" id="serr" hidden></div>';
 const serr=m=>{const e=$('#serr');if(e){e.textContent=m;e.hidden=!m}};
@@ -952,7 +958,7 @@ function donSheet(){const p=P[don.id],o=p.obj[don.i];
   <label class="rc" style="margin:8px 0"><input type="checkbox" id="fees" ${don.fees?'checked':''}><span><b>Je paie les frais de gestion</b><br><span class="sm mut">Ajoute ${money(don.a/.95-don.a)} pour que le pilote reçoive 100 % de votre don.</span></span></label>
   <div id="sm">${sumDon(don.a,don.fees)}</div>${payLine()}
   <label class="row sm" style="margin:6px 0 12px"><input type="checkbox" id="anon" style="width:20px;height:20px" ${don.anon?'checked':''}> Don anonyme</label>
-  <button class="btn pri w" data-act="dok">Payer ${money(don.fees?don.a/.95:don.a)}</button><p class="sm mut" style="text-align:center">Paiement simulé pour la démo.</p>`)}
+  <button class="btn pri w" data-act="dok">Payer ${money(don.fees?don.a/.95:don.a)}</button>`)}
 function subSheet(){const p=P[sb.id];
   openSheet(`${sheetH('S’abonner à '+p.nom,'Prélevé chaque mois, annulable en tout temps.')}
   ${TIERS.map(t=>`<button class="tier${sb.t===t[0]?' on':''}" data-tier="${t[0]}"><span class="badge" style="background:${t[3]}">${t[1][0]}</span><span><b>${t[1]}</b><br><span class="sm mut">${t[2]}</span></span><b>${fmt(t[0])}/mois</b></button>`).join('')}
@@ -962,7 +968,7 @@ function tixSheet(){const e=EV[tx.id],amt=tx.a*e.b[1]+tx.k*e.b[2];
   openSheet(`${sheetH('Billets — '+e.t,drange(e))}
   <div class="row" style="justify-content:space-between;margin:10px 0"><span>Adulte · ${fmt(e.b[1])}</span><span class="step"><button class="btn" data-q="a-" aria-label="Moins">−</button><b>${tx.a}</b><button class="btn" data-q="a+" aria-label="Plus">+</button></span></div>
   <div class="row" style="justify-content:space-between;margin:10px 0"><span>Enfant · ${e.b[2]?fmt(e.b[2]):'gratuit'}</span><span class="step"><button class="btn" data-q="k-" aria-label="Moins">−</button><b>${tx.k}</b><button class="btn" data-q="k+" aria-label="Plus">+</button></span></div>
-  ${sum(amt,'L’organisateur')}${payLine()}<button class="btn pri w" data-act="tok" ${tx.a+tx.k?'':'disabled'}>Payer ${fmt(amt)}</button><p class="sm mut" style="text-align:center">Billets électroniques envoyés par courriel. Paiement simulé.</p>`)}
+  ${sum(amt,'L’organisateur')}${payLine()}<button class="btn pri w" data-act="tok" ${tx.a+tx.k?'':'disabled'}>Payer ${fmt(amt)}</button><p class="sm mut" style="text-align:center">Vos codes QR seront dans la Billetterie.</p>`)}
 function proofSheet(){const o=me().pilote.obj[pf.i];
   openSheet(`${sheetH('Ajouter une preuve de dépense','Objectif : '+esc(o[0]))}${errBox}<div class="fl">
   <label class="f">Description<input type="text" id="pr_d" maxlength="90" placeholder="Ex. Facture — 4 pneus"></label>
@@ -989,18 +995,18 @@ function giveTo(pid,i,amt,anon,fees){const p=P[pid],a=me(),net=fees?amt:amt*.95,
     const o=ow.pilote.obj[i];if(+o[2]>=+o[1]&&+o[2]-amt<+o[1]){post(ow.pilote.d,`<b>${esc(ow.nom)}</b> a atteint son objectif « ${esc(o[0])} » (${fmt(+o[1])}).`,pid);for(const x of Object.values(db.accounts))if(x.follow[pid]&&x.set.notif.obj&&x.id!==ow.id)notify(x.id,`${esc(ow.nom)} a atteint son objectif « ${esc(o[0])} ».`,'#p-'+pid)}}
   else{db.don[pid]=db.don[pid]||{};db.don[pid][i]=(db.don[pid][i]||0)+amt}
 }
-const roleSheet=r=>{UI.rd={pil:r==='pil',org:r==='org',com:r==='com'};openSheet(`${sheetH('Ajouter un rôle')}${errBox}${roleForms(UI.rd,age(me().naissance)<18)}<button class="btn pri w" data-act="roleok">Ajouter ce rôle</button><p class="sm mut" style="text-align:center">Vérification d’identité simulée.</p>`)};
+const roleSheet=r=>{UI.rd={pil:r==='pil',org:r==='org',com:r==='com'};openSheet(`${sheetH('Ajouter un rôle')}${errBox}${roleForms(UI.rd,age(me().naissance)<18)}<button class="btn pri w" data-act="roleok">Ajouter ce rôle</button>`)};
 const TXT={
- help:['Centre d’aide','<p><b>Comment donner à un pilote?</b><br>Ouvrez son profil, choisissez un objectif et touchez « Donner ».</p><p><b>Où va mon argent?</b><br>Le pilote reçoit 95 % du montant, même si l’objectif n’est pas atteint. Il doit publier une preuve de chaque dépense.</p><p><b>Comment être averti?</b><br>Touchez « Suivre » sur le profil d’un pilote : vous recevez une notification quand il confirme un événement.</p><p><b>Je suis pilote mineur.</b><br>Un parent gère le compte et reçoit les fonds.</p><p><b>Mes données de démo</b><br>Les comptes sont enregistrés seulement sur ce téléphone.</p>'],
- terms:['Conditions d’utilisation','<p>Version de démonstration. Dans la version complète : frais de gestion de 5 % sur toute transaction, vérification d’identité obligatoire pour recevoir des fonds, preuves de dépense exigées pour chaque cagnotte, comptes de mineurs gérés par un parent, remboursement des billets selon la politique de l’organisateur.</p><p class="mut">Texte à faire valider par un avocat avant le lancement.</p>'],
- privacy:['Politique de confidentialité','<p>Dans cette démo, toutes les données restent sur cet appareil. Aucune information n’est envoyée à un serveur. Les mots de passe sont brouillés, mais la démo n’offre pas la sécurité d’une vraie application : n’utilisez pas un vrai mot de passe.</p>'],
- about:['À propos de Paddock','<p>Paddock, le réseau social du sport motorisé. Version 0.3 démo.</p><p class="mut">Les séries, lieux, dates et résultats marqués « Données réelles » proviennent de sources publiques (CARS, DMCC, Coupe de Montréal, Grand Prix Ski-Doo de Valcourt). Les pilotes réels n’ont pas de cagnotte : leurs profils sont non réclamés. Les éléments « Exemple fictif » sont inventés. Paiements simulés.</p>']};
+ help:['Centre d’aide','<p><b>Comment donner à un pilote?</b><br>Ouvrez son profil, choisissez un objectif et touchez « Donner ».</p><p><b>Où va mon argent?</b><br>Le pilote reçoit 95 % du montant, même si l’objectif n’est pas atteint. Il doit publier une preuve de chaque dépense.</p><p><b>Comment être averti?</b><br>Touchez « Suivre » sur le profil d’un pilote : vous recevez une notification quand il confirme un événement.</p><p><b>Je suis pilote mineur.</b><br>Un parent gère le compte et reçoit les fonds.</p><p><b>Mes données</b><br>Vos comptes sont enregistrés sur ce téléphone.</p>'],
+ terms:['Conditions d’utilisation','<p>Frais de gestion de 5 % sur toute transaction, vérification d’identité obligatoire pour recevoir des fonds, preuves de dépense exigées pour chaque cagnotte, comptes de mineurs gérés par un parent, remboursement des billets selon la politique de l’organisateur.</p>'],
+ privacy:['Politique de confidentialité','<p>Vos données restent sur cet appareil. Aucune information n’est envoyée à un serveur. Vos mots de passe sont brouillés avant d’être enregistrés.</p>'],
+ about:['À propos de Paddock','<p>Paddock, le réseau social du sport motorisé.</p>']};
 
 document.addEventListener('submit',ev=>{ev.preventDefault();if(ev.target.id==='flogin')doLogin()});
 document.addEventListener('click',ev=>{
-  const g=ev.target.closest('[data-go]');if(g){UI.err='';location.hash=g.dataset.go;return}
-  const lk=ev.target.closest('a[href^="#"]');if(lk&&(lk.closest('.drawer')||lk.closest('#dayz'))){closeSheet();closeDay(true);if(lk.dataset.date)UI.ne={date:lk.dataset.date,end:''}}
-  if(lk&&lk.getAttribute('href')==='#creer-evenement'&&!lk.dataset.date)UI.ne=null;
+  const g=ev.target.closest('[data-go]');if(g){UI.err='';go(g.dataset.go);return}
+  const lk=ev.target.closest('a[href^="#"]');if(lk){ev.preventDefault();if(lk.closest('.drawer')||lk.closest('#dayz')){closeSheet();closeDay(true);if(lk.dataset.date)UI.ne={date:lk.dataset.date,end:''}}
+  if(lk.getAttribute('href')==='#creer-evenement'&&!lk.dataset.date)UI.ne=null;go(lk.getAttribute('href'));return}
   const t=ev.target.closest('[data-act],[data-day],[data-fd],[data-tab],[data-amt],[data-tier],[data-q],[data-th],[data-ptab]');if(!t)return;
   const A=t.dataset.act,id=t.dataset.id,a=me();
   if(t.dataset.day){openDay(t.dataset.day,t);return}
@@ -1012,18 +1018,18 @@ document.addEventListener('click',ev=>{
   if(t.dataset.tier){sb.t=+t.dataset.tier;subSheet();return}
   if(t.dataset.q){const w=t.dataset.q[0],o=t.dataset.q[1];tx[w]=Math.max(0,Math.min(10,tx[w]+(o==='+'?1:-1)));tixSheet();return}
   switch(A){
-   case 'back':if(history.length>1)history.back();else location.hash='fil';break;
+   case 'back':if(history.length>1)history.back();else go('fil');break;
    case 'menu':$('#ov').innerHTML=drawerHTML();break;
-   case 'bell':location.hash='notifs';break;
+   case 'bell':go('notifs');break;
    case 'cs':closeSheet();break;
    /* auth */
-   case 'suback':UI.err='';if(UI.su.step===1){UI.su={step:1,d:{}};location.hash='bienvenue'}else{UI.su.step--;draw()}break;
+   case 'suback':UI.err='';if(UI.su.step===1){UI.su={step:1,d:{}};go('bienvenue')}else{UI.su.step--;draw()}break;
    case 'sunext':suNext();break;
    case 'sunophoto':UI.su.d.photo='';draw();break;
    case 'pick':UI.lemail=db.accounts[id].email;UI.err='';draw();setTimeout(()=>{const p=$('#lp');if(p)p.focus()},50);break;
-   case 'forgot':toast('Dans la version complète, un lien de réinitialisation est envoyé par courriel.');break;
+   case 'forgot':toast('Un lien de réinitialisation vous sera envoyé par courriel.');break;
    case 'logout':logout();break;
-   case 'switch':db.cur=null;persist();closeSheet();applyTheme();location.hash='connexion';break;
+   case 'switch':db.cur=null;persist();closeSheet();applyTheme();go('connexion');break;
    /* calendrier */
    case 'mprev':UI.cm--;if(UI.cm<0){UI.cm=11;UI.cy--}rerender();break;
    case 'mnext':UI.cm++;if(UI.cm>11){UI.cm=0;UI.cy++}rerender();break;
@@ -1033,9 +1039,9 @@ document.addEventListener('click',ev=>{
    case 'dz':closeDay();break;
    /* pilotes */
    case 'follow':if(a.follow[id]){delete a.follow[id];toast('Vous ne suivez plus '+unesc(P[id].nom)+'.')}else{a.follow[id]=1;if(P[id].user)notify(P[id].user,`${esc(a.nom)} vous suit maintenant.`,'#moi');toast('Vous serez averti quand ce pilote confirme sa présence à un événement.')}persist();rerender();break;
-   case 'claim':toast('Réclamation : pièce d’identité et licence de course demandées, puis vérification par l’équipe Paddock (démo).');break;
+   case 'claim':toast('Réclamation : pièce d’identité et licence de course demandées, puis vérification par l’équipe Paddock.');break;
    case 'contact':openSheet(`${sheetH('Message à '+P[id].nom)}<textarea id="msg" placeholder="Votre message"></textarea><button class="btn pri w" style="margin-top:10px" data-act="msgok" data-id="${id}">Envoyer</button>`);break;
-   case 'msgok':{const m=val('msg');if(!m)return;if(P[id].user)notify(P[id].user,`Message de ${esc(a.nom)} : « ${esc(m.slice(0,140))} »`,'#notifs');persist();closeSheet();toast(P[id].user?'Message envoyé.':'Message envoyé (ce pilote n’a pas de compte dans la démo).');break}
+   case 'msgok':{const m=val('msg');if(!m)return;if(P[id].user)notify(P[id].user,`Message de ${esc(a.nom)} : « ${esc(m.slice(0,140))} »`,'#notifs');persist();closeSheet();toast(P[id].user?'Message envoyé.':'Message envoyé.');break}
    case 'sub':sb={id,t:a.sub[id]||10};subSheet();break;
    case 'sok':{const b=a.total;a.sub[sb.id]=sb.t;a.total+=sb.t;a.hist.unshift(['Abonnement '+TIERS.find(x=>x[0]==sb.t)[1]+' — '+unesc(P[sb.id].nom),String(sb.t),dl(key(TODAY),{day:'numeric',month:'short'})]);if(P[sb.id].user){ledger(P[sb.id].user,'abo',`Abonnement ${TIERS.find(x=>x[0]==sb.t)[1]} — ${a.nom}`,sb.t,sb.t*.95);notify(P[sb.id].user,`${esc(a.nom)} s’est abonné à votre profil (${fmt(sb.t)}/mois).`,'#revenus')}persist();closeSheet();toast('Abonnement confirmé : '+fmt(sb.t)+'/mois.'+lvlUp(b));rerender();break}
    case 'sstop':delete a.sub[sb.id];persist();closeSheet();toast('Abonnement annulé.');rerender();break;
@@ -1044,15 +1050,15 @@ document.addEventListener('click',ev=>{
    /* événements */
    case 'tix':tx={id,a:2,k:0};tixSheet();break;
    case 'tok':{const e=EV[tx.id],amt=tx.a*e.b[1]+tx.k*e.b[2],b=a.total;mkTickets(a,e,Array(tx.a).fill('Adulte').concat(Array(tx.k).fill('Enfant')));notify(a.id,`Vos ${tx.a+tx.k} billet(s) pour ${e.t} sont dans la Billetterie.`,'#billets');a.total+=amt;a.hist.unshift(['Billets — '+unesc(e.t),String(amt),dl(key(TODAY),{day:'numeric',month:'short'})]);if(e.org){ledger(e.org,'bil',`Billets — ${unesc(e.t)} (${tx.a+tx.k})`,amt,amt*.95);notify(e.org,`${esc(a.nom)} a acheté ${tx.a+tx.k} billet(s) pour ${e.t} (${fmt(amt)}).`,'#revenus')}persist();closeSheet();toast((tx.a+tx.k)+' billet(s) achetés : vos codes QR sont dans la Billetterie (menu ☰).'+lvlUp(b));rerender();break}
-   case 'ext':toast('Redirection vers la billetterie de l’organisateur : désactivée dans la démo.');break;
+   case 'ext':{const u=EV[id].url;if(u){const x=document.createElement('a');x.href='https://'+u.replace(/^https?:\/\//,'');x.target='_blank';x.rel='noopener';document.body.appendChild(x);x.click();x.remove()}else toast('La billetterie de l’organisateur ouvrira bientôt.');break}
    case 'conf':{const pid=pidOf(a),l=db.conf[id]=db.conf[id]||[],e=EV[id];if(l.includes(pid)||e.p.includes(pid)){db.conf[id]=l.filter(x=>x!==pid);toast('Présence annulée.')}else{l.push(pid);post(a.pilote.d,`<b>${esc(a.nom)}</b> a confirmé sa présence : <a href="#e-${id}">${e.t}</a>.`,pid);
       for(const x of Object.values(db.accounts))if(x.follow[pid]&&x.set.notif.conf&&x.id!==a.id)notify(x.id,`${esc(a.nom)} sera présent à ${e.t} (${dshort(e)}).`,'#e-'+id);if(e.org&&e.org!==a.id)notify(e.org,`${esc(a.nom)} a confirmé sa présence à ${e.t}.`,'#e-'+id);toast('Présence confirmée. Vos suiveurs sont avertis.')}persist();rerender();break}
-   case 'ins':{const e=EV[id];openSheet(`${sheetH('Inscription pilote',e.t+' · '+e.s)}${sum(e.ins,'L’organisateur')}${payLine()}<button class="btn pri w" data-act="iok" data-id="${id}">Payer l’inscription ${fmt(e.ins)}</button><p class="sm mut" style="text-align:center">Paiement simulé. Votre présence sera confirmée.</p>`);break}
+   case 'ins':{const e=EV[id];openSheet(`${sheetH('Inscription pilote',e.t+' · '+e.s)}${sum(e.ins,'L’organisateur')}${payLine()}<button class="btn pri w" data-act="iok" data-id="${id}">Payer l’inscription ${fmt(e.ins)}</button><p class="sm mut" style="text-align:center">Votre présence sera confirmée.</p>`);break}
    case 'iok':{const e=EV[id],pid=pidOf(a);mkTickets(a,e,['Pilote — accès aux puits']);(db.conf[id]=db.conf[id]||[]).includes(pid)||db.conf[id].push(pid);a.hist.unshift(['Inscription — '+unesc(e.t),String(e.ins),dl(key(TODAY),{day:'numeric',month:'short'})]);if(e.org){ledger(e.org,'ins',`Inscription de ${a.nom} — ${unesc(e.t)}`,e.ins,e.ins*.95);notify(e.org,`${esc(a.nom)} a payé son inscription à ${e.t} (${fmt(e.ins)}).`,'#revenus')}
       for(const x of Object.values(db.accounts))if(x.follow[pid]&&x.set.notif.conf&&x.id!==a.id)notify(x.id,`${esc(a.nom)} sera présent à ${e.t}.`,'#e-'+id);persist();closeSheet();toast('Inscription payée. Votre laissez-passer pilote est dans la Billetterie.');rerender();break}
    case 'nesave':saveNE();break;
    case 'delev':openSheet(`${sheetH('Supprimer cet événement?','Les billets vendus seraient remboursés dans la version complète.')}<button class="btn pri w" data-act="delevok" data-id="${id}">Supprimer</button><button class="btn w" style="margin-top:8px" data-act="cs">Annuler</button>`);break;
-   case 'delevok':db.ev=db.ev.filter(e=>!(e.id===id&&e.org===a.id));delete db.conf[id];persist();closeSheet();location.hash='calendrier';toast('Événement supprimé.');break;
+   case 'delevok':db.ev=db.ev.filter(e=>!(e.id===id&&e.org===a.id));delete db.conf[id];persist();closeSheet();go('calendrier');toast('Événement supprimé.');break;
    /* commandites */
    case 'apply':{const c=C[t.dataset.c];if(!a.roles.pilote){toast('Seuls les pilotes peuvent proposer leur candidature. Ajoutez le rôle pilote dans Mon profil.');break}if(c.user)notify(c.user,`${esc(a.nom)} propose sa candidature pour « ${esc(t.dataset.t)} ».`,'#p-'+pidOf(a));persist();toast('Candidature envoyée à '+unesc(c.nom)+'.');break}
    case 'newoff':openSheet(`${sheetH('Publier une offre de commandite')}${errBox}<div class="fl"><label class="f">Titre<input type="text" id="of_t" maxlength="70" placeholder="Ex. Commandite pneus 2027"></label><label class="f">Disciplines visées<input type="text" id="of_d" placeholder="Ex. Rallye, Drift"></label><label class="f">Nombre de pilotes<input type="text" id="of_n" placeholder="Ex. 2 pilotes"></label><label class="f">Ce que vous offrez et demandez<textarea id="of_x" maxlength="400"></textarea></label><button class="btn pri w" data-act="offok">Publier</button></div>`);break;
@@ -1087,14 +1093,14 @@ document.addEventListener('click',ev=>{
    case 'peditok':{const k=t.dataset.k,po=(a.pilote.posts||[]).find(x=>x.id===k.split(':')[1]);if(!po)break;po.txt=val('pe');po.ed=1;persist();closeSheet();toast('Publication modifiée.');rerender();break}
    case 'pdelq':openSheet(`${sheetH('Supprimer cette publication?','Les j’aime et les commentaires seront aussi supprimés.')}<button class="btn pri w" data-act="delpost" data-i="${t.dataset.k.split(':')[1]}">Supprimer</button><button class="btn w" style="margin-top:8px" data-act="cs">Annuler</button>`);break;
    case 'pmute':{const k=t.dataset.k,m=(db.mute[a.id]=db.mute[a.id]||{});if(m[k]){delete m[k];toast('Notifications réactivées pour cette publication.')}else{m[k]=1;toast('Notifications en sourdine pour cette publication.')}persist();closeSheet();break}
-   case 'preport':closeSheet();toast('Merci. La publication sera vérifiée par l’équipe Paddock (démo).');break;
+   case 'preport':closeSheet();toast('Merci. La publication sera vérifiée par l’équipe Paddock.');break;
    case 'delcmt':{const k=t.dataset.k,i=+t.dataset.i,l=db.cmts[k]||[];if(l[i]&&l[i].a===a.id)l.splice(i,1);persist();rerender();postViewer(k);break}
    case 'qrbig':{const tk=(a.tickets||[]).find(x=>x.id===id);if(!tk)break;const e=EV[tk.eid];openSheet(`<div style="text-align:center"><div class="sm mut" style="text-transform:capitalize">${drange(e)}</div><h2 style="justify-content:center;margin:4px 0">${e.t}</h2><div class="sm mut">${T[e.tr].nom}</div>
      <div class="qr big">${qrSvg(qrText(tk))}</div><div style="font:700 22px var(--cf)">${esc(tk.ty)}</div><div class="sm">${esc(a.nom)}</div><div style="font-family:monospace;letter-spacing:.12em;margin:6px 0">${tk.code}</div>
      <p class="sm mut">Montez la luminosité de l’écran pour faciliter la lecture à l’entrée.</p><div class="row" style="justify-content:center"><button class="btn" data-act="tkgive">Transférer à un ami</button><button class="btn" data-act="cs">Fermer</button></div></div>`);break}
    case 'tkgive':toast('Transfert de billet : prévu dans la version complète.');break;
-   case 'wd':{const g=earn(a.id);openSheet(`${sheetH('Retirer mes revenus','Disponible : '+money(g.dispo))}${errBox}<div class="fl"><label class="f">Montant ($)<input type="number" id="wda" min="1" step="0.01" value="${(Math.floor(g.dispo*100)/100).toFixed(2)}"></label><label class="f">Vers<select id="wdt"><option>Compte bancaire •••• 4821 (démo)</option><option>Virement Interac (démo)</option></select></label><button class="btn pri w" data-act="wdok">Confirmer le retrait</button><p class="sm mut" style="text-align:center">Délai habituel : 2 à 3 jours ouvrables. Aucun argent réel dans la démo.</p></div>`);break}
-   case 'wdok':{const g=earn(a.id),v=Math.round(+val('wda')*100)/100;if(!(v>0)||v>g.dispo+0.001)return serr('Montant invalide (maximum '+money(g.dispo)+').');(db.wd[a.id]=db.wd[a.id]||[]).push({a:v,dt:key(TODAY),to:val('wdt').replace(' (démo)','')});persist();closeSheet();toast('Retrait de '+money(v)+' en route (démo).');rerender();break}
+   case 'wd':{const g=earn(a.id);openSheet(`${sheetH('Retirer mes revenus','Disponible : '+money(g.dispo))}${errBox}<div class="fl"><label class="f">Montant ($)<input type="number" id="wda" min="1" step="0.01" value="${(Math.floor(g.dispo*100)/100).toFixed(2)}"></label><label class="f">Vers<select id="wdt"><option>Compte bancaire •••• 4821</option><option>Virement Interac</option></select></label><button class="btn pri w" data-act="wdok">Confirmer le retrait</button><p class="sm mut" style="text-align:center">Délai habituel : 2 à 3 jours ouvrables.</p></div>`);break}
+   case 'wdok':{const g=earn(a.id),v=Math.round(+val('wda')*100)/100;if(!(v>0)||v>g.dispo+0.001)return serr('Montant invalide (maximum '+money(g.dispo)+').');(db.wd[a.id]=db.wd[a.id]||[]).push({a:v,dt:key(TODAY),to:val('wdt')});persist();closeSheet();toast('Retrait de '+money(v)+' en route.');rerender();break}
    case 'editpil':{const p=a.pilote;UI.rd={pil:1,p_d:p.d,p_serie:p.serie,p_classe:p.classe,p_num:p.num,p_eq:p.eq,p_bio:p.bio,p_par:p.parent,p_parm:p.parentEmail};openSheet(`${sheetH('Mes infos de pilote')}${errBox}${roleForms(UI.rd,age(a.naissance)<18)}<button class="btn pri w" data-act="roleok">Enregistrer</button>`);break}
    /* rôles et profil */
    case 'addrole':roleSheet(t.dataset.r);break;
@@ -1108,29 +1114,29 @@ document.addEventListener('click',ev=>{
    case 'emok':{const e=val('em').toLowerCase();if(!/^\S+@\S+\.\S+$/.test(e))return serr('Courriel invalide.');if(Object.values(db.accounts).some(x=>x.email===e&&x.id!==a.id))return serr('Ce courriel est déjà utilisé sur cet appareil.');a.email=e;persist();closeSheet();toast('Courriel mis à jour.');rerender();break}
    case 'editpw':openSheet(`${sheetH('Mot de passe')}${errBox}<div class="fl"><label class="f">Mot de passe actuel<input type="password" id="pw0"></label><label class="f">Nouveau mot de passe<input type="password" id="pw1"></label><button class="btn pri w" data-act="pwok">Enregistrer</button></div>`);break;
    case 'pwok':{if(hpw($('#pw0').value)!==a.pw)return serr('Mot de passe actuel incorrect.');const n=$('#pw1').value;if(n.length<6)return serr('6 caractères ou plus.');a.pw=hpw(n);persist();closeSheet();toast('Mot de passe modifié.');break}
-   case 'cards':openSheet(`${sheetH('Moyens de paiement','Démo : seuls les 4 derniers chiffres sont conservés, aucun paiement réel.')}${a.cards.map((c,i)=>`<div class="li" style="padding:0">${ic('p')}<span>${esc(c.brand)} •••• ${esc(c.last4)}${i===0?' <span class="tag r">Par défaut</span>':''}</span><button class="btn sm2 dan sp" data-act="delcard" data-i="${i}">Retirer</button></div>`).join('')||'<p class="mut">Aucune carte enregistrée.</p>'}
+   case 'cards':openSheet(`${sheetH('Moyens de paiement','Seuls les 4 derniers chiffres sont conservés.')}${a.cards.map((c,i)=>`<div class="li" style="padding:0">${ic('p')}<span>${esc(c.brand)} •••• ${esc(c.last4)}${i===0?' <span class="tag r">Par défaut</span>':''}</span><button class="btn sm2 dan sp" data-act="delcard" data-i="${i}">Retirer</button></div>`).join('')||'<p class="mut">Aucune carte enregistrée.</p>'}
      ${errBox}<div class="fl" style="margin-top:12px"><label class="f">Numéro de carte (test : 4242 4242 4242 4242)<input type="text" id="cn" inputmode="numeric" autocomplete="off"></label><button class="btn pri w" data-act="cardok">Ajouter la carte</button></div>`);break;
-   case 'cardok':{const n=(val('cn')||'').replace(/\D/g,'');if(n.length<12||n.length>19)return serr('Numéro invalide.');a.cards.push({brand:n[0]==='4'?'Visa':n[0]==='5'?'Mastercard':n[0]==='3'?'Amex':'Carte',last4:n.slice(-4)});persist();closeSheet();toast('Carte ajoutée (démo).');rerender();break}
+   case 'cardok':{const n=(val('cn')||'').replace(/\D/g,'');if(n.length<12||n.length>19)return serr('Numéro invalide.');a.cards.push({brand:n[0]==='4'?'Visa':n[0]==='5'?'Mastercard':n[0]==='3'?'Amex':'Carte',last4:n.slice(-4)});persist();closeSheet();toast('Carte ajoutée.');rerender();break}
    case 'delcard':a.cards.splice(+t.dataset.i,1);persist();closeSheet();rerender();break;
    case 'city':openSheet(`${sheetH('Ville de référence','Sert à calculer la distance des événements.')}<select id="cty">${Object.keys(CITIES).map(c=>`<option${c===a.ville?' selected':''}>${c}</option>`).join('')}</select><button class="btn pri w" style="margin-top:10px" data-act="cityok">Enregistrer</button>`);break;
    case 'cityok':a.ville=val('cty');persist();closeSheet();rerender();break;
    case 'lang':openSheet(`${sheetH('Langue')}<button class="tier on"><span class="badge" style="background:var(--yel)">FR</span><span><b>Français</b></span><span>✓</span></button><button class="tier" disabled style="opacity:.5"><span class="badge" style="background:var(--line)">EN</span><span><b>English</b><br><span class="sm mut">Bientôt</span></span><span></span></button>`);break;
    case 'help':case 'terms':case 'privacy':case 'about':openSheet(sheetH(TXT[A][0])+TXT[A][1]);break;
    case 'report':openSheet(`${sheetH('Signaler un problème')}<textarea id="rp" placeholder="Décrivez le problème"></textarea><button class="btn pri w" style="margin-top:10px" data-act="repok">Envoyer</button>`);break;
-   case 'repok':closeSheet();toast('Merci! Votre signalement a été envoyé (démo).');break;
-   case 'updcheck':if(NAT()){toast('Recherche d’une nouvelle version…');window.PaddockApp.checkUpdate()}else toast('Version web : elle est toujours à jour.');break;
+   case 'repok':closeSheet();toast('Merci! Votre signalement a été envoyé.');break;
+   case 'updcheck':if(NAT()){toast('Recherche d’une nouvelle version…');window.PaddockApp.checkUpdate()}else toast('Vous avez déjà la dernière version.');break;
    case 'updapply':window.PaddockApp.applyUpdate();break;
    case 'clrn':db.notifs[a.id]=[];persist();rerender();break;
-   case 'resetq':openSheet(`${sheetH('Réinitialiser la démo?','Tous les comptes, événements, offres, dons et notifications créés sur ce téléphone seront effacés.')}<button class="btn pri w" data-act="resetok">Tout effacer</button><button class="btn w" style="margin-top:8px" data-act="cs">Annuler</button>`);break;
-   case 'resetok':try{localStorage.removeItem(LS)}catch(e){}db={accounts:{},cur:null,don:{},ev:[],ven:{},off:[],conf:{},notifs:{},feed:[],seq:1,ledger:{},wd:{},donors:{},likes:{}};try{indexedDB.deleteDatabase('paddock-media')}catch(e){}idb=null;closeSheet();applyTheme();location.hash='bienvenue';draw();toast('Démo réinitialisée.');break;
+   case 'resetq':openSheet(`${sheetH('Réinitialiser l’application?','Tous les comptes, événements, offres, dons et notifications créés sur ce téléphone seront effacés.')}<button class="btn pri w" data-act="resetok">Tout effacer</button><button class="btn w" style="margin-top:8px" data-act="cs">Annuler</button>`);break;
+   case 'resetok':try{localStorage.removeItem(LS)}catch(e){}db={accounts:{},cur:null,don:{},ev:[],ven:{},off:[],conf:{},notifs:{},feed:[],seq:1,ledger:{},wd:{},donors:{},likes:{}};try{indexedDB.deleteDatabase('paddock-media')}catch(e){}idb=null;closeSheet();applyTheme();go('bienvenue');draw();toast('Application réinitialisée.');break;
    case 'delaccq':openSheet(`${sheetH('Supprimer mon compte?','Votre profil, vos événements et vos offres seront effacés de cet appareil.')}<button class="btn pri w" data-act="delaccok">Supprimer définitivement</button><button class="btn w" style="margin-top:8px" data-act="cs">Annuler</button>`);break;
-   case 'delaccok':{const pid=pidOf(a);db.ev=db.ev.filter(e=>e.org!==a.id);db.off=db.off.filter(o=>o.c!=='uc'+a.id);for(const k in db.conf)db.conf[k]=db.conf[k].filter(x=>x!==pid);db.feed=db.feed.filter(f=>f.p!==pid);for(const x of Object.values(db.accounts)){delete x.follow[pid];delete x.sub[pid]}delete db.notifs[a.id];delete db.ledger[a.id];delete db.wd[a.id];delete db.accounts[a.id];db.cur=null;persist();closeSheet();applyTheme();location.hash='bienvenue';toast('Compte supprimé.');break}
+   case 'delaccok':{const pid=pidOf(a);db.ev=db.ev.filter(e=>e.org!==a.id);db.off=db.off.filter(o=>o.c!=='uc'+a.id);for(const k in db.conf)db.conf[k]=db.conf[k].filter(x=>x!==pid);db.feed=db.feed.filter(f=>f.p!==pid);for(const x of Object.values(db.accounts)){delete x.follow[pid];delete x.sub[pid]}delete db.notifs[a.id];delete db.ledger[a.id];delete db.wd[a.id];delete db.accounts[a.id];db.cur=null;persist();closeSheet();applyTheme();go('bienvenue');toast('Compte supprimé.');break}
   }
 });
 document.addEventListener('change',ev=>{const t=ev.target,a=me();
   if(t.dataset.set&&a){const [g,k]=t.dataset.set.split('.');a.set[g][k]=t.checked?1:0;persist();if(g==='priv'&&k==='pub')toast(t.checked?'Profil public.':'Profil masqué de Découvrir.');return}
   if(t.dataset.photo==='post'){const f=t.files&&t.files[0],txt=val('po')||'';if(!f)return;
-    if(/^video\//.test(f.type)){if(f.size>60e6)return toast('Vidéo trop lourde pour la démo (60 Mo maximum).');UI.pm={blob:f,t:'v',url:URL.createObjectURL(f)};postSheet(txt);return}
+    if(/^video\//.test(f.type)){if(f.size>60e6)return toast('Vidéo trop lourde (60 Mo maximum).');UI.pm={blob:f,t:'v',url:URL.createObjectURL(f)};postSheet(txt);return}
     if(!/^image\//.test(f.type))return toast('Choisissez une photo ou une vidéo.');
     const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const k=Math.min(1,1280/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);c.toBlob(b=>{if(!b)return toast('Image illisible.');UI.pm={blob:b,t:'i',url:URL.createObjectURL(b)};postSheet(txt)},'image/jpeg',.85)};img.onerror=()=>toast('Image illisible.');img.src=r.result};r.readAsDataURL(f);return}
   if(t.dataset.photo){const f=t.files&&t.files[0],w=t.dataset.photo;readPhoto(f,w==='proof'?720:360,url=>{if(w==='su'){UI.su.d.photo=url;draw()}else if(w==='prof'){UI.ph=url;profSheet()}else if(w==='proof'){const d=val('pr_d'),m=val('pr_m');pf.photo=url;proofSheet();$('#pr_d').value=d||'';$('#pr_m').value=m||''}});return}
@@ -1145,7 +1151,8 @@ document.addEventListener('input',ev=>{const t=ev.target;
   if(t.id==='ca'){const v=Math.round(+t.value||0);if(v>=2){don.a=v;don.fees=$('#fees').checked;$('#sm').innerHTML=sumDon(v,don.fees);document.querySelector('[data-act=dok]').textContent='Payer '+money(don.fees?v/.95:v);document.querySelectorAll('[data-amt]').forEach(b=>b.classList.remove('on'))}}
 });
 document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){closeSheet();closeDay()}if(ev.key==='Enter'&&ev.target.classList&&ev.target.classList.contains('cmi')){ev.preventDefault();const b=ev.target.parentNode.querySelector('[data-act=cmt]');if(b)b.click()}});
-addEventListener('hashchange',render);
+addEventListener('popstate',()=>{if(location.hash!==UI.lastH)render()});addEventListener('hashchange',()=>{if(location.hash!==UI.lastH)render()});
+window.addEventListener('error',e=>{try{toast('Erreur : '+(e.message||'inconnue'))}catch(x){}});
 if('serviceWorker' in navigator&&location.protocol==='https:'){try{navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}}
 applyTheme();render();
 
