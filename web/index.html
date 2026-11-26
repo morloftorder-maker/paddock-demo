@@ -151,7 +151,8 @@ body.out nav.bot,body.out .top .ib{display:none}
 .nt{display:flex;gap:10px;align-items:flex-start;padding:12px 4px;border-bottom:1px solid var(--line);text-decoration:none}
 .nt.un{background:var(--clb);background:color-mix(in srgb,var(--yel) 12%,transparent)}
 .nt .d{width:10px;height:10px;border-radius:50%;background:var(--red);margin-top:7px;flex:none}.nt .d.o{background:transparent}
-.post{overflow:hidden}.pm{display:block;width:calc(100% + 30px);max-width:none;margin:-15px -15px 10px;max-height:520px;object-fit:cover;background:#000}video.pm{object-fit:contain}.pm.fm{width:100%;margin:8px 0 0;border-radius:10px}
+.post{overflow:hidden}.ph{margin:-4px 0 10px;gap:8px}.av.sm3{width:40px;height:40px}.kb{font-size:22px;line-height:1;min-width:40px;padding:0}.pa{gap:8px;margin-top:2px}.ptx{margin:8px 0 2px;font-size:17px}.cfm{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.cmi{min-height:40px!important}
+.pm{display:block;width:calc(100% + 30px);max-width:none;margin:0 -15px 10px;max-height:520px;object-fit:cover;background:#000}video.pm{object-fit:contain}.pm.fm{width:100%;margin:8px 0 0;border-radius:10px}
 .top3{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}.rk{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 15px var(--cf);background:var(--line);flex:none}.rk1{background:var(--yel);color:#111}.rk2{background:#cfd3d8;color:#111}.rk3{background:#d9925b;color:#111}
 .stats.rev b{font-size:21px}
 .pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;margin:6px 0}.pgrid button{aspect-ratio:1;padding:0;border:0;background:#000;position:relative;overflow:hidden;cursor:pointer;border-radius:4px}.pgrid img,.pgrid video{width:100%;height:100%;object-fit:cover;display:block}.pgrid .vi{position:absolute;top:6px;right:8px;color:#fff;font-size:18px;text-shadow:0 1px 3px #000}.pgrid .lk{position:absolute;left:6px;bottom:4px;color:#fff;font:600 13px Barlow,sans-serif;text-shadow:0 1px 3px #000}
@@ -305,7 +306,7 @@ f13:[['2026-11-22','Tall Pines terminé : la Subaru a tenu jusqu’au bout.',12]
 const SEEDDON={f1:[['Pneus Sirois',600],['Marc-André Tremblay',250],['Anonyme',180]],f2:[['Quincaillerie Morin',300],['Grand-papa Gagnon',200],['Anonyme',95]],f3:[['Garage Fortin',400],['Steve Dion',150],['Anonyme',100]],f4:[['Pneus Sirois',500],['Julie Roy',220],['Anonyme',150]],f5:[['Anonyme',120],['Marie Bouchard',100],['Éric Lessard',50]],f6:[['Garage Fortin',350],['Anonyme',120],['Kevin Lalonde',80]],f7:[['Anonyme',300],['Patrick Pelletier',200],['Club Karting Québec',150]],f8:[['Pneus Sirois',250],['Anonyme',90],['Annie Côté',60]],f9:[['Quincaillerie Morin',400],['Anonyme',120],['Luc Tremblay',75]],f10:[['Anonyme',100],['Sophie Gagné',75],['Alex Morin',50]],f11:[['Anonyme',200],['Sylvie Fortin',150],['Jean Boucher',100]],f12:[['Garage Fortin',300],['Anonyme',100],['Nadia Roy',50]],f13:[['Anonyme',150],['Félix Bouchard',100],['Garage Rimouski',75]]};
 const SEEDCMT={'f1:s0':[['Pneus Sirois','Fiers de t’appuyer, bonne saison!','2026-11-23'],['Émile Bergeron','On se voit vendredi à Lévis!','2026-11-24']],'f1:s1':[['Mathis Gagné','Belle bataille en finale!','2026-11-15']],'f2:s0':[['Julie Gagnon','Tellement fière de toi!','2026-11-15'],['Sarah Pelletier','Bravo Léa!','2026-11-16']],'f6:s1':[['Maxime Lavoie','Bien mérité, bravo!','2026-11-15']],'f7:s0':[['William Fortin','Belle course Sarah!','2026-11-15']],'f4:s1':[['Nicolas Bouchard','La revanche s’en vient!','2026-11-08']]};
 
-const APPV=7;
+const APPV=8;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Math.round(n).toLocaleString('fr-CA')+' $';
@@ -337,7 +338,7 @@ const LS='paddock-db-v3';
 let db=null;
 try{db=JSON.parse(localStorage.getItem(LS)||'null')}catch(e){}
 if(!db||typeof db!=='object'||!db.accounts)db={accounts:{},cur:null,don:{},ev:[],ven:{},off:[],conf:{},notifs:{},feed:[],seq:1};
-for(const k of ['ledger','wd','donors','likes','cmts'])db[k]=db[k]||{};
+for(const k of ['ledger','wd','donors','likes','cmts','mute'])db[k]=db[k]||{};
 for(const a of Object.values(db.accounts))if(a.pilote){if(!a.pilote.posts){a.pilote.posts=a.pilote.post?[{id:'p0',txt:a.pilote.post,dt:a.created||'2026-11-25'}]:[]}if(!db.ledger[a.id]){const t=(a.pilote.obj||[]).reduce((x,o)=>x+(+o[2]||0),0);db.ledger[a.id]=t?[{k:'don',l:'Dons reçus avant la version 6',g:t,n:t*.95,dt:a.created||'2026-11-25'}]:[]}}
 const persist=()=>{try{localStorage.setItem(LS,JSON.stringify(db));return true}catch(e){toast('Mémoire du téléphone pleine pour la démo : retirez une photo.');return false}};
 const nid=()=>(db.seq++).toString(36);
@@ -357,17 +358,27 @@ const mediaPut=(id,b)=>idbOpen().then(d=>new Promise((res,rej)=>{const t=d.trans
 const mediaGet=id=>idbOpen().then(d=>new Promise(res=>{const r=d.transaction('m').objectStore('m').get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>res(null)}));
 const mediaDel=id=>idbOpen().then(d=>{d.transaction('m','readwrite').objectStore('m').delete(id)}).catch(()=>{});
 function hydrateMedia(){document.querySelectorAll('[data-mid]').forEach(el=>{const id=el.dataset.mid;if(murl[id]){el.src=murl[id];return}mediaGet(id).then(b=>{if(b){murl[id]=URL.createObjectURL(b);el.src=murl[id]}}).catch(()=>{})})}
-const cmtsOf=k=>(SEEDCMT[k]||[]).map(c=>({n:esc(c[0]),txt:esc(c[1]),dt:c[2]})).concat((db.cmts[k]||[]).map((c,i)=>({n:db.accounts[c.a]?esc(db.accounts[c.a].nom):'Ancien membre',txt:esc(c.txt),dt:c.dt,a:c.a,i})));
+const cmtsOf=k=>(SEEDCMT[k]||[]).map((c,j)=>({n:esc(c[0]),txt:esc(c[1]),dt:c[2],ts:0,seed:j})).concat((db.cmts[k]||[]).map((c,i)=>({n:db.accounts[c.a]?esc(db.accounts[c.a].nom):'Ancien membre',txt:esc(c.txt),dt:c.dt,ts:+c.ts||0,a:c.a,i})));
 const likeN=(k,seed)=>(seed||0)+Object.keys(db.likes[k]||{}).length;
 const findPost=k=>{const [pid,poid]=k.split(':');const p=P[pid];return p&&p.posts?p.posts.find(x=>x.id===poid):null};
-const cmtRow=(c,k)=>`<div class="cm"><div class="avi s">${esc(ini(unesc(c.n)))}</div><div style="flex:1"><b>${c.n}</b> ${c.txt}<div class="sm mut">${ago(c.dt)}</div></div>${c.a&&c.a===db.cur?`<button class="btn sm2" data-act="delcmt" data-k="${k}" data-i="${c.i}" aria-label="Supprimer le commentaire">×</button>`:''}</div>`;
-const actBar=(k,po)=>{const L=db.likes[k]||{},n=cmtsOf(k).length;return `<div class="row sm mut" style="margin-top:8px"><span>${ago(po.dt)}</span><button class="btn sm2 sp${L[db.cur]?' on':''}" data-act="like" data-k="${k}" aria-label="J’aime">♥ ${likeN(k,po.seed)}</button><button class="btn sm2" data-act="openpost" data-k="${k}">Commenter${n?' ('+n+')':''}</button></div>`};
-const postCard=(k,po,mine)=>{const cs=cmtsOf(k);return `<div class="card post">${mediaEl(po.m)}${po.txt?`<p>${po.txt}</p>`:''}${actBar(k,po)}${cs.length?`<div class="cms">${cs.slice(-2).map(c=>cmtRow(c,k)).join('')}${cs.length>2?`<button class="lnk" data-act="openpost" data-k="${k}">Voir les ${cs.length} commentaires</button>`:''}</div>`:''}${mine?`<div style="text-align:right;margin-top:6px"><button class="btn sm2 dan" data-act="delpost" data-i="${po.id}">Supprimer</button></div>`:''}</div>`};
-function postViewer(k){const po=findPost(k);if(!po)return;const pid=k.split(':')[0],p=P[pid],cs=cmtsOf(k);
-  openSheet(`<div class="row" style="margin-bottom:10px">${p.photo?`<img class="av" src="${p.photo}" alt="">`:plate(pid,1)}<div><b>${p.nom}</b><div class="sm mut">${ago(po.dt)}</div></div><button class="btn sm2 sp" data-act="cs" aria-label="Fermer">×</button></div>
-  ${po.m?mediaEl(po.m).replace('class="pm"','class="pm fm"'):''}${po.txt?`<p>${po.txt}</p>`:''}${actBar(k,po)}
-  <h3 style="margin:14px 0 6px">Commentaires (${cs.length})</h3><div class="cms" style="border:0;padding:0">${cs.map(c=>cmtRow(c,k)).join('')||'<p class="sm mut">Soyez le premier à commenter.</p>'}</div>
-  <div class="row" style="flex-wrap:nowrap;margin-top:10px"><input type="text" id="cm" maxlength="300" placeholder="Écrire un commentaire…"><button class="btn pri" data-act="cmt" data-k="${k}">Envoyer</button></div>`);UI.pv=k}
+const muted=(acc,k)=>!!(db.mute[acc]&&db.mute[acc][k]);
+const fdt=x=>x.ts?new Date(x.ts).toLocaleString('fr-CA',{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):dl(x.dt,{weekday:'short',day:'numeric',month:'short'});
+const ICF='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h12M4 11h9M4 16h6M18 10v9M15 16l3 3 3-3"/></svg>';
+const cmtRow=(c,k)=>`<div class="cm"><div class="avi s">${esc(ini(unesc(c.n)))}</div><div style="flex:1"><b>${c.n}</b> ${c.txt}<div class="sm mut">${fdt(c)}</div></div>${c.a&&c.a===db.cur?`<button class="btn sm2" data-act="delcmt" data-k="${k}" data-i="${c.i}" aria-label="Supprimer le commentaire">×</button>`:''}</div>`;
+const CMODES=[['pert','Plus pertinents'],['rec','Plus récents'],['tous','Tous les commentaires']];
+function sortCmts(k,cs,mode){const ow=P[k.split(':')[0]],me_=me(),score=c=>(ow&&ow.user&&c.a===ow.user?3:0)+(c.a&&me_&&me_.follow['u'+c.a]?2:0)+(c.a===db.cur?1:0)+Math.min(2,(c.txt||'').length/60);
+  const t=c=>c.ts||+pd(c.dt);if(mode==='rec')return cs.slice().sort((x,y)=>t(y)-t(x)).slice(0,3);if(mode==='tous')return cs.slice().sort((x,y)=>t(x)-t(y));return cs.slice().sort((x,y)=>score(y)-score(x)||t(y)-t(x)).slice(0,3)}
+function postCard(k,po,mine,full){const pid=k.split(':')[0],p=P[pid],L=db.likes[k]||{},cs=cmtsOf(k),mode=full?'tous':(UI.cf&&UI.cf[k])||'pert',shown=sortCmts(k,cs,mode);
+  return `<div class="card post" data-k="${k}"><div class="row ph" style="flex-wrap:nowrap"><a class="row" href="#p-${pid}" style="text-decoration:none;flex:1;flex-wrap:nowrap">${p.photo?`<img class="av sm3" src="${p.photo}" alt="">`:plate(pid,1)}<b>${p.nom}</b></a><button class="btn sm2 kb" data-act="pmenu" data-k="${k}" aria-label="Options de la publication">⋮</button></div>
+  ${mediaEl(po.m)}
+  <div class="row pa" style="flex-wrap:nowrap"><button class="btn sm2${L[db.cur]?' on':''}" data-act="like" data-k="${k}" aria-label="J’aime">♥ ${likeN(k,po.seed)}</button><span class="sm mut">${cs.length} commentaire${cs.length>1?'s':''}</span><span class="sp sm mut" style="text-align:right">${fdt(po)}${po.ed?' · modifié':''}</span></div>
+  ${po.txt?`<p class="ptx">${po.txt}</p>`:''}
+  <div class="cms">${cs.length?`<div class="row" style="flex-wrap:nowrap"><span class="sm" style="font-weight:700;flex:1">${CMODES.find(m=>m[0]===mode)[1]}</span><button class="btn sm2" data-act="cfilt" data-k="${k}" aria-label="Trier les commentaires">${ICF}</button></div>
+   ${UI.cfo===k?`<div class="cfm">${CMODES.map(([m,l])=>`<button class="chip${mode===m?' on':''}" data-act="cmode" data-k="${k}" data-m="${m}">${l}</button>`).join('')}</div>`:''}
+   ${shown.map(c=>cmtRow(c,k)).join('')}${!full&&mode!=='tous'&&cs.length>shown.length?`<button class="lnk" data-act="cmode" data-k="${k}" data-m="tous">Voir les ${cs.length} commentaires</button>`:''}`:''}
+   <div class="row" style="flex-wrap:nowrap;margin-top:8px"><input type="text" class="cmi" maxlength="300" placeholder="Écrire un commentaire…" aria-label="Écrire un commentaire"><button class="btn pri sm2" data-act="cmt" data-k="${k}">Envoyer</button></div></div></div>`}
+function postViewer(k){const po=findPost(k);if(!po)return;const pid=k.split(':')[0];
+  openSheet(`<div class="row" style="margin-bottom:6px"><b style="flex:1">Publication</b><button class="btn sm2" data-act="cs" aria-label="Fermer">×</button></div>${postCard(k,po,P[pid].user===db.cur,1)}`);UI.pv=k}
 const mediaEl=m=>m?(m.t==='v'?`<video class="pm" controls playsinline preload="metadata" data-mid="${m.id}"></video>`:`<img class="pm" data-mid="${m.id}" alt="">`):'';
 
 /* ---------- Hydratation: données de base + contenus créés ---------- */
@@ -380,7 +391,7 @@ function hydrate(){
     if(a.roles.pilote&&a.pilote){const pl=a.pilote;
       P[pidOf(a)]={nom:esc(a.nom),ville:esc(a.ville),d:D[pl.d]?pl.d:'ra',v:1,user:a.id,photo:okImg(a.photo),minor:pl.parent?esc(pl.parent):'',
         ser:[[D[pl.d]?D[pl.d][0]:'Rallye',esc(pl.serie||'—'),esc(pl.classe||'—'),pl.num===''||pl.num==null?null:esc(pl.num)]],eqt:esc(pl.eq||''),com:[],ab:0,suiv:0,bio:esc(pl.bio||''),
-        posts:(pl.posts||[]).map(x=>({id:x.id,txt:esc(x.txt||''),dt:x.dt,m:x.m&&/^m[0-9a-z]+$/.test(x.m.id)?{id:x.m.id,t:x.m.t==='v'?'v':'i'}:null,seed:0})).reverse(),
+        posts:(pl.posts||[]).map(x=>({id:x.id,txt:esc(x.txt||''),dt:x.dt,ts:+x.ts||0,ed:!!x.ed,m:x.m&&/^m[0-9a-z]+$/.test(x.m.id)?{id:x.m.id,t:x.m.t==='v'?'v':'i'}:null,seed:0})).reverse(),
         obj:(pl.obj||[]).map(o=>[esc(o[0]),+o[1],+o[2],(o[3]||[]).map(r=>[esc(r[0]),esc(r[1]),esc(r[2]),okImg(r[3])])]),res:[],post:esc(pl.post||''),pub:a.set.priv.pub}}
     if(a.roles.com&&a.com)C['uc'+a.id]={nom:esc(a.com.nom),ville:esc(a.ville),sect:esc(a.com.sect),desc:esc(a.com.desc||''),user:a.id};
   }
@@ -552,12 +563,13 @@ function feed(){
    {d:'ra',dt:'2026-11-24',real:1,h:`La finale du championnat canadien des rallyes se court au <a href="#e-e21">Big White Winter Rally</a>, à Kelowna, les 4 et 5 décembre.`},
    {d:'dr',dt:'2026-09-06',real:1,p:'r14',h:`<b>Marc Landreville</b> est sacré champion DMCC Pro 2026 et William Guertin, champion Pro-Am. <a href="#s-dmcc">Voir la série</a>`},
    {d:'ra',dt:'2026-06-07',real:1,p:'r11',h:`<b>Martynas Samsonas</b> et son fils Kajus remportent le <a href="#e-e4">Rocky Mountain Rally</a>, leur première victoire en championnat canadien.`},
-   {d:'any',dt:'2026-11-19',h:`<b>Pneus Sirois</b> offre une <a href="#marche">commandite pneus 2027</a> à 2 pilotes.`}].concat(db.feed.filter(i=>!i.p||P[i.p]));
-  const sc=i=>(a.visits[i.d]||0)*2+(i.p&&a.follow[i.p]?5:0)+(i.user?3:0)-((TODAY-pd(i.dt))/864e5)/7;
+   {d:'any',dt:'2026-11-19',h:`<b>Pneus Sirois</b> offre une <a href="#marche">commandite pneus 2027</a> à 2 pilotes.`}].concat(db.feed.filter(i=>(!i.p||P[i.p])&&!i.m&&!/a publié( une photo| une vidéo)?( : «|\.)/.test(i.h)));
+  for(const [pid,p] of Object.entries(P))if(p.pub!==0)for(const po of p.posts||[])it.push({d:p.d,dt:po.dt,ts:po.ts,post:pid+':'+po.id,p:pid,user:p.user?1:0,real:p.real});
+  const sc=i=>(a.visits[i.d]||0)*2+(i.p&&a.follow[i.p]?5:0)+(i.user?3:0)+(i.post?1:0)-((TODAY-pd(i.dt))/864e5)/7+(i.ts?i.ts/1e13:0);
   it.sort((x,y)=>sc(y)-sc(x));
   const soon=E.filter(e=>!past(e)).slice(0,3);
   return `<h1>Votre fil</h1><p class="sm mut" style="margin:0">${top.length?`Trié selon vos visites (${top.join(', ')}) et les pilotes que vous suivez.`:'Visitez des pilotes et des événements : votre fil s’adapte à vos habitudes.'}</p>
-  ${it.map(i=>{const ec=i.d==='any'||!D[i.d]?'var(--yel)':D[i.d][1],lab=i.d==='any'||!D[i.d]?'Paddock':D[i.d][0];return `<div class="card fc" style="--ec:${ec}">${i.p&&P[i.p]?`<a class="row" href="#p-${i.p}" style="text-decoration:none;margin-bottom:8px">${P[i.p].photo?`<img class="av" src="${P[i.p].photo}" alt="">`:plate(i.p,1)}<span class="sm mut">${lab} · ${ago(i.dt)}</span><span class="sp">${tagOf(i)}</span></a>`:`<div class="row sm mut" style="margin-bottom:6px"><span>${lab} · ${ago(i.dt)}</span><span class="sp">${tagOf(i)}</span></div>`}<p>${i.h}</p>${i.m&&/^m[0-9a-z]+$/.test(i.m.id)?mediaEl(i.m).replace('class="pm"','class="pm fm"'):''}</div>`}).join('')}
+  ${it.map(i=>{if(i.post){const po=findPost(i.post);return po?postCard(i.post,po,P[i.p].user===a.id):''}const ec=i.d==='any'||!D[i.d]?'var(--yel)':D[i.d][1],lab=i.d==='any'||!D[i.d]?'Paddock':D[i.d][0];return `<div class="card fc" style="--ec:${ec}">${i.p&&P[i.p]?`<a class="row" href="#p-${i.p}" style="text-decoration:none;margin-bottom:8px">${P[i.p].photo?`<img class="av" src="${P[i.p].photo}" alt="">`:plate(i.p,1)}<span class="sm mut">${lab} · ${ago(i.dt)}</span><span class="sp">${tagOf(i)}</span></a>`:`<div class="row sm mut" style="margin-bottom:6px"><span>${lab} · ${ago(i.dt)}</span><span class="sp">${tagOf(i)}</span></div>`}<p>${i.h}</p>${i.m&&/^m[0-9a-z]+$/.test(i.m.id)?mediaEl(i.m).replace('class="pm"','class="pm fm"'):''}</div>`}).join('')}
   <h2>Prochains événements</h2>${soon.map(e=>erow(e)).join('')||'<p class="mut">Aucun.</p>'}`;
 }
 
@@ -994,15 +1006,27 @@ document.addEventListener('click',ev=>{
       for(const x of Object.values(db.accounts))if(x.follow[pidOf(a)]&&x.set.notif.obj&&x.id!==a.id)notify(x.id,`${esc(a.nom)} a publié une preuve de dépense.`,'#p-'+pidOf(a));if(!persist()){o[3][o[3].length-1][3]='';persist()}closeSheet();toast('Preuve publiée.');rerender();break}
    case 'newpost':UI.pm=null;postSheet('');break;
    case 'nomedia':UI.pm=null;postSheet(val('po')||'');break;
-   case 'postok':{a.pilote.posts=a.pilote.posts||[];const txt=val('po')||'';if(!txt&&!UI.pm)return serr('Ajoutez un texte, une photo ou une vidéo.');const po={id:'p'+nid(),txt,dt:key(TODAY)},pm=UI.pm,pid=pidOf(a);
-     const fin=()=>{a.pilote.posts.push(po);post(a.pilote.d,`<b>${esc(a.nom)}</b> ${po.m?(po.m.t==='v'?'a publié une vidéo':'a publié une photo'):'a publié'}${txt?' : « '+esc(txt)+' »':'.'}`,pid,po.m||null);
+   case 'postok':{a.pilote.posts=a.pilote.posts||[];const txt=val('po')||'';if(!txt&&!UI.pm)return serr('Ajoutez un texte, une photo ou une vidéo.');const po={id:'p'+nid(),txt,dt:key(TODAY),ts:Date.now()},pm=UI.pm,pid=pidOf(a);
+     const fin=()=>{a.pilote.posts.push(po);
        for(const x of Object.values(db.accounts))if(x.follow[pid]&&x.id!==a.id)notify(x.id,`${esc(a.nom)} a publié ${po.m?(po.m.t==='v'?'une vidéo':'une photo'):'une nouvelle'}.`,'#p-'+pid);
        if(!persist()){a.pilote.posts.pop();return serr('Mémoire pleine.')}UI.pm=null;closeSheet();toast('Publié sur votre profil et dans le fil.');rerender()};
      if(pm){const mid='m'+nid();const btn=t;btn.disabled=true;btn.textContent='Enregistrement…';mediaPut(mid,pm.blob).then(()=>{murl[mid]=pm.url;po.m={id:mid,t:pm.t};fin()}).catch(()=>{btn.disabled=false;btn.textContent='Publier';serr('Impossible d’enregistrer ce média sur le téléphone. Essayez un fichier plus léger.')})}else fin();break}
-   case 'delpost':{const l=a.pilote.posts,ix=l.findIndex(x=>x.id===t.dataset.i);if(ix<0)break;const po=l[ix];l.splice(ix,1);if(po.m){mediaDel(po.m.id);db.feed=db.feed.filter(f=>!(f.m&&f.m.id===po.m.id))}persist();toast('Publication supprimée.');rerender();break}
-   case 'like':{const k=t.dataset.k,L=(db.likes[k]=db.likes[k]||{});if(L[a.id])delete L[a.id];else{L[a.id]=1;const ow=P[k.split(':')[0]];if(ow&&ow.user&&ow.user!==a.id)notify(ow.user,`${esc(a.nom)} aime votre publication.`,'#p-'+k.split(':')[0])}persist();const pv=UI.pv;rerender();if(pv)postViewer(pv);break}
+   case 'delpost':{const l=a.pilote.posts,ix=l.findIndex(x=>x.id===t.dataset.i);if(ix<0)break;const po=l[ix];l.splice(ix,1);delete db.likes[pidOf(a)+':'+po.id];delete db.cmts[pidOf(a)+':'+po.id];closeSheet();if(po.m){mediaDel(po.m.id);db.feed=db.feed.filter(f=>!(f.m&&f.m.id===po.m.id))}persist();toast('Publication supprimée.');rerender();break}
+   case 'like':{const k=t.dataset.k,L=(db.likes[k]=db.likes[k]||{});if(L[a.id])delete L[a.id];else{L[a.id]=1;const ow=P[k.split(':')[0]];if(ow&&ow.user&&ow.user!==a.id&&!muted(ow.user,k))notify(ow.user,`${esc(a.nom)} aime votre publication.`,'#p-'+k.split(':')[0])}persist();const pv=UI.pv;rerender();if(pv)postViewer(pv);break}
    case 'openpost':hydrate();postViewer(t.dataset.k);break;
-   case 'cmt':{const k=t.dataset.k,v=val('cm');if(!v)break;(db.cmts[k]=db.cmts[k]||[]).push({a:a.id,txt:v,dt:key(TODAY)});const [pid]=k.split(':'),ow=P[pid];if(ow&&ow.user&&ow.user!==a.id)notify(ow.user,`${esc(a.nom)} a commenté votre publication : « ${esc(v.slice(0,80))} »`,'#p-'+pid);for(const ca of new Set(db.cmts[k].map(c=>c.a)))if(ca!==a.id&&ca!==(ow&&ow.user))notify(ca,`${esc(a.nom)} a aussi commenté une publication de ${ow?ow.nom:''}.`,'#p-'+pid);persist();rerender();postViewer(k);setTimeout(()=>{const s=document.querySelector('.sheet');if(s)s.scrollTop=s.scrollHeight},30);break}
+   case 'cmt':{const k=t.dataset.k,inp=t.closest('.post')&&t.closest('.post').querySelector('.cmi'),v=inp?inp.value.trim():'';if(!v){if(inp)inp.focus();break}(db.cmts[k]=db.cmts[k]||[]).push({a:a.id,txt:v,dt:key(TODAY),ts:Date.now()});const [pid]=k.split(':'),ow=P[pid];
+     if(ow&&ow.user&&ow.user!==a.id&&!muted(ow.user,k))notify(ow.user,`${esc(a.nom)} a commenté votre publication : « ${esc(v.slice(0,80))} »`,'#p-'+pid);
+     for(const ca of new Set(db.cmts[k].map(c=>c.a)))if(ca!==a.id&&ca!==(ow&&ow.user)&&!muted(ca,k))notify(ca,`${esc(a.nom)} a aussi commenté une publication de ${ow?ow.nom:''}.`,'#p-'+pid);
+     UI.cf=UI.cf||{};if(UI.cf[k]!=='tous')UI.cf[k]='rec';persist();const pv=UI.pv;rerender();if(pv)postViewer(pv);break}
+   case 'cfilt':UI.cfo=UI.cfo===t.dataset.k?null:t.dataset.k;{const pv=UI.pv;rerender();if(pv)postViewer(pv)}break;
+   case 'cmode':UI.cf=UI.cf||{};UI.cf[t.dataset.k]=t.dataset.m;UI.cfo=null;rerender();break;
+   case 'pmenu':{const k=t.dataset.k,[pid,poid]=k.split(':'),mine=P[pid]&&P[pid].user===a.id,mu=muted(a.id,k);
+     openSheet(`${sheetH('Publication')}<div class="grp">${mine?li('f','Modifier la publication',`data-act="pedit" data-k="${k}"`)+li('x','Supprimer la publication',`data-act="pdelq" data-k="${k}"`,'','dan'):''}${li('b',mu?'Réactiver les notifications':'Mettre les notifications en sourdine',`data-act="pmute" data-k="${k}"`,mu?'En sourdine':'')}${!mine?li('i','Signaler la publication',`data-act="preport"`):''}</div><button class="btn w" data-act="cs">Annuler</button>`);break}
+   case 'pedit':{const k=t.dataset.k,po=(a.pilote.posts||[]).find(x=>x.id===k.split(':')[1]);if(!po)break;openSheet(`${sheetH('Modifier la publication')}<textarea id="pe" maxlength="500">${esc(po.txt||'')}</textarea><button class="btn pri w" style="margin-top:10px" data-act="peditok" data-k="${k}">Enregistrer</button>`);break}
+   case 'peditok':{const k=t.dataset.k,po=(a.pilote.posts||[]).find(x=>x.id===k.split(':')[1]);if(!po)break;po.txt=val('pe');po.ed=1;persist();closeSheet();toast('Publication modifiée.');rerender();break}
+   case 'pdelq':openSheet(`${sheetH('Supprimer cette publication?','Les j’aime et les commentaires seront aussi supprimés.')}<button class="btn pri w" data-act="delpost" data-i="${t.dataset.k.split(':')[1]}">Supprimer</button><button class="btn w" style="margin-top:8px" data-act="cs">Annuler</button>`);break;
+   case 'pmute':{const k=t.dataset.k,m=(db.mute[a.id]=db.mute[a.id]||{});if(m[k]){delete m[k];toast('Notifications réactivées pour cette publication.')}else{m[k]=1;toast('Notifications en sourdine pour cette publication.')}persist();closeSheet();break}
+   case 'preport':closeSheet();toast('Merci. La publication sera vérifiée par l’équipe Paddock (démo).');break;
    case 'delcmt':{const k=t.dataset.k,i=+t.dataset.i,l=db.cmts[k]||[];if(l[i]&&l[i].a===a.id)l.splice(i,1);persist();rerender();postViewer(k);break}
    case 'wd':{const g=earn(a.id);openSheet(`${sheetH('Retirer mes revenus','Disponible : '+money(g.dispo))}${errBox}<div class="fl"><label class="f">Montant ($)<input type="number" id="wda" min="1" step="0.01" value="${(Math.floor(g.dispo*100)/100).toFixed(2)}"></label><label class="f">Vers<select id="wdt"><option>Compte bancaire •••• 4821 (démo)</option><option>Virement Interac (démo)</option></select></label><button class="btn pri w" data-act="wdok">Confirmer le retrait</button><p class="sm mut" style="text-align:center">Délai habituel : 2 à 3 jours ouvrables. Aucun argent réel dans la démo.</p></div>`);break}
    case 'wdok':{const g=earn(a.id),v=Math.round(+val('wda')*100)/100;if(!(v>0)||v>g.dispo+0.001)return serr('Montant invalide (maximum '+money(g.dispo)+').');(db.wd[a.id]=db.wd[a.id]||[]).push({a:v,dt:key(TODAY),to:val('wdt').replace(' (démo)','')});persist();closeSheet();toast('Retrait de '+money(v)+' en route (démo).');rerender();break}
@@ -1055,7 +1079,7 @@ document.addEventListener('input',ev=>{const t=ev.target;
   if(t.id==='q'){UI.q=t.value;const pos=t.selectionStart;rerender();const n=$('#q');n.focus();n.setSelectionRange(pos,pos)}
   if(t.id==='ca'){const v=Math.round(+t.value||0);if(v>=2){don.a=v;don.fees=$('#fees').checked;$('#sm').innerHTML=sumDon(v,don.fees);document.querySelector('[data-act=dok]').textContent='Payer '+money(don.fees?v/.95:v);document.querySelectorAll('[data-amt]').forEach(b=>b.classList.remove('on'))}}
 });
-document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){closeSheet();closeDay()}});
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){closeSheet();closeDay()}if(ev.key==='Enter'&&ev.target.classList&&ev.target.classList.contains('cmi')){ev.preventDefault();const b=ev.target.parentNode.querySelector('[data-act=cmt]');if(b)b.click()}});
 addEventListener('hashchange',render);
 if('serviceWorker' in navigator&&location.protocol==='https:'){try{navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}}
 applyTheme();render();
