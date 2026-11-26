@@ -142,7 +142,7 @@ body.out nav.bot,body.out .top .ib{display:none}
 .fc{border-left:5px solid var(--ec)}
 .note{font-size:13px;color:var(--mut);margin-top:28px}
 .wel{min-height:calc(100vh - 120px);display:flex;flex-direction:column;justify-content:center;gap:12px}
-.wel .big{font:italic 800 clamp(64px,22vw,104px)/.9 var(--cf);margin:0}.wel .big span{color:var(--red)}
+.wel .big{font:italic 800 clamp(48px,19vw,110px)/.95 var(--cf);margin:0;white-space:nowrap;letter-spacing:-.01em}.wel .big span{color:var(--red)}
 .wel .flag{height:22px;background:repeating-conic-gradient(var(--ink) 0 25%,transparent 0 50%) 0 0/22px 22px;border-radius:4px;width:66%}
 .prog{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:6px 0 14px}.prog i{height:6px;border-radius:3px;background:var(--line)}.prog i.on{background:var(--red)}
 .rc{display:flex;gap:12px;align-items:flex-start;padding:12px;border:1.5px solid var(--line);border-radius:12px;margin:8px 0;cursor:pointer;background:var(--card)}
@@ -290,7 +290,7 @@ const BE=[
 ['e20','2027-02-12','2027-02-14','Grand Prix Ski-Doo de Valcourt (45e édition)','tyd','Gestion GPV inc.','mn','Snocross AMSOIL · ovale de glace',1,[0],0,['f3','f12'],[],'grandprixvalcourt.com',['gpv']]
 ].map(([id,date,end,t,tr,o,d,s,real,b,ins,p,res,url,sr,x])=>({id,date,end,t,tr,o,d,s,real,b,ins,p,res,url,sr:sr||[],cancel:!!(x&&x.cancel),dl:x&&x.dl||''}));
 
-const APPV=4;
+const APPV=5;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Math.round(n).toLocaleString('fr-CA')+' $';
@@ -381,7 +381,7 @@ const lia=(icn,label,href,right)=>`<a class="li" href="${href}">${ic(icn)}<span>
 /* ---------- Bienvenue, connexion, inscription ---------- */
 function welcome(){
   const accs=Object.values(db.accounts);
-  return `<div class="wel"><div class="flag"></div><p class="big">PADD<span>/</span><br>OCK</p>
+  return `<div class="wel"><div class="flag"></div><p class="big">PADD<span>/</span>OCK</p>
   <p style="font-size:19px;max-width:30ch">Le réseau social du sport motorisé : suivez vos pilotes, trouvez les événements et financez leur saison.</p>
   <button class="btn pri w" data-go="inscription">Créer un compte</button>
   <button class="btn w" data-go="connexion">Se connecter</button>
