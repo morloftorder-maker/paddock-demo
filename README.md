@@ -18,3 +18,13 @@ Le fichier `Paddock-demo.apk` est ensuite publié dans **Releases**.
 - `.github/workflows/build-apk.yml` : compilation automatique de l'APK.
 
 Les comptes créés dans la démo sont enregistrés seulement sur le téléphone. Paiements simulés.
+
+## Mises à jour sans réinstaller
+
+L'app Android vérifie `version.json` sur la branche `main` à chaque ouverture.
+Si le numéro `web` est plus grand que celui de la version installée, elle télécharge `web/index.html`
+et propose « Redémarrer » pour l'appliquer. Les comptes de la démo sont conservés.
+
+Pour publier une mise à jour : modifier `web/index.html` (et la même copie dans `app/src/main/assets/`),
+puis augmenter le numéro dans `version.json` et `app/src/main/assets/version.json`.
+Il faut réinstaller l'APK seulement si le code Android (`app/src/main/java`) change.

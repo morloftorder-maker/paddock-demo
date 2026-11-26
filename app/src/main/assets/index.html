@@ -151,6 +151,7 @@ body.out nav.bot,body.out .top .ib{display:none}
 .nt{display:flex;gap:10px;align-items:flex-start;padding:12px 4px;border-bottom:1px solid var(--line);text-decoration:none}
 .nt.un{background:var(--clb);background:color-mix(in srgb,var(--yel) 12%,transparent)}
 .nt .d{width:10px;height:10px;border-radius:50%;background:var(--red);margin-top:7px;flex:none}.nt .d.o{background:transparent}
+.updbar{position:fixed;left:8px;right:8px;bottom:calc(66px + env(safe-area-inset-bottom));z-index:35;max-width:544px;margin:0 auto;background:var(--yel);color:#111;border-radius:12px;padding:8px 8px 8px 14px;display:flex;align-items:center;gap:10px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.3)}.updbar span{flex:1}
 @media(prefers-reduced-motion:reduce){.sheet,.drawer{animation:none}.dayz{transition:none!important}}
 </style></head><body>
 <header class="top"><div>
@@ -169,7 +170,7 @@ body.out nav.bot,body.out .top .ib{display:none}
 <div id="ov"></div>
 <script>
 {
-const D={ra:['Rallye','#0a8a43'],dr:['Drift','#e0217a'],ka:['Karting','#1f5fff'],mn:['Motoneige','#0096c7'],gl:['Course sur glace','#7b5cff']};
+const D={ra:['Rallye','#0a8a43'],dr:['Drift','#e0217a'],ka:['Karting','#1f5fff'],mn:['Motoneige','#0096c7'],gl:['Course sur glace','#7b5cff'],au:['Autre','#6f7782']};
 /* Lieux. lat/lon approximatives. cap = capacité déclarée (valeurs d'exemple). */
 const BT={
 tm:{nom:'Maniwaki',ville:'Maniwaki (Haute-Gatineau)',lat:46.38,lon:-75.97,cap:5000,host:1,desc:'Spéciales sur routes forestières enneigées et glacées de la Haute-Gatineau.'},
@@ -178,67 +179,118 @@ tsv:{nom:'Saint-Victor-de-Beauce',ville:'Saint-Victor (Beauce)',lat:46.15,lon:-7
 tlm:{nom:'La Malbaie',ville:'La Malbaie (Charlevoix)',lat:47.65,lon:-70.15,cap:8000,host:1,desc:'Spéciales sur asphalte dans La Malbaie et Clermont, puis sur gravier en forêt.'},
 tbc:{nom:'Bancroft',ville:'Bancroft (Ontario)',lat:45.06,lon:-77.86,cap:3000,host:1,desc:'Rallye d’une journée réputé pour être le plus exigeant au Canada.'},
 tin:{nom:'Invermere',ville:'Invermere (Colombie-Britannique)',lat:50.51,lon:-116.03,cap:3000,host:1,desc:'Spéciales de gravier dans la vallée de la Columbia.'},
+tme:{nom:'Merritt',ville:'Merritt (Colombie-Britannique)',lat:50.11,lon:-120.79,cap:2000,host:1,desc:'Rallye de gravier de l’intérieur de la Colombie-Britannique.'},
+tkw:{nom:'Big White (Kelowna)',ville:'Kelowna (Colombie-Britannique)',lat:49.88,lon:-119.49,cap:3000,host:1,desc:'Rallye d’hiver sur neige et glace, finale du championnat canadien.'},
+tca:{nom:'Catchacoma',ville:'Catchacoma (Ontario)',lat:44.73,lon:-78.33,cap:2000,host:1,desc:'Routes de gravier rapides des Kawarthas.'},
 tac:{nom:'Autodrome Chaudière',ville:'Vallée-Jonction',lat:46.37,lon:-70.92,cap:6000,desc:'Ovale de Beauce qui accueille deux manches du DMCC.'},
-tsf:{nom:'Autodrome St-Félicien',ville:'Saint-Félicien',lat:48.65,lon:-72.45,cap:4000,desc:'Ovale du Lac-Saint-Jean.'},
+tsf:{nom:'Autodrome St-Félicien',ville:'Saint-Félicien',lat:48.65,lon:-72.45,cap:4000,desc:'Ovale du Lac-Saint-Jean, nouveau au DMCC en 2026.'},
 tmm:{nom:'Autodrome Montmagny',ville:'Montmagny',lat:46.98,lon:-70.55,cap:5000,desc:'Tracé technique et serré, classique du drift québécois.'},
 tic:{nom:'ICAR',ville:'Mirabel',lat:45.68,lon:-74.03,cap:7000,desc:'Complexe de sports motorisés : drift park Route 66 et piste SRA Karting.'},
 tsh:{nom:'SH Karting',ville:'Mont-Saint-Hilaire',lat:45.56,lon:-73.19,cap:2000,desc:'Deux pistes de 700 m qu’on peut combiner.'},
-ttr:{nom:'Karting Trois-Rivières',ville:'Trois-Rivières',lat:46.35,lon:-72.55,cap:2000,desc:'Piste de karting de la Mauricie.'},
+ttr:{nom:'Karting Trois-Rivières',ville:'Trois-Rivières',lat:46.35,lon:-72.55,cap:2000,desc:'Piste de karting de la Mauricie, nouvel asphalte en 2026.'},
 ttag:{nom:'TAG Karting Academy',ville:'Mont-Tremblant',lat:46.19,lon:-74.62,cap:2500,desc:'Hôte des manches communes Coupe de Montréal et RMC Québec.'},
 tsc:{nom:'Saint-Célestin Performance',ville:'Saint-Célestin',lat:46.22,lon:-72.44,cap:1500,desc:'Piste du Centre-du-Québec.'},
 tyd:{nom:'Circuit Yvon-Duhamel',ville:'Valcourt (Maricourt)',lat:45.50,lon:-72.31,cap:20000,desc:'Site du Grand Prix Ski-Doo de Valcourt : snocross, ovale de glace, motos et VTT.'},
 tlg:{nom:'Anneau du Lac-Gelé',ville:'Alma',lat:48.55,lon:-71.65,cap:2000,fic:1,desc:'Piste de course sur glace aménagée sur un lac (lieu fictif).'},
 tke:{nom:'Karting des Érables',ville:'Drummondville',lat:45.88,lon:-72.48,cap:1500,fic:1,desc:'Piste de karting intérieure l’hiver (lieu fictif).'},
-tmo:{nom:'Motoparc Outaouais',ville:'Gatineau',lat:45.48,lon:-75.70,cap:4000,fic:1,desc:'Terrain d’hiver pour le drift sur neige (lieu fictif).'}};
+tmo:{nom:'Motoparc Outaouais',ville:'Gatineau',lat:45.48,lon:-75.70,cap:4000,fic:1,desc:'Terrain d’hiver pour le drift sur neige (lieu fictif).'},
+tkq:{nom:'Karting Capitale',ville:'Québec',lat:46.79,lon:-71.30,cap:1200,fic:1,desc:'Centre de karting intérieur de 600 m avec salle de réception (lieu fictif).'},
+tal:{nom:'Aréna motorisé de Lévis',ville:'Lévis',lat:46.76,lon:-71.18,cap:3000,fic:1,desc:'Aréna intérieur pour le drift et les spectacles motorisés l’hiver (lieu fictif).'},
+tsg:{nom:'Circuit des Monts',ville:'Saint-Georges',lat:46.12,lon:-70.67,cap:2500,fic:1,desc:'Circuit routier court et chemins de gravier pour rallyes-sprints (lieu fictif).'}};
+/* Séries */
+const SR={
+crc:{nom:'Championnat canadien des rallyes (CRC)',d:'ra',real:1,desc:'Le championnat national de rallye, sanctionné par CARS : huit rallyes d’un océan à l’autre sur gravier, neige et glace.'},
+ecrc:{nom:'Championnat des rallyes de l’Est canadien (ECRC)',d:'ra',real:1,desc:'Championnat régional de l’Est : manches au Québec et en Ontario, avec son propre classement.'},
+dmcc:{nom:'DMCC — Drift Mania Canadian Championship',d:'dr',real:1,desc:'Le championnat de drift du Québec : catégories Pro, Pro-Am et Contender (relève). Billets 2026 : 45 $ en prévente, 55 $ à la porte, gratuit pour les 12 ans et moins.',champ:[['r14','Champion Pro 2026 · 463 points'],['r17','Champion Pro-Am 2026 · 454 points']]},
+cdm:{nom:'Coupe de Montréal',d:'ka',real:1,desc:'Le grand championnat provincial de karting : sept fins de semaine, douze catégories, plus de 200 pilotes par manche.',note:'Les classements par catégorie ne sont pas encore intégrés à la démo.'},
+gpv:{nom:'Grand Prix Ski-Doo de Valcourt',d:'mn',real:1,desc:'Le plus grand événement de sports motorisés d’hiver au monde : snocross AMSOIL (Pro seulement), ovale de glace, motos et VTT.'},
+defi:{nom:'Défi Glace',d:'gl',fic:1,desc:'Série régionale de course sur glace au Lac-Saint-Jean (série fictive).'},
+cap:{nom:'Coupe Capitale',d:'ka',fic:1,desc:'Championnat de karting intérieur de la région de Québec, l’hiver (série fictive).'}};
 /* Pilotes réels: profils non réclamés bâtis à partir de résultats publiés. Pilotes f*: fictifs. */
 const BP={
-r1:{nom:'Jean-Sébastien Besner',ville:'Québec',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Open 4RM',59]],co:'Hubert Gaudreau',auto:'Ford Fiesta Proto',eqt:'CAS Liftier',res:[['Rallye de Charlevoix 2026','La Malbaie','1er','e18'],['Rallye Beauce-Appalaches 2026','Saint-Victor','1er','e15'],['Rallye Baie-des-Chaleurs 2026','New Richmond','1er','e8']]},
+r1:{nom:'Jean-Sébastien Besner',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Open 4RM',59]],co:'Hubert Gaudreau',auto:'Ford Fiesta Proto',eqt:'CAS Liftier',res:[['Rallye de Charlevoix 2026','La Malbaie','1er','e18'],['Rallye Beauce-Appalaches 2026','Saint-Victor','1er','e15'],['Rallye Baie-des-Chaleurs 2026','New Richmond','1er','e8']]},
 r2:{nom:'Jérôme Mailloux',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Open 4RM',252]],co:'Philippe Poirier',auto:'Subaru',eqt:'TEST Racing',res:[['Rallye Baie-des-Chaleurs 2026','New Richmond','2e','e8']]},
-r3:{nom:'Alexandre Moreau',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Open 4RM',121]],co:'Ian Guité',auto:'Subaru WRX STI',eqt:'Alex Moreau Rally',res:[['Rallye Baie-des-Chaleurs 2026','New Richmond','3e','e8']]},
-r4:{nom:'André Leblanc',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Open 2RM',73]],co:'Dave Cyr',auto:'Ford Fiesta Rally4',eqt:'Leblanc 3 Rally Team',res:[['Rallye Baie-des-Chaleurs 2026 (1er en 2RM)','New Richmond','4e','e8']]},
-r5:{nom:'Leo Urlichich',d:'ra',real:1,ser:[['Rallye','Championnat des rallyes de l’Est canadien','Général',null]],co:'Enzo Mahinc',res:[['Rallye Perce-Neige 2026','Maniwaki','1er','e1']]},
+r3:{nom:'Alexandre Moreau',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Open 4RM',121]],co:'Ian Guité',auto:'Subaru WRX STI',eqt:'Alex Moreau Rally',res:[['Rallye Baie-des-Chaleurs 2026','New Richmond','3e','e8'],['Rocky Mountain Rally 2026 (bris de transmission)','Invermere','Abandon','e4']]},
+r4:{nom:'André Leblanc',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Open 2RM',73]],co:'Dave Cyr',auto:'Ford Fiesta Rally4',eqt:'Leblanc 3 Rally Team',res:[['Rallye Baie-des-Chaleurs 2026 (1er en 2RM)','New Richmond','4e','e8'],['Rocky Mountain Rally 2026 (1er en 2RM)','Invermere','3e','e4']]},
+r5:{nom:'Leo Urlichich',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Général',null]],co:'Enzo Mahinc',auto:'Subaru Impreza STI',res:[['Rallye Perce-Neige 2026','Maniwaki','1er','e1']]},
 r6:{nom:'Simon Vincent',d:'ra',real:1,ser:[['Rallye','Championnat des rallyes de l’Est canadien','Général',null]],co:'Hubert Gaudreau',auto:'Subaru WRX',res:[['Champion ECRC 2025','Est canadien','1er'],['Rallye de Charlevoix 2025 (CRC)','La Malbaie','1er'],['Rallye Perce-Neige 2025','Maniwaki','1er']]},
 r7:{nom:'Jonathan Guitard',d:'dr',real:1,ser:[['Drift','DMCC','Pro',null]],res:[['DMCC 2025 — manche 2','Vallée-Jonction','1er']]},
 r8:{nom:'Meo Pelchat',d:'dr',real:1,ser:[['Drift','DMCC','Pro',null]],res:[['DMCC 2025 — manche 2','Vallée-Jonction','2e']]},
 r9:{nom:'Dave Widmer',d:'dr',real:1,ser:[['Drift','DMCC','Pro',null]],res:[['DMCC 2025 — manche 2','Vallée-Jonction','3e']]},
 r10:{nom:'Jean-Philippe Mercure',d:'dr',real:1,ser:[['Drift','DMCC','Pro-Am',null]],res:[['DMCC 2025 — manche 2','Vallée-Jonction','1er Pro-Am']]},
-f1:{nom:'Maxime Lavoie',ville:'Saint-Raymond',d:'dr',eq:'q1',v:1,ser:[['Drift','DMCC','Pro-Am',27]],com:['c1','c2'],ab:42,suiv:618,bio:'Pilote de drift en Pro-Am depuis 2024, Nissan 240SX. Vise la catégorie Pro en 2027.',obj:[['Pneus',4800,2950,[['Facture Pneus Sirois — 16 pneus','1 640 $','12 nov. 2026']]],['Transport (remorque et essence)',2200,1400,[]],['Nourriture et hébergement',1500,620,[]],['Embrayage et différentiel',3500,900,[]]],res:[['DMCC 2026 — manche 4','Montmagny','5e','e12'],['DMCC 2026 — manche 2','Saint-Félicien','8e','e7']],post:'Les nouveaux pneus sont arrivés. Merci aux 31 donateurs qui ont rendu ça possible!'},
-f2:{nom:'Léa Gagnon',ville:'Drummondville',d:'ka',eq:'q2',v:1,minor:'Julie Gagnon',ser:[['Karting','Coupe de Montréal','Rotax Junior',7]],com:['c3'],ab:18,suiv:240,bio:'15 ans, troisième saison en Coupe de Montréal.',obj:[['Frais d’inscription 2027',900,900,[['Reçu — inscriptions de la saison','900 $','3 nov. 2026']]],['Pneus',1200,480,[]],['Transport',800,210,[]]],res:[['Coupe de Montréal 2026 — finale','ICAR','6e','e17'],['Coupe de Montréal 2026 — manche 5','SH Karting','3e','e13']],post:'Premier podium en Rotax Junior! Merci à toute l’équipe.'},
-f3:{nom:'Gabriel Fortier',ville:'Valcourt',d:'mn',v:1,ser:[['Motoneige','Ovale de glace','Pro Stock 600',212]],com:['c2'],ab:27,suiv:390,bio:'Coureur d’ovale de glace. Vise le podium à Valcourt en 2027.',obj:[['Chenilles et crampons',2600,1100,[]],['Transport',1800,950,[]],['Hébergement',1200,300,[]]],res:[['Grand Prix Ski-Doo de Valcourt 2026','Valcourt','7e','e2']],post:'Machine prête pour le 45e Grand Prix de Valcourt!'},
-f4:{nom:'Antoine Roy',ville:'Québec',d:'ra',eq:'q1',v:1,ser:[['Rallye','Championnat des rallyes de l’Est canadien','2RM',63],['Course sur glace','Défi Glace','Crampons',3]],com:['c1'],ab:33,suiv:512,bio:'Rallye l’été et l’automne, course sur glace l’hiver.',obj:[['Moteur reconstruit',6000,2400,[]],['Pneus à crampons',2400,1000,[]],['Inscriptions',1500,1500,[['Reçus d’inscription ECRC 2027','1 500 $','1er nov. 2026']]]],res:[['Rallye de Charlevoix 2026','La Malbaie','14e','e18'],['Rallye Perce-Neige 2026','Maniwaki','11e','e1']],post:'Moteur sur le banc d’essai cette semaine.'},
-f5:{nom:'Jade Bouchard',ville:'Longueuil',d:'ka',v:0,ser:[['Karting','Coupe de Montréal','Rotax DD2',91]],com:[],ab:9,suiv:150,bio:'Karting Rotax DD2, deuxième saison.',obj:[['Moteur (révision)',1600,420,[]],['Pneus',900,300,[]]],res:[['Coupe de Montréal 2026 — manche 6','Saint-Célestin','9e','e16']],post:''}};
+r11:{nom:'Martynas Samsonas',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Général',null]],co:'Kajus Samsonas',auto:'Subaru Impreza STI',res:[['Rocky Mountain Rally 2026 (première victoire en CRC)','Invermere','1er','e4']]},
+r12:{nom:'Vincent Trudel',d:'ra',real:1,ser:[['Rallye','Championnat des rallyes de l’Est canadien','Général',null]],co:'Michelle Miller',res:[['Rallye Baie-des-Chaleurs 2026 (classement ECRC)','New Richmond','1er','e8']]},
+r13:{nom:'Michael Dimkovski',d:'ra',real:1,ser:[['Rallye','Championnat des rallyes de l’Est canadien','Général',null]],co:'Simon Levac',auto:'Subaru WRX STI',res:[['Black Bear Rally 2026','Catchacoma','1er','e23'],['Rally of the Voyageurs 2026','Catchacoma','1er','e22']]},
+r14:{nom:'Marc Landreville',d:'dr',real:1,ser:[['Drift','DMCC','Pro',11]],res:[['Champion DMCC Pro 2026 (463 points)','Québec','1er'],['DMCC 2026 — manche 5','Mirabel','3e','e14']]},
+r15:{nom:'Martin Langlois',d:'dr',real:1,ser:[['Drift','DMCC','Pro',72]],res:[['DMCC 2026 — manche 5','Mirabel','1er','e14']]},
+r16:{nom:'Josiah Fallaise',d:'dr',real:1,ser:[['Drift','DMCC','Pro',13]],res:[['DMCC 2026 — manche 5','Mirabel','2e','e14']]},
+r17:{nom:'William Guertin',d:'dr',real:1,ser:[['Drift','DMCC','Pro-Am',14]],res:[['Champion DMCC Pro-Am 2026 (454 points)','Québec','1er']]},
+r18:{nom:'Philippe G. Perreault',d:'dr',real:1,ser:[['Drift','DMCC','Pro-Am',69]],res:[['DMCC 2026 — manche 5','Mirabel','1er Pro-Am','e14']]},
+r19:{nom:'Jeremy Bergeron',d:'dr',real:1,ser:[['Drift','DMCC','Pro-Am',44]],res:[['DMCC 2026 — manche 5','Mirabel','2e Pro-Am','e14']]},
+r20:{nom:'Jonathan Paquin',d:'dr',real:1,ser:[['Drift','DMCC','Pro-Am',62]],res:[['DMCC 2026 — manche 5','Mirabel','3e Pro-Am','e14']]},
+r21:{nom:'Jordan Lebel',ville:'Valcourt',d:'mn',real:1,ser:[['Motoneige','Snocross AMSOIL','Pro',null]],res:[['Grand Prix Ski-Doo de Valcourt 2026 (victoire à domicile)','Valcourt','1er','e2']]},
+f1:{nom:'Maxime Lavoie',ville:'Saint-Raymond',d:'dr',eq:'q1',v:1,ser:[['Drift','DMCC','Pro-Am',27]],com:['c1','c2'],ab:42,suiv:618,bio:'Pilote de drift en Pro-Am depuis 2024, Nissan 240SX. Vise la catégorie Pro en 2027.',obj:[['Pneus',4800,2950,[['Facture Pneus Sirois — 16 pneus','1 640 $','12 nov. 2026']]],['Transport (remorque et essence)',2200,1400,[]],['Nourriture et hébergement',1500,620,[]],['Embrayage et différentiel',3500,900,[]]],res:[['Drift de la Toussaint','Lévis','2e','x7']],post:'Les nouveaux pneus sont arrivés. Merci aux 31 donateurs qui ont rendu ça possible!'},
+f2:{nom:'Léa Gagnon',ville:'Drummondville',d:'ka',eq:'q2',v:1,minor:'Julie Gagnon',ser:[['Karting','Coupe de Montréal','Rotax Junior',7]],com:['c3'],ab:18,suiv:240,bio:'15 ans, troisième saison en Coupe de Montréal.',obj:[['Frais d’inscription 2027',900,900,[['Reçu — inscriptions de la saison','900 $','3 nov. 2026']]],['Pneus',1200,480,[]],['Transport',800,210,[]]],res:[['Coupe Capitale — manche 1','Québec','3e','x6']],post:'Premier podium en Coupe Capitale! Merci à toute l’équipe.'},
+f3:{nom:'Gabriel Fortier',ville:'Valcourt',d:'mn',v:1,ser:[['Motoneige','Ovale de glace','Pro Stock 600',212]],com:['c2'],ab:27,suiv:390,bio:'Coureur d’ovale de glace. Vise le podium à Valcourt en 2027.',obj:[['Chenilles et crampons',2600,1100,[]],['Transport',1800,950,[]],['Hébergement',1200,300,[]]],res:[['Grand Prix Ski-Doo de Valcourt 2026 (ovale de glace)','Valcourt','7e','e2']],post:'Machine prête pour le 45e Grand Prix de Valcourt!'},
+f4:{nom:'Antoine Roy',ville:'Québec',d:'ra',eq:'q1',v:1,ser:[['Rallye','Championnat des rallyes de l’Est canadien','2RM',63],['Course sur glace','Défi Glace','Crampons',3]],com:['c1'],ab:33,suiv:512,bio:'Rallye l’été et l’automne, course sur glace l’hiver.',obj:[['Moteur reconstruit',6000,2400,[]],['Pneus à crampons',2400,1000,[]],['Inscriptions',1500,1500,[['Reçus d’inscription ECRC 2027','1 500 $','1er nov. 2026']]]],res:[['Rallye-sprint d’automne','Saint-Georges','1er','x5']],post:'Moteur sur le banc d’essai cette semaine.'},
+f5:{nom:'Jade Bouchard',ville:'Longueuil',d:'ka',v:0,ser:[['Karting','Coupe de Montréal','Rotax DD2',91]],com:[],ab:9,suiv:150,bio:'Karting Rotax DD2, deuxième saison.',obj:[['Moteur (révision)',1600,420,[]],['Pneus',900,300,[]]],res:[['Coupe Capitale — manche 1','Québec','5e','x6']],post:''},
+f6:{nom:'Émile Bergeron',ville:'Gatineau',d:'dr',v:1,ser:[['Drift','DMCC','Pro-Am',55]],com:['c2'],ab:24,suiv:470,bio:'Drift Pro-Am, BMW E36 à moteur V8.',obj:[['Pneus',3500,1700,[]],['Embrayage',1200,200,[]]],res:[['Drift de la Toussaint','Lévis','1er','x7']],post:'Entraînement sur neige ce week-end, venez voir!'},
+f7:{nom:'Sarah Pelletier',ville:'Québec',d:'ka',v:1,ser:[['Karting','Coupe de Montréal','Rotax DD2 Masters',34]],com:[],ab:14,suiv:210,bio:'Revenue au karting à 35 ans. Mère de deux futurs pilotes.',obj:[['Châssis usagé',2500,1650,[]],['Inscriptions',1100,600,[]]],res:[['Coupe Capitale — manche 1','Québec','1er','x6']],post:'Victoire en Coupe Capitale! On garde le rythme cet hiver.'},
+f8:{nom:'Olivier Côté',ville:'Saint-Georges',d:'ra',v:1,ser:[['Rallye','Championnat des rallyes de l’Est canadien','2RM',118]],com:['c1'],ab:11,suiv:175,bio:'Honda Civic de rallye préparée dans le garage familial.',obj:[['Arceau de sécurité',3200,800,[]],['Pneus de gravier',1400,550,[]]],res:[['Rallye-sprint d’automne','Saint-Georges','3e','x5']],post:''},
+f9:{nom:'Camille Tremblay',ville:'Alma',d:'gl',v:1,ser:[['Course sur glace','Défi Glace','Crampons',22]],com:['c3'],ab:16,suiv:260,bio:'Course sur glace depuis 2022, Subaru BRZ à crampons.',obj:[['Pneus à crampons',1800,1200,[]],['Transport',600,180,[]]],res:[],post:''},
+f10:{nom:'Mathis Gagné',ville:'Lévis',d:'dr',v:1,ser:[['Drift','DMCC','Contender',9]],com:[],ab:6,suiv:95,bio:'Première saison en Contender, Nissan 350Z.',obj:[['Pneus',1600,400,[]],['Siège baquet et harnais',900,350,[]]],res:[['Drift de la Toussaint','Lévis','4e','x7']],post:''},
+f11:{nom:'William Fortin',ville:'Lévis',d:'ka',v:1,ser:[['Karting','Coupe de Montréal','Rotax Senior',41]],com:[],ab:12,suiv:190,bio:'19 ans, vise le Canadian Open en 2027.',obj:[['Moteur Rotax',3800,1300,[]],['Pneus',900,500,[]]],res:[['Coupe Capitale — manche 1','Québec','2e','x6']],post:''},
+f12:{nom:'Jessica Roy',ville:'Sherbrooke',d:'mn',v:1,ser:[['Motoneige','Ovale de glace','Pro Women',77]],com:['c2'],ab:19,suiv:330,bio:'Coureuse d’ovale de glace depuis l’âge de 18 ans.',obj:[['Moteur (révision)',2200,900,[]],['Transport',900,300,[]]],res:[],post:''},
+f13:{nom:'Nicolas Bouchard',ville:'Rimouski',d:'ra',v:1,ser:[['Rallye','Championnat des rallyes de l’Est canadien','4RM',88]],com:[],ab:8,suiv:140,bio:'Subaru Impreza 2004, copilote : son frère Félix.',obj:[['Turbo',2600,700,[]],['Transport vers l’Ontario',1200,250,[]]],res:[['Rallye-sprint d’automne','Saint-Georges','2e','x5']],post:''}};
 const BQ={q1:{nom:'Écurie Boréale',ville:'Saint-Raymond',m:['f1','f4'],desc:'Écurie familiale de drift et de rallye. Deux voitures, quatre mécaniciens bénévoles.'},q2:{nom:'Gagnon Karting',ville:'Drummondville',m:['f2'],desc:'Équipe de karting junior gérée par la famille Gagnon.'}};
 const BC={c1:{nom:'Pneus Sirois',ville:'Saint-Raymond',sect:'Pneus et mécanique',desc:'Fournisseur de pneus de course depuis 1994.'},c2:{nom:'Garage Fortin',ville:'Alma',sect:'Pièces et main-d’œuvre',desc:'Atelier de préparation moteur, motoneige et auto.'},c3:{nom:'Quincaillerie Morin',ville:'Roberval',sect:'Commerce local',desc:'Commerce familial qui appuie la relève régionale.'}};
 const BM=[{c:'c1',t:'Commandite pneus 2027',d:'Drift, Rallye',n:'2 pilotes',x:'Jusqu’à 16 pneus par pilote. Logo sur le capot et mention dans les publications.'},{c:'c2',t:'Pièces et main-d’œuvre',d:'Motoneige, Rallye',n:'3 pilotes',x:'Préparation moteur à prix coûtant en échange de visibilité sur la machine.'}];
 const BMD=[{p:'f5',t:'Cherche commanditaire principal',x:'Visibilité complète sur le kart et la combinaison, 7 manches de la Coupe de Montréal.'},{p:'f3',t:'Cherche partenaire pour l’hébergement à Valcourt',x:'Logo sur la motoneige et le dossard, publications hebdomadaires.'}];
-/* Événements. real:1 = date et lieu réels. b:[0]=billetterie de l'organisateur, [1,adulte,enfant]=vente sur le site. */
+/* Événements. real:1 = date et lieu réels. b:[0]=billetterie de l'organisateur, [1,adulte,enfant]=vente sur le site. sr = séries. */
 const BE=[
-['e1','2026-02-06','2026-02-07','Rallye Perce-Neige (60e édition)','tm','Club Rallye Maniwaki','ra','CRC · ECRC',1,[0],0,['r5','f4'],[['r5','1er au général, avec Enzo Mahinc'],['f4','11e']],'rallyeperceneige.com'],
-['e2','2026-02-13','2026-02-15','Grand Prix Ski-Doo de Valcourt','tyd','Gestion GPV inc.','mn','Snocross · ovale de glace',1,[0],0,['f3'],[['f3','7e en Pro Stock 600']],'grandprixvalcourt.com'],
-['e3','2026-05-09','2026-05-10','Coupe de Montréal — manche 1','tsh','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f2'],[],'coupedemontreal.com'],
-['e4','2026-05-29','2026-05-31','Rocky Mountain Rally','tin','Club CSCC','ra','CRC',1,[0],0,[],[],'rockymountainrally.com'],
-['e5','2026-05-30','','DMCC — manche 1','tac','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1'],[],'dmcc-series.com'],
-['e6','2026-06-06','2026-06-07','Coupe de Montréal — manche 2','ttr','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f2'],[],'coupedemontreal.com'],
-['e7','2026-06-20','','DMCC — manche 2','tsf','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1'],[['f1','8e en Pro-Am']],'dmcc-series.com'],
-['e8','2026-06-26','2026-06-28','Rallye international Baie-des-Chaleurs','tn','Club CRAB','ra','CRC · NACR · ECRC',1,[0],0,['r1','r2','r3','r4'],[['r1','1er au général'],['r2','2e'],['r3','3e'],['r4','4e, 1er en 2RM']],'rallyebdc.com'],
-['e9','2026-06-27','2026-06-28','Coupe de Montréal — manche 3 · RMC Québec','ttag','Coupe de Montréal','ka','Coupe de Montréal · RMC Québec',1,[0],0,['f2','f5'],[],'coupedemontreal.com'],
-['e10','2026-07-11','2026-07-12','Coupe de Montréal — manche 4 · RMC Québec','ttag','Coupe de Montréal','ka','Coupe de Montréal · RMC Québec',1,[0],0,['f2','f5'],[],'coupedemontreal.com'],
-['e11','2026-07-18','','DMCC — manche 3','tac','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1'],[],'dmcc-series.com'],
-['e12','2026-08-08','','DMCC — manche 4','tmm','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1'],[['f1','5e en Pro-Am']],'dmcc-series.com'],
-['e13','2026-08-29','2026-08-30','Coupe de Montréal — manche 5','tsh','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f2'],[['f2','3e en Rotax Junior']],'coupedemontreal.com'],
-['e14','2026-09-05','','DMCC — manche 5','tic','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1'],[],'dmcc-series.com'],
-['e15','2026-09-11','2026-09-12','Rallye Beauce-Appalaches','tsv','Rallye Beauce-Appalaches','ra','CRC · ECRC',1,[0],0,['r1'],[['r1','1er au général, avec Hubert Gaudreau']],''],
-['e16','2026-09-19','2026-09-20','Coupe de Montréal — manche 6','tsc','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f5'],[['f5','9e en Rotax DD2']],'coupedemontreal.com'],
-['e17','2026-10-10','2026-10-11','Coupe de Montréal — finale','tic','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f2','f5'],[['f2','6e en Rotax Junior']],'coupedemontreal.com'],
-['e18','2026-10-30','2026-11-01','Rallye de Charlevoix','tlm','Club Rallye de Charlevoix','ra','CRC · ECRC',1,[0],0,['r1','f4'],[['r1','1er au général (CRC), avec Hubert Gaudreau'],['f4','14e']],'rallyecharlevoix.com'],
-['e19','2026-11-20','2026-11-21','Rally of the Tall Pines','tbc','Rally of the Tall Pines','ra','ECRC',1,[0],0,[],[],'tallpinesrally.com'],
-['x1','2026-12-05','','Défi Glace — manche 1','tlg','Association Glace Lac-Saint-Jean','gl','Défi Glace',0,[1,15,5],60,['f4'],[],''],
-['x2','2026-12-12','','Coupe d’hiver intérieure','tke','Karting des Érables inc.','ka','Coupe d’hiver',0,[1,10,0],55,['f2','f5'],[],''],
-['x3','2027-01-16','','Drift sur neige','tmo','Motoparc Outaouais','dr','Exhibition hivernale',0,[1,20,10],90,['f1'],[],''],
-['x4','2027-01-30','','Défi Glace — manche 2','tlg','Association Glace Lac-Saint-Jean','gl','Défi Glace',0,[1,15,5],60,['f4'],[],''],
-['e20','2027-02-12','2027-02-14','Grand Prix Ski-Doo de Valcourt (45e édition)','tyd','Gestion GPV inc.','mn','Snocross AMSOIL · ovale de glace',1,[0],0,['f3'],[],'grandprixvalcourt.com']
-].map(([id,date,end,t,tr,o,d,s,real,b,ins,p,res,url])=>({id,date,end,t,tr,o,d,s,real,b,ins,p,res,url}));
+['e1','2026-02-06','2026-02-07','Rallye Perce-Neige (60e édition)','tm','Club Rallye Maniwaki','ra','CRC · ECRC',1,[0],0,['r5'],[['r5','1er au général, avec Enzo Mahinc']],'rallyeperceneige.com',['crc','ecrc']],
+['e2','2026-02-13','2026-02-15','Grand Prix Ski-Doo de Valcourt','tyd','Gestion GPV inc.','mn','Snocross AMSOIL · ovale de glace',1,[0],0,['r21','f3','f12'],[['r21','1er en snocross Pro, à domicile'],['f3','7e en ovale de glace Pro Stock 600']],'grandprixvalcourt.com',['gpv']],
+['e3','2026-05-09','2026-05-10','Coupe de Montréal — manche 1','tsh','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f2','f7','f11'],[],'coupedemontreal.com',['cdm']],
+['e22','2026-05-09','','Rally of the Voyageurs','tca','K.W.R.C.','ra','ECRC',1,[0],0,['r13'],[['r13','1er au général, avec Simon Levac (gagné par deux dixièmes)']],'rallyofthevoyageurs.ca',['ecrc']],
+['e4','2026-05-29','2026-05-31','Rocky Mountain Rally','tin','Club CSCC','ra','CRC',1,[0],0,['r11','r4','r3'],[['r11','1er au général, avec Kajus Samsonas'],['r4','3e au général, 1er en 2RM'],['r3','Abandon (transmission)']],'rockymountainrally.com',['crc']],
+['e5','2026-05-30','','DMCC — manche 1','tac','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1','f6'],[],'dmcc-series.com',['dmcc']],
+['e24','2026-06-05','2026-06-06','Pacific Forest Rally','tme','Pacific Forest Rally','ra','CRC',1,[0],0,[],[],'pacificforestrally.com',['crc'],{cancel:1}],
+['e6','2026-06-06','2026-06-07','Coupe de Montréal — manche 2','ttr','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f2','f7'],[],'coupedemontreal.com',['cdm']],
+['e7','2026-06-20','','DMCC — manche 2','tsf','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1'],[],'dmcc-series.com',['dmcc']],
+['e8','2026-06-26','2026-06-28','Rallye international Baie-des-Chaleurs','tn','Club CRAB','ra','CRC · NACR · ECRC',1,[0],0,['r1','r2','r3','r4','r12'],[['r1','1er au général (CRC), avec Hubert Gaudreau'],['r2','2e (CRC), avec Philippe Poirier'],['r3','3e (CRC), avec Ian Guité'],['r4','4e (CRC), 1er en 2RM'],['r12','1er au classement ECRC, avec Michelle Miller']],'rallyebdc.com',['crc','ecrc']],
+['e9','2026-06-27','2026-06-28','Coupe de Montréal — manche 3 · RMC Québec','ttag','Coupe de Montréal','ka','Coupe de Montréal · RMC Québec',1,[0],0,['f2','f5','f11'],[],'coupedemontreal.com',['cdm']],
+['e10','2026-07-11','2026-07-12','Coupe de Montréal — manche 4 · RMC Québec','ttag','Coupe de Montréal','ka','Coupe de Montréal · RMC Québec',1,[0],0,['f2','f5','f7'],[],'coupedemontreal.com',['cdm']],
+['e11','2026-07-18','','DMCC — manche 3','tac','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1','f6','f10'],[],'dmcc-series.com',['dmcc']],
+['e23','2026-08-08','','Black Bear Rally','tca','Maple Leaf Rally Club','ra','ECRC',1,[0],0,['r13'],[['r13','1er au général, avec Simon Levac']],'mlrc.ca',['ecrc']],
+['e12','2026-08-08','','DMCC — manche 4','tmm','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1','f6'],[],'dmcc-series.com',['dmcc']],
+['e13','2026-08-29','2026-08-30','Coupe de Montréal — manche 5','tsh','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f2','f11'],[],'coupedemontreal.com',['cdm']],
+['e14','2026-09-05','','DMCC — manche 5','tic','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['r15','r16','r14','r18','r19','r20','f1'],[['r15','1er en Pro'],['r16','2e en Pro'],['r14','3e en Pro'],['r18','1er en Pro-Am'],['r19','2e en Pro-Am'],['r20','3e en Pro-Am']],'dmcc-series.com',['dmcc']],
+['e15','2026-09-11','2026-09-12','Rallye Beauce-Appalaches','tsv','Rallye Beauce-Appalaches','ra','CRC · ECRC',1,[0],0,['r1','f8'],[['r1','1er au général, avec Hubert Gaudreau']],'',['crc','ecrc']],
+['e16','2026-09-19','2026-09-20','Coupe de Montréal — manche 6','tsc','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f5','f7'],[],'coupedemontreal.com',['cdm']],
+['e17','2026-10-10','2026-10-11','Coupe de Montréal — finale','tic','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f2','f5','f7','f11'],[],'coupedemontreal.com',['cdm']],
+['e18','2026-10-30','2026-11-01','Rallye de Charlevoix','tlm','Club Rallye de Charlevoix','ra','CRC · ECRC',1,[0],0,['r1','f4','f13'],[['r1','1er au général (CRC), avec Hubert Gaudreau']],'rallyecharlevoix.com',['crc','ecrc']],
+['x5','2026-11-07','','Rallye-sprint d’automne','tsg','Club Rallye des Monts','ra','Rallye-sprint',0,[1,10,0],45,['f4','f13','f8'],[['f4','1er'],['f13','2e'],['f8','3e']],'',[]],
+['x6','2026-11-14','','Coupe Capitale — manche 1','tkq','Karting Capitale','ka','Coupe Capitale',0,[1,8,0],40,['f7','f11','f2','f5'],[['f7','1er'],['f11','2e'],['f2','3e'],['f5','5e']],'',['cap']],
+['x7','2026-11-14','','Drift de la Toussaint','tal','Aréna motorisé de Lévis','dr','Exhibition',0,[1,25,10],80,['f6','f1','f10'],[['f6','1er'],['f1','2e'],['f10','4e']],'',[]],
+['e19','2026-11-20','2026-11-21','Rally of the Tall Pines','tbc','Maple Leaf Rally Club','ra','CRC · ECRC',1,[0],0,['f13','f8'],[],'tallpinesrally.com',['crc','ecrc']],
+['x8','2026-11-27','','Vendredi drift sous les lumières','tal','Aréna motorisé de Lévis','dr','Exhibition',0,[1,20,10],60,['f6','f10','f1'],[],'',[]],
+['x9','2026-11-28','','Coupe Capitale — manche 2','tkq','Karting Capitale','ka','Coupe Capitale',0,[1,8,0],40,['f7','f11','f2','f5'],[],'',['cap']],
+['x10','2026-11-28','','Défi Glace — journée d’essais','tlg','Association Glace Lac-Saint-Jean','gl','Défi Glace',0,[1,5,0],30,['f9','f4'],[],'',['defi']],
+['x11','2026-11-28','','Drift sur neige — ouverture de saison','tmo','Motoparc Outaouais','dr','Exhibition hivernale',0,[1,20,10],90,['f6','f1'],[],'',[]],
+['x12','2026-11-29','','Endurance karting 3 heures','tke','Karting des Érables inc.','ka','Endurance',0,[1,10,0],120,['f5','f7','f11'],[],'',[]],
+['x13','2026-11-29','','Rallye-sprint de la Beauce','tsg','Club Rallye des Monts','ra','Rallye-sprint',0,[1,10,0],45,['f8','f13','f4'],[],'',[]],
+['x14','2026-11-30','','Rencontre pilotes et commanditaires','tkq','Paddock','au','Réseautage',0,[2],0,['f1','f7','f8','f12'],[],'',[],{dl:'Réseautage'}],
+['e21','2026-12-04','2026-12-05','Big White Winter Rally','tkw','Big White Winter Rally','ra','CRC (finale)',1,[0],0,['f13'],[],'',['crc']],
+['x1','2026-12-05','','Défi Glace — manche 1','tlg','Association Glace Lac-Saint-Jean','gl','Défi Glace',0,[1,15,5],60,['f4','f9'],[],'',['defi']],
+['x2','2026-12-12','','Coupe d’hiver intérieure','tke','Karting des Érables inc.','ka','Coupe d’hiver',0,[1,10,0],55,['f2','f5','f11'],[],'',[]],
+['x15','2026-12-19','','Coupe Capitale — manche 3 (Noël)','tkq','Karting Capitale','ka','Coupe Capitale',0,[1,8,0],40,['f7','f11','f2'],[],'',['cap']],
+['x16','2026-12-27','','Drift sur neige des Fêtes','tmo','Motoparc Outaouais','dr','Exhibition hivernale',0,[1,20,10],90,['f6','f10'],[],'',[]],
+['x3','2027-01-16','','Drift sur neige','tmo','Motoparc Outaouais','dr','Exhibition hivernale',0,[1,20,10],90,['f1','f6'],[],'',[]],
+['x4','2027-01-30','','Défi Glace — manche 2','tlg','Association Glace Lac-Saint-Jean','gl','Défi Glace',0,[1,15,5],60,['f4','f9'],[],'',['defi']],
+['e20','2027-02-12','2027-02-14','Grand Prix Ski-Doo de Valcourt (45e édition)','tyd','Gestion GPV inc.','mn','Snocross AMSOIL · ovale de glace',1,[0],0,['f3','f12'],[],'grandprixvalcourt.com',['gpv']]
+].map(([id,date,end,t,tr,o,d,s,real,b,ins,p,res,url,sr,x])=>({id,date,end,t,tr,o,d,s,real,b,ins,p,res,url,sr:sr||[],cancel:!!(x&&x.cancel),dl:x&&x.dl||''}));
 
+const APPV=4;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Math.round(n).toLocaleString('fr-CA')+' $';
@@ -253,6 +305,7 @@ const dshort=e=>{const a=pd(e.date),b=e.end?pd(e.end):null;const m=x=>x.toLocale
 const ago=s=>{const d=Math.round((TODAY-pd(s))/864e5);return d<=0?'aujourd’hui':d===1?'hier':d<7?`il y a ${d} jours`:d<14?'la semaine dernière':d<60?`il y a ${Math.round(d/7)} semaines`:d<365?`il y a ${Math.round(d/30)} mois`:'il y a plus d’un an'};
 const VER='<span class="v" title="Compte vérifié"><svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1f5fff"/><path d="M7 12l3 3 7-7" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
 const FIC='<span class="tag f">Exemple fictif</span>',REAL='<span class="tag r">Données réelles</span>',USR='<span class="tag u">Créé dans la démo</span>';
+const dn=e=>e.d==='au'&&e.dl?e.dl:D[e.d][0];
 const tagOf=x=>x.user?USR:x.real?REAL:FIC;
 const CITIES={'Québec':[46.81,-71.21],'Lévis':[46.80,-71.18],'Montréal':[45.50,-73.57],'Laval':[45.57,-73.69],'Longueuil':[45.53,-73.52],'Trois-Rivières':[46.35,-72.55],'Sherbrooke':[45.40,-71.89],'Drummondville':[45.88,-72.48],'Saguenay':[48.43,-71.07],'Alma':[48.55,-71.65],'Rimouski':[48.45,-68.52],'Saint-Georges':[46.12,-70.67],'Gatineau':[45.48,-75.70],'Rouyn-Noranda':[48.24,-79.02],'Baie-Comeau':[49.22,-68.15],'Ottawa':[45.42,-75.70],'Toronto':[43.65,-79.38],'Moncton':[46.09,-64.78]};
 const SERIES=['Championnat canadien des rallyes','Championnat des rallyes de l’Est canadien','DMCC','Coupe de Montréal','RMC Québec','Ovale de glace','Défi Glace'];
@@ -296,7 +349,7 @@ function hydrate(){
   for(const o of db.off)if(C[o.c])M.push({c:o.c,t:esc(o.t),d:esc(o.d),n:esc(o.n),x:esc(o.x),user:1,id:o.id});
   E=BE.map(e=>({...e,p:e.p.slice()}));
   for(const e of db.ev)if(T[e.tr])E.push({id:e.id,date:e.date,end:e.end||'',t:esc(e.t),tr:e.tr,o:esc(e.o),d:D[e.d]?e.d:'ra',s:esc(e.s),real:0,user:1,org:e.org,
-    b:e.b[0]?[1,+e.b[1]||0,+e.b[2]||0]:[0],ins:+e.ins||0,p:[],res:[],url:esc(e.url||''),desc:esc(e.desc||''),hor:(e.hor||[]).map(h=>[esc(h[0]),esc(h[1])])});
+    b:e.b[0]===2?[2]:e.b[0]?[1,+e.b[1]||0,+e.b[2]||0]:[0],ins:+e.ins||0,p:[],res:[],sr:[],dl:esc(e.dl||''),url:esc(e.url||''),desc:esc(e.desc||''),hor:(e.hor||[]).map(h=>[esc(h[0]),esc(h[1])])});
   for(const eid in db.conf){const e=E.find(x=>x.id===eid);if(e)for(const pid of db.conf[eid])if(P[pid]&&!e.p.includes(pid))e.p.push(pid)}
   E.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);EV=Object.fromEntries(E.map(e=>[e.id,e]));
 }
@@ -317,8 +370,8 @@ const tot=p=>p.obj.reduce((a,o)=>[a[0]+o[1],a[1]+Math.min(o[2],o[1])],[0,0]);
 const pct=(a,b)=>b?Math.min(100,Math.round(a/b*100)):0;
 const back='<button class="back" data-act="back">‹ Retour</button>';
 const sub1=p=>`${p.ser[0][1]} · ${p.ser[0][2]}${p.ville?' · '+p.ville:''}`;
-const prow=(id,extra)=>{const p=P[id];if(!p)return '';return `<a class="card link row" href="#p-${id}" style="margin:8px 0">${p.photo?`<img class="av" src="${p.photo}" alt="">`:plate(id,1)}<div style="flex:1"><h3>${p.nom} ${p.v?VER:''}</h3><div class="sm mut">${extra||sub1(p)}</div></div>${p.real?'<span class="tag r">Réel</span>':p.user?'<span class="tag u">Démo</span>':''}</a>`};
-const erow=(e,extra)=>`<a class="card link ev" href="#e-${e.id}" style="margin:8px 0;--ec:${D[e.d][1]}"><i></i><div><div class="sm mut">${dshort(e)} · ${D[e.d][0]}${past(e)?' · terminé':''}</div><h3>${e.t}</h3><div class="sm mut">${T[e.tr].nom}${T[e.tr].host?'':', '+T[e.tr].ville} · ${dist(e).toLocaleString('fr-CA')} km</div>${extra||''}</div></a>`;
+const prow=(id,extra)=>{const p=P[id];if(!p)return '';return `<a class="card link row" href="#p-${id}" style="margin:8px 0">${p.photo?`<img class="av" src="${p.photo}" alt="">`:plate(id,1)}<div style="flex:1"><h3>${p.nom} ${p.v?VER:''}</h3><div class="sm mut">${extra||sub1(p)}</div></div>${p.real?'<span class="tag r">Réel</span>':p.user?'<span class="tag u">Démo</span>':'<span class="tag f">Fictif</span>'}</a>`};
+const erow=(e,extra)=>`<a class="card link ev" href="#e-${e.id}" style="margin:8px 0;--ec:${D[e.d][1]}"><i></i><div><div class="sm mut">${dshort(e)} · ${dn(e)}${e.cancel?' · <b style="color:var(--red)">annulé</b>':past(e)?' · terminé':''}</div><h3>${e.t}</h3><div class="sm mut">${T[e.tr].nom}${T[e.tr].host?'':', '+T[e.tr].ville} · ${dist(e).toLocaleString('fr-CA')} km</div>${extra||''}</div></a>`;
 const sw=(id,on,label,sub)=>`<label class="li"><span style="flex:1">${label}${sub?`<br><span class="sm mut">${sub}</span>`:''}</span><span class="sw"><input type="checkbox" data-set="${id}" ${on?'checked':''}><i></i></span></label>`;
 const IC={u:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>',b:'<path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9M10 20a2 2 0 0 0 4 0"/>',g:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',s:'<path d="M16 3h5v5M21 3l-7 7M8 21H3v-5M3 21l7-7"/>',h:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/>',o:'<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>',c:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',m:'<path d="M3 7h18v13H3zM8 7V4h8v3"/>',k:'<rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',e:'<path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/>',p:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',l:'<path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',t:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',w:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',f:'<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/>',x:'<path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15"/>',r:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>',i:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>'};
 const ic=k=>`<svg viewBox="0 0 24 24">${IC[k]}</svg>`;
@@ -456,6 +509,9 @@ function feed(){
    {d:'ka',dt:'2026-11-21',p:'f2',h:`<b>Léa Gagnon</b> a atteint son objectif « Frais d’inscription 2027 » (900 $).`},
    {d:'gl',dt:'2026-11-20',p:'f4',h:`<b>Antoine Roy</b> a confirmé sa présence au <a href="#e-x1">Défi Glace — manche 1</a>.`},
    {d:'ra',dt:'2026-09-21',real:1,p:'r1',h:`<b>Jean-Sébastien Besner</b> et Hubert Gaudreau gagnent le <a href="#e-e15">Rallye Beauce-Appalaches</a>, nouveau au calendrier national.`},
+   {d:'ra',dt:'2026-11-24',real:1,h:`La finale du championnat canadien des rallyes se court au <a href="#e-e21">Big White Winter Rally</a>, à Kelowna, les 4 et 5 décembre.`},
+   {d:'dr',dt:'2026-09-06',real:1,p:'r14',h:`<b>Marc Landreville</b> est sacré champion DMCC Pro 2026 et William Guertin, champion Pro-Am. <a href="#s-dmcc">Voir la série</a>`},
+   {d:'ra',dt:'2026-06-07',real:1,p:'r11',h:`<b>Martynas Samsonas</b> et son fils Kajus remportent le <a href="#e-e4">Rocky Mountain Rally</a>, leur première victoire en championnat canadien.`},
    {d:'any',dt:'2026-11-19',h:`<b>Pneus Sirois</b> offre une <a href="#marche">commandite pneus 2027</a> à 2 pilotes.`}].concat(db.feed.filter(i=>!i.p||P[i.p]));
   const sc=i=>(a.visits[i.d]||0)*2+(i.p&&a.follow[i.p]?5:0)+(i.user?3:0)-((TODAY-pd(i.dt))/864e5)/7;
   it.sort((x,y)=>sc(y)-sc(x));
@@ -493,7 +549,7 @@ function dayHTML(k){
   return `<div class="in"><button class="back" data-act="dz">‹ Retour au calendrier</button>
   <div class="row" style="align-items:flex-end;gap:14px"><div class="bign">${d.getDate()}</div><div><div style="font:700 26px/1.1 var(--cf);text-transform:capitalize">${d.toLocaleDateString('fr-CA',{weekday:'long'})}</div><div class="mut" style="text-transform:capitalize">${d.toLocaleDateString('fr-CA',{month:'long',year:'numeric'})}</div></div></div>
   <p class="mut">${l.length?l.length+' événement(s) cette journée':'Aucun événement cette journée.'}${hid?` · ${hid} masqué(s) par vos filtres`:''}</p>
-  ${l.map(e=>erow(e,`<div class="row sm" style="margin-top:6px;gap:6px">${past(e)?`<span class="tag">${e.res.length?'Résultats disponibles':'Terminé'}</span>`:`<span class="tag">${e.p.length} pilote(s) confirmé(s)</span><span class="tag">${e.b[0]?'Billets dès '+fmt(e.b[1]):'Billetterie de l’organisateur'}</span>`}${tagOf(e)}</div>`)).join('')}
+  ${l.map(e=>erow(e,`<div class="row sm" style="margin-top:6px;gap:6px">${past(e)?`<span class="tag">${e.res.length?'Résultats disponibles':'Terminé'}</span>`:`<span class="tag">${e.p.length} pilote(s) confirmé(s)</span><span class="tag">${e.b[0]===2?'Entrée gratuite':e.b[0]?'Billets dès '+fmt(e.b[1]):'Billetterie de l’organisateur'}</span>`}${tagOf(e)}</div>`)).join('')}
   ${me().roles.org&&!past({date:k})?`<a class="btn yel w" href="#creer-evenement" data-date="${k}">+ Créer un événement cette journée</a>`:''}</div>`;
 }
 let zc=null;const rm=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -522,7 +578,7 @@ function pilot(id){
   if(p.real)return `${head}
   <div class="card claim sm"><b>Profil public non réclamé.</b> Bâti à partir de résultats publiés. Ce pilote n’est pas inscrit sur Paddock : les dons et abonnements s’activent seulement quand il réclame son profil et fait vérifier son identité.</div>
   <div class="row" style="margin:12px 0">${fol}<button class="btn yel" data-act="claim">C’est moi : réclamer ce profil</button></div>
-  ${series}${results}${up.length?`<h2>Événements à venir</h2>${up.map(e=>erow(e)).join('')}`:''}`;
+  ${series}${results}${up.length?`<h2>Événements à venir</h2>${up.map(e=>erow(e)).join('')}`:''}${pastList(id)}`;
   const [c,am]=tot(p);
   return `${head}
   ${p.minor?`<div class="card sm" style="background:var(--rs);border-color:transparent">Compte de pilote mineur géré par un parent : <b>${p.minor}</b>. Les fonds sont versés au compte du parent.</div>`:''}
@@ -539,19 +595,31 @@ function pilot(id){
    ${o[3].map(pr=>`<div class="proof">${pr[3]?`<img src="${pr[3]}" alt="">`:ic('f').replace('<svg','<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"')}<div><b>Preuve de dépense</b> · ${pr[0]} · ${pr[1]}<div class="mut">${pr[2]}</div></div></div>`).join('')}
    <div class="row" style="margin-top:8px">${o[2]>=o[1]?'<span class="sm" style="color:var(--grn);font-weight:600">Objectif atteint</span>':''}${mine?`<button class="btn sp sm2" data-act="proof" data-i="${i}">+ Preuve</button>`:`<button class="btn sp${p.v?' pri':''}" data-act="don" data-id="${id}" data-i="${i}" ${p.v?'':'disabled'}>Donner</button>`}</div></div>`).join('')}`:`<p class="mut">${mine?'Vous n’avez pas encore d’objectif. ':'Aucun objectif publié pour l’instant.'}${mine?'<a href="#moi">Créer ma cagnotte</a>':''}</p>`}
   <h2>Événements à venir</h2>${up.length?up.map(e=>erow(e)).join(''):'<p class="mut">Aucune présence confirmée.</p>'}
-  ${results}
+  ${pastList(id)}${results}
   ${p.post?`<h2>Publications</h2><div class="card"><div class="sm mut">${p.nom}</div><p>${p.post}</p></div>`:''}`;
 }
+
+const pastList=id=>{const l=E.filter(e=>e.p.includes(id)&&past(e)&&!e.cancel).reverse();return l.length?`<h2>Événements passés</h2>${l.map(e=>{const r=e.res.find(x=>x[0]===id);return erow(e,r?`<div style="margin-top:6px"><span class="tag f">${r[1]}</span></div>`:'')}).join('')}`:''};
+
+/* ---------- Séries ---------- */
+function seriesPage(id){const s=SR[id];if(!s)return notfound();const l=E.filter(e=>e.sr&&e.sr.includes(id)),up=l.filter(e=>!past(e)&&!e.cancel),done=l.filter(e=>past(e)||e.cancel).reverse();
+  return `${back}<div class="band" style="--dc:${D[s.d][1]}"><span class="chip" style="cursor:default;background:${D[s.d][1]};border-color:${D[s.d][1]};color:#fff">${D[s.d][0]}</span><h1>${s.nom}</h1><div style="margin-top:6px">${s.real?REAL:FIC}</div></div>
+  <p>${s.desc}</p>
+  <div class="stats" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div><b>${l.filter(e=>!e.cancel).length}</b><span>manches</span></div><div><b>${l.filter(e=>past(e)&&!e.cancel).length}</b><span>terminées</span></div><div><b>${up.length}</b><span>à venir</span></div></div>
+  ${s.champ?`<h2>Champions 2026</h2>${s.champ.map(c=>prow(c[0],c[1])).join('')}`:''}
+  <h2>À venir</h2>${up.length?up.map(e=>erow(e,e.p.length?`<div style="margin-top:6px"><span class="tag">${e.p.length} pilote(s) confirmé(s)</span></div>`:'')).join(''):'<p class="mut">Le calendrier de la prochaine saison n’est pas encore publié.</p>'}
+  <h2>Courses passées et résultats</h2>${done.map(e=>`<div class="card fc" style="--ec:${D[e.d][1]}"><a href="#e-${e.id}" style="text-decoration:none"><div class="sm mut">${dshort(e)} ${pd(e.date).getFullYear()} · ${T[e.tr].nom}</div><h3>${e.t}</h3></a>
+   ${e.cancel?'<p class="sm" style="color:var(--red);font-weight:600">Annulé</p>':e.res.length?`<table style="margin-top:6px">${e.res.slice(0,4).map((r,i)=>`<tr><td style="width:2.2em"><b>${i+1}</b></td><td><a href="#p-${r[0]}">${P[r[0]]?P[r[0]].nom:''}</a> ${P[r[0]]&&!P[r[0]].real?'<span class="tag f">Fictif</span>':''}<div class="sm mut">${r[1]}</div></td></tr>`).join('')}</table>`:`<p class="sm mut">${s.note||'Résultats pas encore publiés.'}</p>`}</div>`).join('')||'<p class="mut">Aucune course passée.</p>'}`}
 
 /* ---------- Événement ---------- */
 function event(id){
   const e=EV[id];if(!e)return notfound();const t=T[e.tr],ps=past(e),a=me(),mp=a.roles.pilote?pidOf(a):null,conf=mp&&e.p.includes(mp),mine=e.org===a.id;
-  const tix=ps?`<div class="card"><h3>Événement terminé</h3><p class="sm mut">${e.res.length?'Les résultats sont plus bas.':'Les résultats n’ont pas encore été ajoutés par l’organisateur.'}</p></div>`
-   :`<div class="card"><h3>Billets</h3>${e.b[0]?`<p class="sm mut">Adulte ${fmt(e.b[1])}${e.b[2]?' · Enfant '+fmt(e.b[2]):' · Enfant gratuit'}. Billet électronique avec code QR.</p><button class="btn pri w" data-act="tix" data-id="${id}" ${mine?'disabled':''}>Acheter des billets</button>`:`<p class="sm mut">Cet organisateur vend ses billets sur sa propre billetterie${e.url?' ('+e.url+')':''}.</p><button class="btn w" data-act="ext" data-id="${id}">Billetterie de l’organisateur ↗</button>`}
+  const tix=e.cancel?'<div class="card claim"><h3>Événement annulé</h3><p class="sm">Cet événement a été annulé par l’organisateur.</p></div>':ps?`<div class="card"><h3>Événement terminé</h3><p class="sm mut">${e.res.length?'Les résultats sont plus bas.':'Les résultats n’ont pas encore été ajoutés par l’organisateur.'}</p></div>`
+   :`<div class="card"><h3>Billets</h3>${e.b[0]===2?'<p class="sm mut">Entrée gratuite pour les spectateurs.</p>':e.b[0]?`<p class="sm mut">Adulte ${fmt(e.b[1])}${e.b[2]?' · Enfant '+fmt(e.b[2]):' · Enfant gratuit'}. Billet électronique avec code QR.</p><button class="btn pri w" data-act="tix" data-id="${id}" ${mine?'disabled':''}>Acheter des billets</button>`:`<p class="sm mut">Cet organisateur vend ses billets sur sa propre billetterie${e.url?' ('+e.url+')':''}.</p><button class="btn w" data-act="ext" data-id="${id}">Billetterie de l’organisateur ↗</button>`}
    ${mp?`<button class="btn w${conf?' on':' yel'}" style="margin-top:8px" data-act="conf" data-id="${id}">${conf?'Présence confirmée ✓ (annuler)':'Je serai présent comme pilote'}</button>`:''}
    ${e.ins&&mp&&!conf?`<button class="btn w" style="margin-top:8px" data-act="ins" data-id="${id}">Payer mon inscription (${fmt(e.ins)})</button>`:''}
    ${!e.ins&&!mine?'<p class="sm mut" style="margin-top:8px">Inscriptions des pilotes auprès de l’organisateur.</p>':''}</div>`;
-  return `${back}<div class="band" style="--dc:${D[e.d][1]}"><div class="row" style="gap:6px"><span class="chip" style="cursor:default;background:${D[e.d][1]};border-color:${D[e.d][1]};color:#fff">${D[e.d][0]}</span><span class="chip" style="cursor:default">${e.s}</span></div>
+  return `${back}<div class="band" style="--dc:${D[e.d][1]}"><div class="row" style="gap:6px"><span class="chip" style="cursor:default;background:${D[e.d][1]};border-color:${D[e.d][1]};color:#fff">${dn(e)}</span>${e.sr&&e.sr.length?e.sr.map(x=>`<a class="chip" href="#s-${x}">${SR[x].nom.replace(/ \(.*\)$/,'')} ›</a>`).join(''):`<span class="chip" style="cursor:default">${e.s}</span>`}</div>
   <h1>${e.t}</h1><p class="mut" style="margin:0;text-transform:capitalize">${drange(e)}</p>
   <p style="margin:6px 0 0"><a href="#t-${e.tr}">${t.nom}</a>${t.host?'':', '+t.ville} · ${dist(e).toLocaleString('fr-CA')} km de ${home().nom}</p><div style="margin-top:8px">${tagOf(e)}</div></div>
   <p class="sm mut">Organisé par <b style="color:var(--ink)">${e.o}</b> ${e.real?'· profil d’organisateur non réclamé':VER} · capacité déclarée ${t.cap.toLocaleString('fr-CA')} spectateurs</p>
@@ -569,15 +637,16 @@ function newEvent(){
   ${UI.err?`<div class="err">${esc(UI.err)}</div>`:''}
   <div class="fl" style="margin-top:12px">
   <label class="f">Nom de l’événement<input type="text" id="n_t" maxlength="80" value="${esc(d.t||'')}"></label>
-  <label class="f">Discipline<select id="n_d">${Object.entries(D).map(([k,x])=>`<option value="${k}"${d.d===k?' selected':''}>${x[0]}</option>`).join('')}</select></label>
+  <label class="f">Discipline<select id="n_d">${Object.entries(D).map(([k,x])=>`<option value="${k}"${d.d===k?' selected':''}>${x[0]}${k==='au'?'…':''}</option>`).join('')}</select></label>
+  <label class="f" id="n_dlw" style="${d.d==='au'?'':'display:none'}">Préciser le type d’événement<input type="text" id="n_dl" maxlength="40" value="${esc(d.dl||'')}" placeholder="Ex. Tire de tracteurs, VTT, accélération"></label>
   <label class="f">Série ou championnat<input type="text" id="n_s" list="dl_ser2" value="${esc(d.s||'')}"><datalist id="dl_ser2">${SERIES.map(s=>`<option value="${s}">`).join('')}</datalist></label>
   <div class="row" style="flex-wrap:nowrap"><label class="f" style="flex:1">Début<input type="date" id="n_date" value="${esc(d.date||'')}"></label><label class="f" style="flex:1">Fin (facultatif)<input type="date" id="n_end" value="${esc(d.end||'')}"></label></div>
   <label class="f">Lieu<select id="n_tr"><option value="_new"${d.tr==='_new'?' selected':''}>+ Nouveau lieu…</option>${tro}</select></label>
   <div class="card fl" id="n_newv" style="margin:0${d.tr&&d.tr!=='_new'?';display:none':''}"><label class="f">Nom du lieu<input type="text" id="n_vn" value="${esc(d.vn||'')}" placeholder="Ex. Autodrome de la Rive-Nord"></label>
    <label class="f">Ville<select id="n_vc">${Object.keys(CITIES).map(c=>`<option${c===(d.vc||a.ville)?' selected':''}>${c}</option>`).join('')}</select></label>
    <label class="f">Capacité de spectateurs<input type="number" id="n_cap" min="0" step="100" value="${esc(d.cap||'2000')}"></label></div>
-  <label class="f">Billets<select id="n_bm"><option value="site"${d.bm!=='ext'?' selected':''}>Vendus sur Paddock</option><option value="ext"${d.bm==='ext'?' selected':''}>Billetterie externe de l’organisateur</option></select></label>
-  <div class="row" id="n_bsite" style="flex-wrap:nowrap${d.bm==='ext'?';display:none':''}"><label class="f" style="flex:1">Prix adulte ($)<input type="number" id="n_pa" min="0" value="${esc(d.pa??'20')}"></label><label class="f" style="flex:1">Prix enfant ($)<input type="number" id="n_pe" min="0" value="${esc(d.pe??'5')}"></label></div>
+  <label class="f">Billets<select id="n_bm"><option value="site"${d.bm!=='ext'?' selected':''}>Vendus sur Paddock</option><option value="ext"${d.bm==='ext'?' selected':''}>Billetterie externe de l’organisateur</option><option value="free"${d.bm==='free'?' selected':''}>Entrée gratuite</option></select></label>
+  <div class="row" id="n_bsite" style="flex-wrap:nowrap${d.bm&&d.bm!=='site'?';display:none':''}"><label class="f" style="flex:1">Prix adulte ($)<input type="number" id="n_pa" min="0" value="${esc(d.pa??'20')}"></label><label class="f" style="flex:1">Prix enfant ($)<input type="number" id="n_pe" min="0" value="${esc(d.pe??'5')}"></label></div>
   <label class="f" id="n_bext" style="${d.bm==='ext'?'':'display:none'}">Adresse de la billetterie<input type="text" id="n_url" value="${esc(d.url||'')}" placeholder="Ex. billets.monclub.ca"></label>
   <label class="f">Frais d’inscription des pilotes ($, 0 si aucun)<input type="number" id="n_ins" min="0" value="${esc(d.ins??'75')}"></label>
   <label class="f">Description<textarea id="n_desc" maxlength="600">${esc(d.desc||'')}</textarea></label>
@@ -585,16 +654,16 @@ function newEvent(){
   ${[0,1,2,3,4].map(i=>`<div class="row" style="flex-wrap:nowrap;margin-bottom:6px"><input type="text" id="n_h${i}" style="width:7em;flex:none" placeholder="${['8 h','10 h','13 h','16 h','19 h'][i]}" value="${esc((d.hor||[])[i]?.[0]||'')}"><input type="text" id="n_l${i}" placeholder="${['Ouverture des puits','Essais','Qualifications','Finales','Remise des prix'][i]}" value="${esc((d.hor||[])[i]?.[1]||'')}"></div>`).join('')}</div>
   <button class="btn pri w" data-act="nesave">Publier l’événement</button></div>`;
 }
-function readNE(){const d={t:val('n_t'),d:val('n_d'),s:val('n_s'),date:val('n_date'),end:val('n_end'),tr:val('n_tr'),vn:val('n_vn'),vc:val('n_vc'),cap:val('n_cap'),bm:val('n_bm'),pa:val('n_pa'),pe:val('n_pe'),url:val('n_url'),ins:val('n_ins'),desc:val('n_desc'),hor:[]};
+function readNE(){const d={t:val('n_t'),d:val('n_d'),dl:val('n_dl'),s:val('n_s'),date:val('n_date'),end:val('n_end'),tr:val('n_tr'),vn:val('n_vn'),vc:val('n_vc'),cap:val('n_cap'),bm:val('n_bm'),pa:val('n_pa'),pe:val('n_pe'),url:val('n_url'),ins:val('n_ins'),desc:val('n_desc'),hor:[]};
   for(let i=0;i<5;i++){const h=val('n_h'+i),l=val('n_l'+i);if(h||l)d.hor.push([h,l])}return d}
 function saveNE(){
   const a=me(),d=readNE();UI.ne=d;UI.err='';
-  if(!d.t)UI.err='Donnez un nom à l’événement.';else if(!d.date)UI.err='Choisissez la date de début.';else if(d.end&&d.end<d.date)UI.err='La date de fin doit suivre la date de début.';
+  if(!d.t)UI.err='Donnez un nom à l’événement.';else if(d.d==='au'&&!d.dl)UI.err='Précisez le type d’événement (option Autre).';else if(!d.date)UI.err='Choisissez la date de début.';else if(d.end&&d.end<d.date)UI.err='La date de fin doit suivre la date de début.';
   else if(d.tr==='_new'&&!d.vn)UI.err='Donnez un nom au nouveau lieu.';
   if(UI.err){draw();scrollTo(0,0);return}
   let tr=d.tr;if(tr==='_new'){tr='v'+nid();const c=CITIES[d.vc]||CITIES['Québec'];db.ven[tr]={nom:d.vn,ville:d.vc,lat:c[0],lon:c[1],cap:Math.max(0,+d.cap||0)}}
   const id='u'+nid();
-  db.ev.push({id,date:d.date,end:d.end&&d.end!==d.date?d.end:'',t:d.t,tr,o:a.org.nom,d:d.d,s:d.s||'Événement',b:d.bm==='ext'?[0]:[1,Math.max(0,+d.pa||0),Math.max(0,+d.pe||0)],ins:Math.max(0,+d.ins||0),url:d.bm==='ext'?d.url:'',desc:d.desc,hor:d.hor,org:a.id});
+  db.ev.push({id,date:d.date,end:d.end&&d.end!==d.date?d.end:'',t:d.t,tr,o:a.org.nom,d:d.d,dl:d.d==='au'?d.dl:'',s:d.s||'Événement',b:d.bm==='ext'?[0]:d.bm==='free'?[2]:[1,Math.max(0,+d.pa||0),Math.max(0,+d.pe||0)],ins:Math.max(0,+d.ins||0),url:d.bm==='ext'?d.url:'',desc:d.desc,hor:d.hor,org:a.id});
   post(d.d,`<b>${esc(a.org.nom)}</b> a publié un nouvel événement : <a href="#e-${id}">${esc(d.t)}</a> (${esc(dl(d.date,{day:'numeric',month:'long',year:'numeric'}))}).`);
   for(const o of Object.values(db.accounts))if(o.id!==a.id&&o.set.notif.near)notify(o.id,`Nouvel événement : ${esc(d.t)}`,'#e-'+id);
   persist();UI.ne=null;const dt=pd(d.date);UI.cy=dt.getFullYear();UI.cm=dt.getMonth();location.hash='e-'+id;toast('Événement publié dans le calendrier.');
@@ -620,8 +689,7 @@ function discover(){
   const tabs=[['pilotes','Pilotes'],['series','Séries'],['equipes','Écuries'],['pistes','Lieux'],['comm','Commanditaires']];const q=UI.q.toLowerCase();const m=s=>!q||s.toLowerCase().includes(q);
   let body='';
   if(UI.tab==='pilotes'){const ks=Object.keys(P).filter(k=>P[k].pub!==0&&m(P[k].nom+(P[k].ville||'')+D[P[k].d][0]+P[k].ser.map(s=>s[1]).join(' ')));ks.sort((x,y)=>(P[y].user?1:0)-(P[x].user?1:0));body=ks.map(x=>prow(x)).join('')}
-  if(UI.tab==='series'){const SR=[['Championnat canadien des rallyes (CRC)','ra','Huit rallyes d’un océan à l’autre, sanctionnés par CARS.'],['Championnat des rallyes de l’Est canadien (ECRC)','ra','Québec, Ontario et Nouvelle-Écosse.'],['DMCC — Drift Mania Canadian Championship','dr','Pro, Pro-Am et Contender, partout au Québec.'],['Coupe de Montréal','ka','Sept fins de semaine de karting au Québec.'],['Grand Prix Ski-Doo de Valcourt','mn','Snocross et ovale de glace, chaque février.']];
-    body=SR.filter(s=>m(s[0])).map(s=>`<div class="card fc" style="--ec:${D[s[1]][1]}"><h3>${s[0]}</h3><p class="sm mut" style="margin:2px 0 0">${D[s[1]][0]} · ${s[2]}</p></div>`).join('')}
+  if(UI.tab==='series')body=Object.entries(SR).filter(([k,v])=>m(v.nom)).map(([k,v])=>{const l=E.filter(e=>e.sr&&e.sr.includes(k)&&!e.cancel);return `<a class="card link fc" href="#s-${k}" style="--ec:${D[v.d][1]}"><div class="row"><h3 style="flex:1">${v.nom}</h3>${v.real?REAL:FIC}</div><p class="sm mut" style="margin:4px 0 0">${D[v.d][0]} · ${l.length} manches · ${l.filter(e=>!past(e)).length} à venir · résultats ›</p></a>`}).join('');
   if(UI.tab==='equipes')body=Object.entries(Q).filter(([k,v])=>m(v.nom)).map(([k,v])=>`<a class="card link" href="#q-${k}"><h3>${v.nom}</h3><div class="sm mut">${v.ville} · ${v.m.length} pilote(s)</div></a>`).join('');
   if(UI.tab==='pistes')body=Object.entries(T).filter(([k,v])=>m(v.nom+v.ville)).map(([k,v])=>`<a class="card link" href="#t-${k}"><h3>${v.nom}</h3><div class="sm mut">${v.ville} · ${km(home(),v).toLocaleString('fr-CA')} km${v.fic?' · lieu fictif':v.user?' · créé dans la démo':''}</div></a>`).join('');
   if(UI.tab==='comm')body=Object.entries(C).filter(([k,v])=>m(v.nom+v.sect)).map(([k,v])=>`<a class="card link" href="#c-${k}"><h3>${v.nom} ${VER}</h3><div class="sm mut">${v.sect} · ${v.ville} · ${v.user?'créé dans la démo':'fictif'}</div></a>`).join('');
@@ -689,6 +757,8 @@ function settings(){
    ${li('f','Conditions d’utilisation','data-act="terms"')}
    ${li('k','Politique de confidentialité','data-act="privacy"')}
    ${li('i','À propos de Paddock','data-act="about"','Version 0.3 démo')}</div>
+  <div class="gt">Application</div><div class="grp">
+   ${li('r','Vérifier les mises à jour','data-act="updcheck"','Version '+curV())}</div>
   <div class="gt">Démo</div><div class="grp">
    ${li('r','Réinitialiser la démo','data-act="resetq"','Efface tous les comptes','dan')}</div>
   <button class="btn pri w" data-act="logout">Se déconnecter</button>
@@ -714,7 +784,7 @@ function draw(){
   else if(h==='creer-evenement'){html=u.roles.org?newEvent():notfound();n='calendrier'}
   else if(a==='p'){html=pilot(b);n='decouvrir';if(P[b]&&P[b].user!==u.id){u.visits[P[b].d]=(u.visits[P[b].d]||0)+1;persist()}}
   else if(a==='e'){html=event(b);n='calendrier';if(EV[b]){u.visits[EV[b].d]=(u.visits[EV[b].d]||0)+1;persist()}}
-  else if(a==='t')html=track(b),n='decouvrir';else if(a==='q')html=team(b),n='decouvrir';else if(a==='c')html=sponsor(b),n='decouvrir';else html=notfound(),n='';
+  else if(a==='s')html=seriesPage(b),n='decouvrir';else if(a==='t')html=track(b),n='decouvrir';else if(a==='q')html=team(b),n='decouvrir';else if(a==='c')html=sponsor(b),n='decouvrir';else html=notfound(),n='';
   $('#view').innerHTML=html;document.querySelectorAll('nav.bot a').forEach(x=>x.classList.toggle('on',x.dataset.n===n));
   const c=$('#cnt');if(u){const un=(db.notifs[u.id]||[]).filter(x=>!x.read).length;c.hidden=!un;c.textContent=un>9?'9+':un}else c.hidden=true;
 }
@@ -722,6 +792,13 @@ function render(){closeDay(true);closeSheet();UI.err='';draw();scrollTo(0,0)}
 const rerender=()=>{const y=scrollY;draw();scrollTo(0,y)};
 const notfound=()=>`${back}<h1>Page introuvable</h1>`;
 function applyTheme(){const u=me(),t=u?u.set.theme:'auto',r=document.documentElement;if(t==='auto')r.removeAttribute('data-theme');else r.dataset.theme=t}
+
+/* ---------- Mises à jour (app Android) ---------- */
+const NAT=()=>!!(window.PaddockApp&&typeof window.PaddockApp.checkUpdate==='function');
+const curV=()=>{try{return NAT()?window.PaddockApp.version():APPV}catch(e){return APPV}};
+window.paddockUpdateReady=v=>{UI.upd=v;showUpd()};
+window.paddockUpdateResult=st=>{if(st==='none')toast('Vous avez déjà la dernière version ('+curV()+').');else if(st==='error')toast('Impossible de vérifier : vérifiez votre connexion internet.')};
+function showUpd(){if(!UI.upd)return;let b=document.getElementById('updbar');if(!b){b=document.createElement('div');b.id='updbar';b.className='updbar';document.body.appendChild(b)}b.innerHTML=`<span>Nouvelle version de Paddock prête (${UI.upd}).</span><button class="btn sm2" data-act="updapply">Redémarrer</button>`}
 
 /* ---------- Feuilles ---------- */
 function toast(t){document.querySelectorAll('.toast').forEach(x=>x.remove());const d=document.createElement('div');d.className='toast';d.setAttribute('role','status');d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),3800)}
@@ -871,6 +948,8 @@ document.addEventListener('click',ev=>{
    case 'help':case 'terms':case 'privacy':case 'about':openSheet(sheetH(TXT[A][0])+TXT[A][1]);break;
    case 'report':openSheet(`${sheetH('Signaler un problème')}<textarea id="rp" placeholder="Décrivez le problème"></textarea><button class="btn pri w" style="margin-top:10px" data-act="repok">Envoyer</button>`);break;
    case 'repok':closeSheet();toast('Merci! Votre signalement a été envoyé (démo).');break;
+   case 'updcheck':if(NAT()){toast('Recherche d’une nouvelle version…');window.PaddockApp.checkUpdate()}else toast('Version web : elle est toujours à jour.');break;
+   case 'updapply':window.PaddockApp.applyUpdate();break;
    case 'clrn':db.notifs[a.id]=[];persist();rerender();break;
    case 'resetq':openSheet(`${sheetH('Réinitialiser la démo?','Tous les comptes, événements, offres, dons et notifications créés sur ce téléphone seront effacés.')}<button class="btn pri w" data-act="resetok">Tout effacer</button><button class="btn w" style="margin-top:8px" data-act="cs">Annuler</button>`);break;
    case 'resetok':try{localStorage.removeItem(LS)}catch(e){}db={accounts:{},cur:null,don:{},ev:[],ven:{},off:[],conf:{},notifs:{},feed:[],seq:1};closeSheet();applyTheme();location.hash='bienvenue';draw();toast('Démo réinitialisée.');break;
@@ -883,7 +962,8 @@ document.addEventListener('change',ev=>{const t=ev.target,a=me();
   if(t.dataset.photo){const f=t.files&&t.files[0],w=t.dataset.photo;readPhoto(f,w==='proof'?720:360,url=>{if(w==='su'){UI.su.d.photo=url;draw()}else if(w==='prof'){UI.ph=url;profSheet()}else if(w==='proof'){const d=val('pr_d'),m=val('pr_m');pf.photo=url;proofSheet();$('#pr_d').value=d||'';$('#pr_m').value=m||''}});return}
   if(t.id==='fd')rerender();if(t.id==='fc'){UI.f.cap=+t.value;rerender()}if(t.id==='fp'){UI.f.per=t.value;rerender()}
   if(t.id==='n_tr'){$('#n_newv').style.display=t.value==='_new'?'':'none'}
-  if(t.id==='n_bm'){$('#n_bsite').style.display=t.value==='ext'?'none':'';$('#n_bext').style.display=t.value==='ext'?'':'none'}
+  if(t.id==='n_bm'){$('#n_bsite').style.display=t.value==='site'?'':'none';$('#n_bext').style.display=t.value==='ext'?'':'none'}
+  if(t.id==='n_d'){$('#n_dlw').style.display=t.value==='au'?'':'none'}
 });
 document.addEventListener('input',ev=>{const t=ev.target;
   if(t.id==='fd'){UI.f.dist=+t.value;$('#dv').textContent=t.value>=5000?'partout':'jusqu’à '+(+t.value).toLocaleString('fr-CA')+' km'}
