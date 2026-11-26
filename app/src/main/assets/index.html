@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#121417">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<title>Paddock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: un vrai produit, net et sportif, comme l'appli officielle d'une série de course
+   IDEA: le paddock un jour de course: drapeau à damier, plaques numérotées, bandes de couleur
+   PICTURE: l'appli elle-même; chaque pilote porte sa plaque sur une bande aux couleurs de sa discipline
+   COLOUR and TYPE: noir et blanc qui dominent, rouge signal, jaune drapeau; Barlow Condensed + Barlow
+   LAYOUT: colonne mobile, barre du haut noire avec damier, navigation fixe en bas */
+:root{color-scheme:light;--bg:#f4f4f1;--card:#fff;--ink:#111316;--mut:#585e66;--line:#dedfd9;--rs:#fde8e6;--grn:#0c8a3a;--blu:#e7eeff;--blu2:#1f45c8;--trb:#e6f4ea;--clb:#fff8d6;--red:#e10600;--yel:#ffd200;--blk:#121417;--cf:'Barlow Condensed','sans-serif-condensed','Roboto Condensed','Arial Narrow',sans-serif}
+:root[data-theme=dark]{color-scheme:dark;--bg:#0d0f11;--card:#181b1f;--ink:#eff1f3;--mut:#9fa6ae;--line:#2b2f35;--rs:#3b1513;--grn:#33c56a;--blu:#14204a;--blu2:#9db5ff;--trb:#12301d;--clb:#2d2808}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#0d0f11;--card:#181b1f;--ink:#eff1f3;--mut:#9fa6ae;--line:#2b2f35;--rs:#3b1513;--grn:#33c56a;--blu:#14204a;--blu2:#9db5ff;--trb:#12301d;--clb:#2d2808}}
+*{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Barlow,system-ui,sans-serif;overflow-x:clip}
+a{color:inherit}
+.top{position:sticky;top:0;z-index:20;background:var(--blk);color:#fff;padding-top:env(safe-area-inset-top)}
+.top>div{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:6px;padding:6px 8px}
+.top::after{content:"";display:block;height:8px;background:repeating-conic-gradient(#fff 0 25%,#121417 0 50%) 0 0/8px 8px}
+.ib{width:44px;height:44px;border:0;background:none;color:#fff;display:grid;place-items:center;cursor:pointer;border-radius:10px;position:relative}
+.ib svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.ib .cnt{position:absolute;top:5px;right:4px;min-width:18px;height:18px;border-radius:9px;background:var(--red);color:#fff;font:700 12px/18px Barlow,sans-serif;padding:0 4px}
+.logo{font:italic 800 30px/1 var(--cf);letter-spacing:.03em;text-decoration:none;margin-right:auto}
+.logo span{color:var(--yel)}
+main{max-width:560px;margin:0 auto;padding:8px 14px calc(100px + env(safe-area-inset-bottom))}
+body.out main{padding-bottom:40px}
+h1{font:800 36px/1.05 var(--cf);margin:8px 0 4px;text-wrap:balance}
+h2{font:700 24px/1.1 var(--cf);margin:24px 0 8px;display:flex;align-items:center;gap:8px}
+h2::before{content:"";width:6px;height:20px;background:var(--red);border-radius:2px;transform:skewX(-14deg);flex:none}
+h3{font:700 19px/1.15 var(--cf);margin:0}
+p{margin:6px 0}
+.mut{color:var(--mut)}.sm{font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+.link{display:block;text-decoration:none;cursor:pointer}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sp{margin-left:auto}
+.btn{min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 16px Barlow,sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+.btn.pri{background:var(--red);border-color:var(--red);color:#fff}
+.btn.yel{background:var(--yel);border-color:var(--yel);color:#111}
+.btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.w{width:100%}.btn.sm2{min-height:36px;padding:0 12px;font-size:14px}
+.btn.dan{color:var(--red);border-color:var(--red)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn:focus-visible,.dc:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,nav a:focus-visible,.chip:focus-visible,.ib:focus-visible,.li:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;border:1px solid var(--line);background:var(--card);font:500 14px Barlow,sans-serif;color:var(--ink);cursor:pointer;text-decoration:none;min-height:34px}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;display:inline-block}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--red),#ff7a00 60%,var(--yel));border-radius:99px}
+.v{display:inline-flex;vertical-align:-3px}
+.back{background:none;border:0;color:var(--mut);font:600 16px Barlow,sans-serif;padding:10px 0;cursor:pointer;min-height:44px}
+.tag{display:inline-block;font:600 13px Barlow,sans-serif;padding:2px 8px;border-radius:6px;background:var(--rs);color:var(--red)}
+.tag.f{background:var(--yel);color:#111}
+.tag.r{background:var(--trb);color:var(--grn)}
+.tag.u{background:var(--blu);color:var(--blu2)}
+.plate{flex:none;width:84px;height:68px;border-radius:12px;background:#fff;color:#111;border:3px solid #111;display:grid;place-items:center;font:italic 800 44px/1 var(--cf);position:relative;overflow:hidden;box-shadow:0 3px 0 rgba(0,0,0,.3);padding-top:6px}
+.plate.s{width:52px;height:42px;font-size:26px;border-width:2px;border-radius:9px;padding-top:4px}
+.plate.i{font-size:32px}.plate.s.i{font-size:19px}
+.plate::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:var(--pc,#e10600)}
+.plate.s::before{height:6px}
+.av{flex:none;width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid var(--yel);background:var(--line)}
+.av.l{width:84px;height:84px;border-width:3px}
+.avi{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--blk);color:var(--yel);font:italic 800 22px var(--cf);border:2px solid var(--yel)}
+.avi.l{width:84px;height:84px;font-size:34px}
+.band{margin:0 -14px;padding:18px 14px 20px;color:#fff;background:linear-gradient(100deg,#121417 52%,rgba(18,20,23,.55) 75%,transparent),repeating-linear-gradient(115deg,var(--dc) 0 16px,#121417 16px 34px)}
+.band h1{color:#fff}.band .mut{color:#c6cacf}.band a{color:#fff}
+.hero{display:flex;gap:12px;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:14px 0}
+.stats div{background:var(--blk);color:#fff;border-radius:12px;padding:8px;text-align:center}
+.stats b{display:block;font:700 26px/1 var(--cf);color:var(--yel)}
+.stats span{font-size:13px;color:#c6cacf}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:7px 4px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{font-weight:600;color:var(--mut);font-size:13px}td.r,th.r{text-align:right;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.sched{list-style:none;padding:0;margin:0}.sched li{display:grid;grid-template-columns:4.6em 1fr;padding:8px 0;border-bottom:1px solid var(--line)}.sched li:last-child{border:0}
+.sched b{font:700 20px/1.1 var(--cf);white-space:nowrap}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:none}.tabs .chip{flex:none}
+.grid7{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.wd{font:600 13px Barlow,sans-serif;color:var(--mut);text-align:center;padding:4px 0}
+.dc{aspect-ratio:1/1.12;border-radius:10px;background:var(--card);border:1px solid var(--line);padding:5px;display:flex;flex-direction:column;align-items:flex-start;cursor:pointer;font:700 17px/1 var(--cf);color:var(--ink)}
+.dc.has{border:1.5px solid var(--ink);background:var(--card);background:color-mix(in srgb,var(--hc) 16%,var(--card))}.dc.today{box-shadow:inset 0 0 0 2px var(--red)}
+.dc .dots{margin-top:auto;display:flex;gap:3px;flex-wrap:wrap}.dc .dots .dot{width:8px;height:8px}
+.dc.blank{visibility:hidden}
+.mh{display:flex;align-items:center;gap:8px;margin:6px 0 10px}.mh h1{margin:0;flex:1;text-transform:capitalize}
+.fl{display:grid;gap:12px}
+label.f{display:grid;gap:4px;font:600 14px Barlow,sans-serif}
+input[type=range]{width:100%;accent-color:var(--red);min-height:30px}
+select,input[type=number],input[type=search],input[type=text],input[type=email],input[type=password],input[type=date],input[type=url],input[type=time],textarea{min-height:46px;font:16px Barlow,sans-serif;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:0 12px;width:100%}
+textarea{padding:10px 12px;min-height:90px;resize:vertical}
+input[type=file]{font:15px Barlow,sans-serif;max-width:100%}
+.err{background:var(--rs);color:var(--red);border-radius:10px;padding:10px 12px;font-weight:600;font-size:15px}
+.ev{display:grid;grid-template-columns:8px 1fr;gap:12px;background:var(--card);background:linear-gradient(90deg,color-mix(in srgb,var(--ec) 10%,var(--card)),var(--card) 60%)}.ev>i{border-radius:4px;background:var(--ec)}
+.dayz{position:fixed;inset:0;z-index:40;background:var(--bg);overflow:auto;will-change:transform;padding-top:env(safe-area-inset-top)}
+.dayz .in{max-width:560px;margin:0 auto;padding:12px 14px 40px}
+.bign{font:italic 800 104px/.9 var(--cf);color:var(--red);text-shadow:4px 4px 0 var(--yel)}
+nav.bot{position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--blk);padding-bottom:env(safe-area-inset-bottom)}
+nav.bot div{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+nav.bot a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0 9px;font:600 13px Barlow,sans-serif;color:#aeb3b9;text-decoration:none;min-height:56px;position:relative}
+nav.bot a.on{color:#fff}nav.bot a.on::before{content:"";position:absolute;top:0;left:28%;right:28%;height:3px;background:var(--yel);border-radius:0 0 3px 3px}
+nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+body.out nav.bot,body.out .top .ib{display:none}
+.bd{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:60}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;background:var(--card);border-radius:18px 18px 0 0;max-height:90vh;overflow:auto;padding:16px 16px calc(20px + env(safe-area-inset-bottom));max-width:560px;margin:0 auto;animation:up .25s ease;border-top:6px solid var(--yel)}
+@keyframes up{from{transform:translateY(40px);opacity:.4}}
+.drawer{position:fixed;top:0;bottom:0;left:0;width:min(86vw,340px);z-index:61;background:var(--card);overflow:auto;animation:sl .22s ease;padding-bottom:env(safe-area-inset-bottom)}
+@keyframes sl{from{transform:translateX(-30px);opacity:.3}}
+.dh{background:linear-gradient(100deg,#121417 50%,rgba(18,20,23,.6) 80%,transparent),repeating-linear-gradient(115deg,var(--yel) 0 16px,#121417 16px 34px);color:#fff;padding:calc(20px + env(safe-area-inset-top)) 16px 18px}
+.li{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:0 16px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:500 16px Barlow,sans-serif;text-align:left;cursor:pointer;text-decoration:none}
+.li svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;color:var(--mut)}
+.li .r{margin-left:auto;color:var(--mut);font-size:14px;text-align:right}
+.li.dan{color:var(--red)}.li.dan svg{color:var(--red)}
+.grp{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:8px 0 18px}
+.grp .li:last-child{border-bottom:0}
+.gt{font:600 13px Barlow,sans-serif;color:var(--mut);margin:18px 4px 0;text-transform:none}
+.sw{position:relative;width:50px;height:30px;flex:none;margin-left:auto}
+.sw input{opacity:0;width:100%;height:100%;margin:0;position:absolute;cursor:pointer}
+.sw i{position:absolute;inset:0;border-radius:15px;background:var(--line);transition:background .15s;pointer-events:none}
+.sw i::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .15s}
+.sw input:checked+i{background:var(--grn)}.sw input:checked+i::after{transform:translateX(20px)}
+.sw input:focus-visible+i{outline:3px solid var(--red);outline-offset:2px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;background:var(--bg);border-radius:10px;padding:4px}
+.seg button{min-height:40px;border:0;border-radius:8px;background:none;color:var(--ink);font:600 15px Barlow,sans-serif;cursor:pointer}
+.seg button.on{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.amts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0}
+.tier{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px;border:1.5px solid var(--line);border-radius:12px;margin:8px 0;cursor:pointer;background:var(--card);color:var(--ink);width:100%;text-align:left;font:inherit}
+.tier.on{border-color:var(--red);background:var(--rs)}
+.badge{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font:italic 800 20px var(--cf);color:#111}
+.sum{background:var(--bg);border-radius:10px;padding:10px 12px;font-size:15px;margin:10px 0}
+.sum div{display:flex;justify-content:space-between;gap:8px}.sum b{white-space:nowrap}
+.step{display:flex;align-items:center;gap:10px}.step b{min-width:2ch;text-align:center;font-size:20px}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--blk);color:#fff;padding:12px 16px;border-radius:12px;z-index:80;max-width:calc(100% - 28px);font-size:15px;box-shadow:0 6px 20px rgba(0,0,0,.3);border-left:5px solid var(--yel)}
+.lv{display:flex;gap:16px;align-items:center;border-radius:16px;padding:16px;margin:10px 0;color:#fff;background:linear-gradient(100deg,#121417 55%,rgba(18,20,23,.6) 80%,transparent),repeating-linear-gradient(115deg,var(--yel) 0 16px,#121417 16px 34px)}
+.lvl{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:10px}
+.lvl div{border:1px solid var(--line);border-radius:10px;padding:6px;text-align:center;font-size:13px}.lvl div.ok{background:var(--yel);color:#111;border-color:var(--yel)}
+.lvl b{display:block;font:700 18px var(--cf)}
+.proof{display:flex;gap:8px;align-items:flex-start;font-size:14px;padding:6px 8px;background:var(--bg);border-radius:8px;margin-top:6px}
+.proof img{width:56px;height:56px;object-fit:cover;border-radius:6px;flex:none}
+.claim{background:var(--clb);border:1px solid var(--yel)}
+.fc{border-left:5px solid var(--ec)}
+.note{font-size:13px;color:var(--mut);margin-top:28px}
+.wel{min-height:calc(100vh - 120px);display:flex;flex-direction:column;justify-content:center;gap:12px}
+.wel .big{font:italic 800 clamp(64px,22vw,104px)/.9 var(--cf);margin:0}.wel .big span{color:var(--red)}
+.wel .flag{height:22px;background:repeating-conic-gradient(var(--ink) 0 25%,transparent 0 50%) 0 0/22px 22px;border-radius:4px;width:66%}
+.prog{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:6px 0 14px}.prog i{height:6px;border-radius:3px;background:var(--line)}.prog i.on{background:var(--red)}
+.rc{display:flex;gap:12px;align-items:flex-start;padding:12px;border:1.5px solid var(--line);border-radius:12px;margin:8px 0;cursor:pointer;background:var(--card)}
+.rc input{width:22px;height:22px;margin-top:2px;accent-color:var(--red);flex:none}
+.rc:has(input:checked){border-color:var(--red);background:var(--rs)}
+.nt{display:flex;gap:10px;align-items:flex-start;padding:12px 4px;border-bottom:1px solid var(--line);text-decoration:none}
+.nt.un{background:var(--clb);background:color-mix(in srgb,var(--yel) 12%,transparent)}
+.nt .d{width:10px;height:10px;border-radius:50%;background:var(--red);margin-top:7px;flex:none}.nt .d.o{background:transparent}
+@media(prefers-reduced-motion:reduce){.sheet,.drawer{animation:none}.dayz{transition:none!important}}
+</style></head><body>
+<header class="top"><div>
+<button class="ib" data-act="menu" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<a class="logo" href="#fil">PADD<span>/</span>OCK</a>
+<button class="ib" data-act="bell" aria-label="Notifications"><svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9M10 20a2 2 0 0 0 4 0"/></svg><span class="cnt" id="cnt" hidden></span></button>
+</div></header>
+<main id="view"></main>
+<div class="dayz" id="dayz" hidden></div>
+<nav class="bot"><div>
+<a href="#fil" data-n="fil"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Fil</a>
+<a href="#calendrier" data-n="calendrier"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendrier</a>
+<a href="#decouvrir" data-n="decouvrir"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Découvrir</a>
+<a href="#moi" data-n="moi"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Moi</a>
+</div></nav>
+<div id="ov"></div>
+<script>
+{
+const D={ra:['Rallye','#0a8a43'],dr:['Drift','#e0217a'],ka:['Karting','#1f5fff'],mn:['Motoneige','#0096c7'],gl:['Course sur glace','#7b5cff']};
+/* Lieux. lat/lon approximatives. cap = capacité déclarée (valeurs d'exemple). */
+const BT={
+tm:{nom:'Maniwaki',ville:'Maniwaki (Haute-Gatineau)',lat:46.38,lon:-75.97,cap:5000,host:1,desc:'Spéciales sur routes forestières enneigées et glacées de la Haute-Gatineau.'},
+tn:{nom:'New Richmond',ville:'New Richmond (Gaspésie)',lat:48.16,lon:-65.86,cap:8000,host:1,desc:'Spéciales sur gravier dans la Baie-des-Chaleurs; des milliers de spectateurs le long des routes.'},
+tsv:{nom:'Saint-Victor-de-Beauce',ville:'Saint-Victor (Beauce)',lat:46.15,lon:-70.90,cap:3000,host:1,desc:'Rallye de la Rive-Sud, ajouté au calendrier national en 2026.'},
+tlm:{nom:'La Malbaie',ville:'La Malbaie (Charlevoix)',lat:47.65,lon:-70.15,cap:8000,host:1,desc:'Spéciales sur asphalte dans La Malbaie et Clermont, puis sur gravier en forêt.'},
+tbc:{nom:'Bancroft',ville:'Bancroft (Ontario)',lat:45.06,lon:-77.86,cap:3000,host:1,desc:'Rallye d’une journée réputé pour être le plus exigeant au Canada.'},
+tin:{nom:'Invermere',ville:'Invermere (Colombie-Britannique)',lat:50.51,lon:-116.03,cap:3000,host:1,desc:'Spéciales de gravier dans la vallée de la Columbia.'},
+tac:{nom:'Autodrome Chaudière',ville:'Vallée-Jonction',lat:46.37,lon:-70.92,cap:6000,desc:'Ovale de Beauce qui accueille deux manches du DMCC.'},
+tsf:{nom:'Autodrome St-Félicien',ville:'Saint-Félicien',lat:48.65,lon:-72.45,cap:4000,desc:'Ovale du Lac-Saint-Jean.'},
+tmm:{nom:'Autodrome Montmagny',ville:'Montmagny',lat:46.98,lon:-70.55,cap:5000,desc:'Tracé technique et serré, classique du drift québécois.'},
+tic:{nom:'ICAR',ville:'Mirabel',lat:45.68,lon:-74.03,cap:7000,desc:'Complexe de sports motorisés : drift park Route 66 et piste SRA Karting.'},
+tsh:{nom:'SH Karting',ville:'Mont-Saint-Hilaire',lat:45.56,lon:-73.19,cap:2000,desc:'Deux pistes de 700 m qu’on peut combiner.'},
+ttr:{nom:'Karting Trois-Rivières',ville:'Trois-Rivières',lat:46.35,lon:-72.55,cap:2000,desc:'Piste de karting de la Mauricie.'},
+ttag:{nom:'TAG Karting Academy',ville:'Mont-Tremblant',lat:46.19,lon:-74.62,cap:2500,desc:'Hôte des manches communes Coupe de Montréal et RMC Québec.'},
+tsc:{nom:'Saint-Célestin Performance',ville:'Saint-Célestin',lat:46.22,lon:-72.44,cap:1500,desc:'Piste du Centre-du-Québec.'},
+tyd:{nom:'Circuit Yvon-Duhamel',ville:'Valcourt (Maricourt)',lat:45.50,lon:-72.31,cap:20000,desc:'Site du Grand Prix Ski-Doo de Valcourt : snocross, ovale de glace, motos et VTT.'},
+tlg:{nom:'Anneau du Lac-Gelé',ville:'Alma',lat:48.55,lon:-71.65,cap:2000,fic:1,desc:'Piste de course sur glace aménagée sur un lac (lieu fictif).'},
+tke:{nom:'Karting des Érables',ville:'Drummondville',lat:45.88,lon:-72.48,cap:1500,fic:1,desc:'Piste de karting intérieure l’hiver (lieu fictif).'},
+tmo:{nom:'Motoparc Outaouais',ville:'Gatineau',lat:45.48,lon:-75.70,cap:4000,fic:1,desc:'Terrain d’hiver pour le drift sur neige (lieu fictif).'}};
+/* Pilotes réels: profils non réclamés bâtis à partir de résultats publiés. Pilotes f*: fictifs. */
+const BP={
+r1:{nom:'Jean-Sébastien Besner',ville:'Québec',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Open 4RM',59]],co:'Hubert Gaudreau',auto:'Ford Fiesta Proto',eqt:'CAS Liftier',res:[['Rallye de Charlevoix 2026','La Malbaie','1er','e18'],['Rallye Beauce-Appalaches 2026','Saint-Victor','1er','e15'],['Rallye Baie-des-Chaleurs 2026','New Richmond','1er','e8']]},
+r2:{nom:'Jérôme Mailloux',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Open 4RM',252]],co:'Philippe Poirier',auto:'Subaru',eqt:'TEST Racing',res:[['Rallye Baie-des-Chaleurs 2026','New Richmond','2e','e8']]},
+r3:{nom:'Alexandre Moreau',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Open 4RM',121]],co:'Ian Guité',auto:'Subaru WRX STI',eqt:'Alex Moreau Rally',res:[['Rallye Baie-des-Chaleurs 2026','New Richmond','3e','e8']]},
+r4:{nom:'André Leblanc',d:'ra',real:1,ser:[['Rallye','Championnat canadien des rallyes','Open 2RM',73]],co:'Dave Cyr',auto:'Ford Fiesta Rally4',eqt:'Leblanc 3 Rally Team',res:[['Rallye Baie-des-Chaleurs 2026 (1er en 2RM)','New Richmond','4e','e8']]},
+r5:{nom:'Leo Urlichich',d:'ra',real:1,ser:[['Rallye','Championnat des rallyes de l’Est canadien','Général',null]],co:'Enzo Mahinc',res:[['Rallye Perce-Neige 2026','Maniwaki','1er','e1']]},
+r6:{nom:'Simon Vincent',d:'ra',real:1,ser:[['Rallye','Championnat des rallyes de l’Est canadien','Général',null]],co:'Hubert Gaudreau',auto:'Subaru WRX',res:[['Champion ECRC 2025','Est canadien','1er'],['Rallye de Charlevoix 2025 (CRC)','La Malbaie','1er'],['Rallye Perce-Neige 2025','Maniwaki','1er']]},
+r7:{nom:'Jonathan Guitard',d:'dr',real:1,ser:[['Drift','DMCC','Pro',null]],res:[['DMCC 2025 — manche 2','Vallée-Jonction','1er']]},
+r8:{nom:'Meo Pelchat',d:'dr',real:1,ser:[['Drift','DMCC','Pro',null]],res:[['DMCC 2025 — manche 2','Vallée-Jonction','2e']]},
+r9:{nom:'Dave Widmer',d:'dr',real:1,ser:[['Drift','DMCC','Pro',null]],res:[['DMCC 2025 — manche 2','Vallée-Jonction','3e']]},
+r10:{nom:'Jean-Philippe Mercure',d:'dr',real:1,ser:[['Drift','DMCC','Pro-Am',null]],res:[['DMCC 2025 — manche 2','Vallée-Jonction','1er Pro-Am']]},
+f1:{nom:'Maxime Lavoie',ville:'Saint-Raymond',d:'dr',eq:'q1',v:1,ser:[['Drift','DMCC','Pro-Am',27]],com:['c1','c2'],ab:42,suiv:618,bio:'Pilote de drift en Pro-Am depuis 2024, Nissan 240SX. Vise la catégorie Pro en 2027.',obj:[['Pneus',4800,2950,[['Facture Pneus Sirois — 16 pneus','1 640 $','12 nov. 2026']]],['Transport (remorque et essence)',2200,1400,[]],['Nourriture et hébergement',1500,620,[]],['Embrayage et différentiel',3500,900,[]]],res:[['DMCC 2026 — manche 4','Montmagny','5e','e12'],['DMCC 2026 — manche 2','Saint-Félicien','8e','e7']],post:'Les nouveaux pneus sont arrivés. Merci aux 31 donateurs qui ont rendu ça possible!'},
+f2:{nom:'Léa Gagnon',ville:'Drummondville',d:'ka',eq:'q2',v:1,minor:'Julie Gagnon',ser:[['Karting','Coupe de Montréal','Rotax Junior',7]],com:['c3'],ab:18,suiv:240,bio:'15 ans, troisième saison en Coupe de Montréal.',obj:[['Frais d’inscription 2027',900,900,[['Reçu — inscriptions de la saison','900 $','3 nov. 2026']]],['Pneus',1200,480,[]],['Transport',800,210,[]]],res:[['Coupe de Montréal 2026 — finale','ICAR','6e','e17'],['Coupe de Montréal 2026 — manche 5','SH Karting','3e','e13']],post:'Premier podium en Rotax Junior! Merci à toute l’équipe.'},
+f3:{nom:'Gabriel Fortier',ville:'Valcourt',d:'mn',v:1,ser:[['Motoneige','Ovale de glace','Pro Stock 600',212]],com:['c2'],ab:27,suiv:390,bio:'Coureur d’ovale de glace. Vise le podium à Valcourt en 2027.',obj:[['Chenilles et crampons',2600,1100,[]],['Transport',1800,950,[]],['Hébergement',1200,300,[]]],res:[['Grand Prix Ski-Doo de Valcourt 2026','Valcourt','7e','e2']],post:'Machine prête pour le 45e Grand Prix de Valcourt!'},
+f4:{nom:'Antoine Roy',ville:'Québec',d:'ra',eq:'q1',v:1,ser:[['Rallye','Championnat des rallyes de l’Est canadien','2RM',63],['Course sur glace','Défi Glace','Crampons',3]],com:['c1'],ab:33,suiv:512,bio:'Rallye l’été et l’automne, course sur glace l’hiver.',obj:[['Moteur reconstruit',6000,2400,[]],['Pneus à crampons',2400,1000,[]],['Inscriptions',1500,1500,[['Reçus d’inscription ECRC 2027','1 500 $','1er nov. 2026']]]],res:[['Rallye de Charlevoix 2026','La Malbaie','14e','e18'],['Rallye Perce-Neige 2026','Maniwaki','11e','e1']],post:'Moteur sur le banc d’essai cette semaine.'},
+f5:{nom:'Jade Bouchard',ville:'Longueuil',d:'ka',v:0,ser:[['Karting','Coupe de Montréal','Rotax DD2',91]],com:[],ab:9,suiv:150,bio:'Karting Rotax DD2, deuxième saison.',obj:[['Moteur (révision)',1600,420,[]],['Pneus',900,300,[]]],res:[['Coupe de Montréal 2026 — manche 6','Saint-Célestin','9e','e16']],post:''}};
+const BQ={q1:{nom:'Écurie Boréale',ville:'Saint-Raymond',m:['f1','f4'],desc:'Écurie familiale de drift et de rallye. Deux voitures, quatre mécaniciens bénévoles.'},q2:{nom:'Gagnon Karting',ville:'Drummondville',m:['f2'],desc:'Équipe de karting junior gérée par la famille Gagnon.'}};
+const BC={c1:{nom:'Pneus Sirois',ville:'Saint-Raymond',sect:'Pneus et mécanique',desc:'Fournisseur de pneus de course depuis 1994.'},c2:{nom:'Garage Fortin',ville:'Alma',sect:'Pièces et main-d’œuvre',desc:'Atelier de préparation moteur, motoneige et auto.'},c3:{nom:'Quincaillerie Morin',ville:'Roberval',sect:'Commerce local',desc:'Commerce familial qui appuie la relève régionale.'}};
+const BM=[{c:'c1',t:'Commandite pneus 2027',d:'Drift, Rallye',n:'2 pilotes',x:'Jusqu’à 16 pneus par pilote. Logo sur le capot et mention dans les publications.'},{c:'c2',t:'Pièces et main-d’œuvre',d:'Motoneige, Rallye',n:'3 pilotes',x:'Préparation moteur à prix coûtant en échange de visibilité sur la machine.'}];
+const BMD=[{p:'f5',t:'Cherche commanditaire principal',x:'Visibilité complète sur le kart et la combinaison, 7 manches de la Coupe de Montréal.'},{p:'f3',t:'Cherche partenaire pour l’hébergement à Valcourt',x:'Logo sur la motoneige et le dossard, publications hebdomadaires.'}];
+/* Événements. real:1 = date et lieu réels. b:[0]=billetterie de l'organisateur, [1,adulte,enfant]=vente sur le site. */
+const BE=[
+['e1','2026-02-06','2026-02-07','Rallye Perce-Neige (60e édition)','tm','Club Rallye Maniwaki','ra','CRC · ECRC',1,[0],0,['r5','f4'],[['r5','1er au général, avec Enzo Mahinc'],['f4','11e']],'rallyeperceneige.com'],
+['e2','2026-02-13','2026-02-15','Grand Prix Ski-Doo de Valcourt','tyd','Gestion GPV inc.','mn','Snocross · ovale de glace',1,[0],0,['f3'],[['f3','7e en Pro Stock 600']],'grandprixvalcourt.com'],
+['e3','2026-05-09','2026-05-10','Coupe de Montréal — manche 1','tsh','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f2'],[],'coupedemontreal.com'],
+['e4','2026-05-29','2026-05-31','Rocky Mountain Rally','tin','Club CSCC','ra','CRC',1,[0],0,[],[],'rockymountainrally.com'],
+['e5','2026-05-30','','DMCC — manche 1','tac','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1'],[],'dmcc-series.com'],
+['e6','2026-06-06','2026-06-07','Coupe de Montréal — manche 2','ttr','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f2'],[],'coupedemontreal.com'],
+['e7','2026-06-20','','DMCC — manche 2','tsf','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1'],[['f1','8e en Pro-Am']],'dmcc-series.com'],
+['e8','2026-06-26','2026-06-28','Rallye international Baie-des-Chaleurs','tn','Club CRAB','ra','CRC · NACR · ECRC',1,[0],0,['r1','r2','r3','r4'],[['r1','1er au général'],['r2','2e'],['r3','3e'],['r4','4e, 1er en 2RM']],'rallyebdc.com'],
+['e9','2026-06-27','2026-06-28','Coupe de Montréal — manche 3 · RMC Québec','ttag','Coupe de Montréal','ka','Coupe de Montréal · RMC Québec',1,[0],0,['f2','f5'],[],'coupedemontreal.com'],
+['e10','2026-07-11','2026-07-12','Coupe de Montréal — manche 4 · RMC Québec','ttag','Coupe de Montréal','ka','Coupe de Montréal · RMC Québec',1,[0],0,['f2','f5'],[],'coupedemontreal.com'],
+['e11','2026-07-18','','DMCC — manche 3','tac','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1'],[],'dmcc-series.com'],
+['e12','2026-08-08','','DMCC — manche 4','tmm','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1'],[['f1','5e en Pro-Am']],'dmcc-series.com'],
+['e13','2026-08-29','2026-08-30','Coupe de Montréal — manche 5','tsh','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f2'],[['f2','3e en Rotax Junior']],'coupedemontreal.com'],
+['e14','2026-09-05','','DMCC — manche 5','tic','DMCC Series','dr','DMCC Pro · Pro-Am',1,[0],0,['f1'],[],'dmcc-series.com'],
+['e15','2026-09-11','2026-09-12','Rallye Beauce-Appalaches','tsv','Rallye Beauce-Appalaches','ra','CRC · ECRC',1,[0],0,['r1'],[['r1','1er au général, avec Hubert Gaudreau']],''],
+['e16','2026-09-19','2026-09-20','Coupe de Montréal — manche 6','tsc','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f5'],[['f5','9e en Rotax DD2']],'coupedemontreal.com'],
+['e17','2026-10-10','2026-10-11','Coupe de Montréal — finale','tic','Coupe de Montréal','ka','Coupe de Montréal',1,[0],0,['f2','f5'],[['f2','6e en Rotax Junior']],'coupedemontreal.com'],
+['e18','2026-10-30','2026-11-01','Rallye de Charlevoix','tlm','Club Rallye de Charlevoix','ra','CRC · ECRC',1,[0],0,['r1','f4'],[['r1','1er au général (CRC), avec Hubert Gaudreau'],['f4','14e']],'rallyecharlevoix.com'],
+['e19','2026-11-20','2026-11-21','Rally of the Tall Pines','tbc','Rally of the Tall Pines','ra','ECRC',1,[0],0,[],[],'tallpinesrally.com'],
+['x1','2026-12-05','','Défi Glace — manche 1','tlg','Association Glace Lac-Saint-Jean','gl','Défi Glace',0,[1,15,5],60,['f4'],[],''],
+['x2','2026-12-12','','Coupe d’hiver intérieure','tke','Karting des Érables inc.','ka','Coupe d’hiver',0,[1,10,0],55,['f2','f5'],[],''],
+['x3','2027-01-16','','Drift sur neige','tmo','Motoparc Outaouais','dr','Exhibition hivernale',0,[1,20,10],90,['f1'],[],''],
+['x4','2027-01-30','','Défi Glace — manche 2','tlg','Association Glace Lac-Saint-Jean','gl','Défi Glace',0,[1,15,5],60,['f4'],[],''],
+['e20','2027-02-12','2027-02-14','Grand Prix Ski-Doo de Valcourt (45e édition)','tyd','Gestion GPV inc.','mn','Snocross AMSOIL · ovale de glace',1,[0],0,['f3'],[],'grandprixvalcourt.com']
+].map(([id,date,end,t,tr,o,d,s,real,b,ins,p,res,url])=>({id,date,end,t,tr,o,d,s,real,b,ins,p,res,url}));
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Math.round(n).toLocaleString('fr-CA')+' $';
+const money=n=>n.toFixed(2).replace('.',',')+' $';
+const pd=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const key=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const TODAY=(d=>new Date(d.getFullYear(),d.getMonth(),d.getDate()))(new Date());
+const dl=(s,o)=>pd(s).toLocaleDateString('fr-CA',o);
+const drange=e=>{const a=pd(e.date),b=e.end?pd(e.end):null;if(!b)return dl(e.date,{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  return a.getMonth()===b.getMonth()?`${a.getDate()} au ${dl(e.end,{day:'numeric',month:'long',year:'numeric'})}`:`${dl(e.date,{day:'numeric',month:'long'})} au ${dl(e.end,{day:'numeric',month:'long',year:'numeric'})}`};
+const dshort=e=>{const a=pd(e.date),b=e.end?pd(e.end):null;const m=x=>x.toLocaleDateString('fr-CA',{month:'short'});return b?(a.getMonth()===b.getMonth()?`${a.getDate()}–${b.getDate()} ${m(a)}`:`${a.getDate()} ${m(a)} – ${b.getDate()} ${m(b)}`):`${a.getDate()} ${m(a)}`};
+const ago=s=>{const d=Math.round((TODAY-pd(s))/864e5);return d<=0?'aujourd’hui':d===1?'hier':d<7?`il y a ${d} jours`:d<14?'la semaine dernière':d<60?`il y a ${Math.round(d/7)} semaines`:d<365?`il y a ${Math.round(d/30)} mois`:'il y a plus d’un an'};
+const VER='<span class="v" title="Compte vérifié"><svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1f5fff"/><path d="M7 12l3 3 7-7" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+const FIC='<span class="tag f">Exemple fictif</span>',REAL='<span class="tag r">Données réelles</span>',USR='<span class="tag u">Créé dans la démo</span>';
+const tagOf=x=>x.user?USR:x.real?REAL:FIC;
+const CITIES={'Québec':[46.81,-71.21],'Lévis':[46.80,-71.18],'Montréal':[45.50,-73.57],'Laval':[45.57,-73.69],'Longueuil':[45.53,-73.52],'Trois-Rivières':[46.35,-72.55],'Sherbrooke':[45.40,-71.89],'Drummondville':[45.88,-72.48],'Saguenay':[48.43,-71.07],'Alma':[48.55,-71.65],'Rimouski':[48.45,-68.52],'Saint-Georges':[46.12,-70.67],'Gatineau':[45.48,-75.70],'Rouyn-Noranda':[48.24,-79.02],'Baie-Comeau':[49.22,-68.15],'Ottawa':[45.42,-75.70],'Toronto':[43.65,-79.38],'Moncton':[46.09,-64.78]};
+const SERIES=['Championnat canadien des rallyes','Championnat des rallyes de l’Est canadien','DMCC','Coupe de Montréal','RMC Québec','Ovale de glace','Défi Glace'];
+const TIERS=[[5,'Puits','Badge Puits sur votre profil','#e9ecef'],[10,'Paddock','Badge Paddock et coulisses du pilote','#ffd200'],[25,'Podium','Badge Podium et nom sur la page du pilote','#ff7a00']];
+const thr=n=>20*2**(n-1),lvl=t=>t<20?0:Math.floor(Math.log2(t/20))+1;
+const hpw=s=>{let h=5381;for(const c of 'paddock:'+s)h=((h<<5)+h+c.charCodeAt(0))|0;return 'h'+(h>>>0).toString(36)};
+const age=b=>{if(!b)return 99;const d=pd(b);let a=TODAY.getFullYear()-d.getFullYear();if(TODAY.getMonth()<d.getMonth()||(TODAY.getMonth()===d.getMonth()&&TODAY.getDate()<d.getDate()))a--;return a};
+const okImg=s=>typeof s==='string'&&/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(s)?s:'';
+const clone=o=>JSON.parse(JSON.stringify(o));
+const unesc=s=>String(s).replace(/&(amp|lt|gt|quot|#39);/g,m=>({'&amp;':'&','&lt;':'<','&gt;':'>','&quot;':'"','&#39;':"'"}[m]));
+
+/* ---------- Base de données locale (comptes et contenus créés dans la démo) ---------- */
+const LS='paddock-db-v3';
+let db=null;
+try{db=JSON.parse(localStorage.getItem(LS)||'null')}catch(e){}
+if(!db||typeof db!=='object'||!db.accounts)db={accounts:{},cur:null,don:{},ev:[],ven:{},off:[],conf:{},notifs:{},feed:[],seq:1};
+const persist=()=>{try{localStorage.setItem(LS,JSON.stringify(db));return true}catch(e){toast('Mémoire du téléphone pleine pour la démo : retirez une photo.');return false}};
+const nid=()=>(db.seq++).toString(36);
+const me=()=>db.cur?db.accounts[db.cur]:null;
+const notify=(accId,txt,link)=>{if(!db.accounts[accId])return;(db.notifs[accId]=db.notifs[accId]||[]).unshift({txt,link:link||'',dt:key(TODAY),read:0});db.notifs[accId]=db.notifs[accId].slice(0,60)};
+const post=(d,h,p)=>{db.feed.unshift({d,h,p:p||'',dt:key(TODAY),user:1});db.feed=db.feed.slice(0,80)};
+const pidOf=a=>'u'+a.id;
+const newAcc=()=>({id:'',nom:'',email:'',pw:'',ville:'Québec',naissance:'',photo:'',roles:{pilote:0,org:0,com:0},pilote:null,org:null,com:null,
+  set:{theme:'auto',notif:{conf:1,near:1,obj:1,off:1,push:1,email:0},priv:{pub:1,lvl:1,anon:0}},cards:[],follow:{},sub:{},hist:[],total:0,visits:{},created:key(TODAY)});
+
+/* ---------- Hydratation: données de base + contenus créés ---------- */
+let P,E,EV,T,C,M,MD,Q;
+function hydrate(){
+  P=clone(BP);T=Object.assign(clone(BT),{});C=clone(BC);M=clone(BM);MD=clone(BMD);Q=clone(BQ);
+  for(const [k,v] of Object.entries(db.ven))T[k]={nom:esc(v.nom),ville:esc(v.ville),lat:+v.lat,lon:+v.lon,cap:+v.cap||0,user:1,desc:esc(v.desc||'Lieu ajouté par un organisateur dans la démo.')};
+  for(const pid in db.don)for(const i in db.don[pid])if(P[pid]&&P[pid].obj&&P[pid].obj[i])P[pid].obj[i][2]+=+db.don[pid][i]||0;
+  for(const a of Object.values(db.accounts)){
+    if(a.roles.pilote&&a.pilote){const pl=a.pilote;
+      P[pidOf(a)]={nom:esc(a.nom),ville:esc(a.ville),d:D[pl.d]?pl.d:'ra',v:1,user:a.id,photo:okImg(a.photo),minor:pl.parent?esc(pl.parent):'',
+        ser:[[D[pl.d]?D[pl.d][0]:'Rallye',esc(pl.serie||'—'),esc(pl.classe||'—'),pl.num===''||pl.num==null?null:esc(pl.num)]],eqt:esc(pl.eq||''),com:[],ab:0,suiv:0,bio:esc(pl.bio||''),
+        obj:(pl.obj||[]).map(o=>[esc(o[0]),+o[1],+o[2],(o[3]||[]).map(r=>[esc(r[0]),esc(r[1]),esc(r[2]),okImg(r[3])])]),res:[],post:esc(pl.post||''),pub:a.set.priv.pub}}
+    if(a.roles.com&&a.com)C['uc'+a.id]={nom:esc(a.com.nom),ville:esc(a.ville),sect:esc(a.com.sect),desc:esc(a.com.desc||''),user:a.id};
+  }
+  for(const p of Object.values(P)){p.suiv=p.suiv||0;p.ab=p.ab||0}
+  for(const a of Object.values(db.accounts)){for(const k in a.follow||{})if(P[k])P[k].suiv++;for(const k in a.sub||{})if(P[k])P[k].ab++}
+  for(const o of db.off)if(C[o.c])M.push({c:o.c,t:esc(o.t),d:esc(o.d),n:esc(o.n),x:esc(o.x),user:1,id:o.id});
+  E=BE.map(e=>({...e,p:e.p.slice()}));
+  for(const e of db.ev)if(T[e.tr])E.push({id:e.id,date:e.date,end:e.end||'',t:esc(e.t),tr:e.tr,o:esc(e.o),d:D[e.d]?e.d:'ra',s:esc(e.s),real:0,user:1,org:e.org,
+    b:e.b[0]?[1,+e.b[1]||0,+e.b[2]||0]:[0],ins:+e.ins||0,p:[],res:[],url:esc(e.url||''),desc:esc(e.desc||''),hor:(e.hor||[]).map(h=>[esc(h[0]),esc(h[1])])});
+  for(const eid in db.conf){const e=E.find(x=>x.id===eid);if(e)for(const pid of db.conf[eid])if(P[pid]&&!e.p.includes(pid))e.p.push(pid)}
+  E.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);EV=Object.fromEntries(E.map(e=>[e.id,e]));
+}
+const home=()=>{const a=me(),n=a&&CITIES[a.ville]?a.ville:'Québec';return {nom:n,lat:CITIES[n][0],lon:CITIES[n][1]}};
+const past=e=>pd(e.end||e.date)<TODAY;
+const days=e=>{const out=[],a=pd(e.date),b=e.end?pd(e.end):a;for(let d=new Date(a);d<=b&&out.length<40;d.setDate(d.getDate()+1))out.push(key(d));return out};
+const km=(a,b)=>{const r=Math.PI/180,x=Math.sin((b.lat-a.lat)*r/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin((b.lon-a.lon)*r/2)**2;return Math.round(12742*Math.asin(Math.sqrt(x)))};
+const dist=e=>km(home(),T[e.tr]);
+const sched=e=>e.hor&&e.hor.length?e.hor:e.d==='ra'?[['Ven. 15 h','Vérifications techniques et départ cérémonial'],['Ven. 18 h','Premières spéciales'],['Sam. 8 h','Départ de la 2e étape'],['Sam. 13 h','Regroupement et service'],['Sam. 19 h','Arrivée et remise des prix']]:e.d==='dr'?[['9 h','Ouverture des puits'],['10 h','Pratiques Pro et Pro-Am'],['13 h','Qualifications'],['16 h','Top 16 en tandem'],['19 h','Finales et podium']]:[['8 h','Ouverture des puits'],['9 h 30','Essais libres'],['12 h','Qualifications'],['14 h','Présentation des pilotes'],['15 h','Finales'],['18 h','Remise des trophées']];
+
+const UI={cy:TODAY.getFullYear(),cm:TODAY.getMonth(),f:{dist:5000,cap:0,ds:[],per:'tous'},showF:false,tab:'pilotes',q:'',su:{step:1,d:{}},err:'',lemail:''};
+
+/* ---------- Petits composants ---------- */
+const ini=n=>String(n).replace(/&[^;]+;/g,'').split(/[\s-]+/).filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+const plate=(id,s)=>{const p=P[id],n=p.ser[0][3];return `<div class="plate${s?' s':''}${n==null||String(n).length>3?' i':''}" style="--pc:${D[p.d][1]}">${n==null?ini(p.nom):n}</div>`};
+const avatar=(a,l)=>{const ph=okImg(a.photo);return ph?`<img class="av${l?' l':''}" src="${ph}" alt="">`:`<div class="avi${l?' l':''}">${esc(ini(a.nom))}</div>`};
+const tot=p=>p.obj.reduce((a,o)=>[a[0]+o[1],a[1]+Math.min(o[2],o[1])],[0,0]);
+const pct=(a,b)=>b?Math.min(100,Math.round(a/b*100)):0;
+const back='<button class="back" data-act="back">‹ Retour</button>';
+const sub1=p=>`${p.ser[0][1]} · ${p.ser[0][2]}${p.ville?' · '+p.ville:''}`;
+const prow=(id,extra)=>{const p=P[id];if(!p)return '';return `<a class="card link row" href="#p-${id}" style="margin:8px 0">${p.photo?`<img class="av" src="${p.photo}" alt="">`:plate(id,1)}<div style="flex:1"><h3>${p.nom} ${p.v?VER:''}</h3><div class="sm mut">${extra||sub1(p)}</div></div>${p.real?'<span class="tag r">Réel</span>':p.user?'<span class="tag u">Démo</span>':''}</a>`};
+const erow=(e,extra)=>`<a class="card link ev" href="#e-${e.id}" style="margin:8px 0;--ec:${D[e.d][1]}"><i></i><div><div class="sm mut">${dshort(e)} · ${D[e.d][0]}${past(e)?' · terminé':''}</div><h3>${e.t}</h3><div class="sm mut">${T[e.tr].nom}${T[e.tr].host?'':', '+T[e.tr].ville} · ${dist(e).toLocaleString('fr-CA')} km</div>${extra||''}</div></a>`;
+const sw=(id,on,label,sub)=>`<label class="li"><span style="flex:1">${label}${sub?`<br><span class="sm mut">${sub}</span>`:''}</span><span class="sw"><input type="checkbox" data-set="${id}" ${on?'checked':''}><i></i></span></label>`;
+const IC={u:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>',b:'<path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9M10 20a2 2 0 0 0 4 0"/>',g:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',s:'<path d="M16 3h5v5M21 3l-7 7M8 21H3v-5M3 21l7-7"/>',h:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/>',o:'<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>',c:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',m:'<path d="M3 7h18v13H3zM8 7V4h8v3"/>',k:'<rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',e:'<path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/>',p:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',l:'<path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',t:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',w:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',f:'<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/>',x:'<path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15"/>',r:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>',i:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>'};
+const ic=k=>`<svg viewBox="0 0 24 24">${IC[k]}</svg>`;
+const li=(icn,label,attrs,right,cls)=>`<button class="li${cls?' '+cls:''}" ${attrs}>${ic(icn)}<span>${label}</span>${right?`<span class="r">${right}</span>`:''}</button>`;
+const lia=(icn,label,href,right)=>`<a class="li" href="${href}">${ic(icn)}<span>${label}</span>${right?`<span class="r">${right}</span>`:''}</a>`;
+
+/* ---------- Bienvenue, connexion, inscription ---------- */
+function welcome(){
+  const accs=Object.values(db.accounts);
+  return `<div class="wel"><div class="flag"></div><p class="big">PADD<span>/</span><br>OCK</p>
+  <p style="font-size:19px;max-width:30ch">Le réseau social du sport motorisé : suivez vos pilotes, trouvez les événements et financez leur saison.</p>
+  <button class="btn pri w" data-go="inscription">Créer un compte</button>
+  <button class="btn w" data-go="connexion">Se connecter</button>
+  ${accs.length?`<p class="sm mut" style="text-align:center">${accs.length} compte(s) enregistré(s) sur cet appareil</p>`:''}
+  <p class="note" style="text-align:center">Démo : vraies séries et vrais résultats publics, comptes et paiements simulés.</p></div>`;
+}
+function login(){
+  const accs=Object.values(db.accounts).sort((a,b)=>a.nom.localeCompare(b.nom));
+  return `<button class="back" data-go="bienvenue">‹ Retour</button><h1>Se connecter</h1>
+  ${UI.err?`<div class="err">${esc(UI.err)}</div>`:''}
+  <form class="fl" id="flogin" style="margin-top:10px"><label class="f">Courriel<input type="email" id="le" autocomplete="username" value="${esc(UI.lemail)}" required></label>
+  <label class="f">Mot de passe<input type="password" id="lp" autocomplete="current-password" required></label>
+  <button class="btn pri w" type="submit">Se connecter</button></form>
+  <button class="btn w" style="margin-top:8px;border:0;background:none;color:var(--mut)" data-act="forgot">Mot de passe oublié?</button>
+  ${accs.length?`<h2>Comptes sur cet appareil</h2><div class="grp">${accs.map(a=>`<button class="li" data-act="pick" data-id="${a.id}" style="min-height:64px">${avatar(a)}<span>${esc(a.nom)}<br><span class="sm mut">${esc(a.email)} · ${roleTxt(a)}</span></span></button>`).join('')}</div><p class="sm mut">Touchez un compte pour remplir le courriel, puis entrez son mot de passe.</p>`:''}
+  <p style="text-align:center;margin-top:20px">Pas encore de compte? <a href="#inscription">Créer un compte</a></p>`;
+}
+const roleTxt=a=>['Visiteur',a.roles.pilote&&'Pilote',a.roles.org&&'Organisateur',a.roles.com&&'Commanditaire'].filter(Boolean).join(' · ');
+function signup(){
+  const s=UI.su,d=s.d,st=s.step,cityOpts=v=>Object.keys(CITIES).map(c=>`<option${c===v?' selected':''}>${c}</option>`).join('');
+  const minor=age(d.naissance)<18;
+  let body='';
+  if(st===1)body=`<h1>Créer un compte</h1><p class="mut">Étape 1 sur 4 · Vos informations</p>
+   <div class="fl"><label class="f">Prénom et nom<input type="text" id="s_nom" autocomplete="name" value="${esc(d.nom||'')}"></label>
+   <label class="f">Courriel<input type="email" id="s_email" autocomplete="email" value="${esc(d.email||'')}"></label>
+   <label class="f">Mot de passe (6 caractères ou plus)<input type="password" id="s_pw" autocomplete="new-password"></label>
+   <label class="f">Ville<select id="s_ville">${cityOpts(d.ville||'Québec')}</select></label>
+   <label class="f">Date de naissance<input type="date" id="s_nais" value="${esc(d.naissance||'')}"></label></div>`;
+  if(st===2)body=`<h1>Votre rôle</h1><p class="mut">Étape 2 sur 4 · Choisissez un ou plusieurs rôles. Tout le monde est aussi visiteur.</p>
+   <label class="rc"><input type="checkbox" checked disabled><span><b>Visiteur</b><br><span class="sm mut">Suivre des pilotes, donner, s’abonner, acheter des billets.</span></span></label>
+   <label class="rc"><input type="checkbox" id="r_pil" ${d.pil?'checked':''}><span><b>Pilote</b><br><span class="sm mut">Profil, numéros de course, cagnotte de saison et présences aux événements.</span></span></label>
+   <label class="rc"><input type="checkbox" id="r_org" ${d.org?'checked':''}><span><b>Organisateur d’événements</b><br><span class="sm mut">Créer des événements, vendre des billets et des inscriptions.</span></span></label>
+   <label class="rc"><input type="checkbox" id="r_com" ${d.com?'checked':''}><span><b>Commanditaire</b><br><span class="sm mut">Publier des offres de commandite et appuyer des pilotes.</span></span></label>`;
+  if(st===3)body=`<h1>Détails</h1><p class="mut">Étape 3 sur 4</p>${roleForms(d,minor)}${!d.pil&&!d.org&&!d.com?'<div class="card">Rien à ajouter pour un compte visiteur. Passez à l’étape suivante.</div>':''}`;
+  if(st===4)body=`<h1>Photo de profil</h1><p class="mut">Étape 4 sur 4 · Facultatif</p>
+   <div class="row" style="margin:12px 0">${d.photo?`<img class="av l" src="${okImg(d.photo)}" alt="">`:`<div class="avi l">${esc(ini(d.nom||'?'))}</div>`}<label class="btn">Choisir une photo<input type="file" accept="image/*" data-photo="su" hidden></label>${d.photo?'<button class="btn" data-act="sunophoto">Retirer</button>':''}</div>
+   <label class="rc"><input type="checkbox" id="s_cgu" ${d.cgu?'checked':''}><span>J’accepte les conditions d’utilisation et la politique de confidentialité de la démo.</span></label>
+   ${d.pil||d.org||d.com?'<div class="card sm">La vérification d’identité est <b>simulée</b> dans la démo : elle sera approuvée automatiquement.</div>':''}`;
+  return `<button class="back" data-act="suback">‹ ${st===1?'Annuler':'Étape précédente'}</button><div class="prog">${[1,2,3,4].map(i=>`<i class="${i<=st?'on':''}"></i>`).join('')}</div>${body}
+  ${UI.err?`<div class="err" style="margin-top:12px">${esc(UI.err)}</div>`:''}
+  <button class="btn pri w" style="margin-top:16px" data-act="sunext">${st===4?'Créer mon compte':'Continuer'}</button>`;
+}
+function roleForms(d,minor,only){
+  const dopt=v=>Object.entries(D).map(([k,x])=>`<option value="${k}"${k===v?' selected':''}>${x[0]}</option>`).join('');
+  let h='<datalist id="dl_ser">'+SERIES.map(s=>`<option value="${s}">`).join('')+'</datalist>';
+  if(d.pil&&(!only||only==='pil'))h+=`<div class="card fl"><h3>Profil pilote</h3>
+   <label class="f">Discipline<select id="p_d">${dopt(d.p_d||'ra')}</select></label>
+   <label class="f">Série principale<input type="text" id="p_serie" list="dl_ser" value="${esc(d.p_serie||'')}" placeholder="Ex. DMCC"></label>
+   <label class="f">Classe<input type="text" id="p_classe" value="${esc(d.p_classe||'')}" placeholder="Ex. Pro-Am"></label>
+   <label class="f">Numéro de course<input type="text" id="p_num" inputmode="numeric" maxlength="4" value="${esc(d.p_num||'')}"></label>
+   <label class="f">Écurie ou équipe (facultatif)<input type="text" id="p_eq" value="${esc(d.p_eq||'')}"></label>
+   <label class="f">Présentation<textarea id="p_bio" maxlength="400">${esc(d.p_bio||'')}</textarea></label>
+   ${minor?`<div class="card" style="background:var(--rs);border-color:transparent;margin:0"><b>Pilote mineur :</b> un parent doit gérer le compte et recevoir les fonds.</div>
+   <label class="f">Nom du parent gestionnaire<input type="text" id="p_par" value="${esc(d.p_par||'')}"></label>
+   <label class="f">Courriel du parent<input type="email" id="p_parm" value="${esc(d.p_parm||'')}"></label>`:''}</div>`;
+  if(d.org&&(!only||only==='org'))h+=`<div class="card fl"><h3>Organisateur</h3>
+   <label class="f">Nom de l’organisation<input type="text" id="o_nom" value="${esc(d.o_nom||'')}" placeholder="Ex. Club Rallye de la Beauce"></label>
+   <label class="f">Site web (facultatif)<input type="url" id="o_site" value="${esc(d.o_site||'')}"></label></div>`;
+  if(d.com&&(!only||only==='com'))h+=`<div class="card fl"><h3>Commanditaire</h3>
+   <label class="f">Nom de l’entreprise<input type="text" id="c_nom" value="${esc(d.c_nom||'')}"></label>
+   <label class="f">Secteur<input type="text" id="c_sect" value="${esc(d.c_sect||'')}" placeholder="Ex. Pneus et mécanique"></label>
+   <label class="f">Description<textarea id="c_desc" maxlength="400">${esc(d.c_desc||'')}</textarea></label></div>`;
+  return h;
+}
+const val=id=>{const x=document.getElementById(id);return x?x.value.trim():undefined};
+const chk=id=>{const x=document.getElementById(id);return x?x.checked:undefined};
+function readRoleForms(d){
+  for(const k of ['p_d','p_serie','p_classe','p_num','p_eq','p_bio','p_par','p_parm','o_nom','o_site','c_nom','c_sect','c_desc']){const v=val(k);if(v!==undefined)d[k]=v}
+}
+function checkRoleForms(d,minor){
+  if(d.pil){if(!d.p_serie)return 'Indiquez votre série principale.';if(d.p_num&&!/^\d{1,4}$/.test(d.p_num))return 'Le numéro de course doit contenir seulement des chiffres.';
+    if(minor&&(!d.p_par||!/^\S+@\S+\.\S+$/.test(d.p_parm||'')))return 'Un pilote mineur doit indiquer le nom et le courriel d’un parent.'}
+  if(d.org&&!d.o_nom)return 'Indiquez le nom de votre organisation.';
+  if(d.com&&(!d.c_nom||!d.c_sect))return 'Indiquez le nom et le secteur de votre entreprise.';
+  return '';
+}
+function applyRoles(a,d){
+  if(d.pil){a.roles.pilote=1;a.pilote=Object.assign(a.pilote||{obj:[],post:''},{d:d.p_d||'ra',serie:d.p_serie,classe:d.p_classe||'',num:d.p_num||'',eq:d.p_eq||'',bio:d.p_bio||'',parent:age(a.naissance)<18?d.p_par:'',parentEmail:age(a.naissance)<18?d.p_parm:''})}
+  if(d.org){a.roles.org=1;a.org={nom:d.o_nom,site:d.o_site||''}}
+  if(d.com){a.roles.com=1;a.com={nom:d.c_nom,sect:d.c_sect,desc:d.c_desc||''}}
+}
+function suNext(){
+  const s=UI.su,d=s.d;UI.err='';
+  if(s.step===1){d.nom=val('s_nom');d.email=val('s_email').toLowerCase();const pw=$('#s_pw').value;d.ville=val('s_ville');d.naissance=val('s_nais');
+    if(!d.nom||d.nom.length<2)UI.err='Entrez votre prénom et votre nom.';
+    else if(!/^\S+@\S+\.\S+$/.test(d.email))UI.err='Entrez un courriel valide.';
+    else if(Object.values(db.accounts).some(a=>a.email===d.email))UI.err='Un compte existe déjà avec ce courriel sur cet appareil.';
+    else if(pw.length<6&&!d.pw)UI.err='Le mot de passe doit avoir au moins 6 caractères.';
+    else if(!d.naissance)UI.err='Entrez votre date de naissance.';
+    else if(age(d.naissance)<13)UI.err='Il faut avoir 13 ans ou plus. Un parent peut créer le compte.';
+    if(pw.length>=6)d.pw=hpw(pw);
+  }else if(s.step===2){d.pil=chk('r_pil');d.org=chk('r_org');d.com=chk('r_com');
+    if(age(d.naissance)<18&&(d.org||d.com))UI.err='Les rôles organisateur et commanditaire sont réservés aux 18 ans et plus.';
+  }else if(s.step===3){readRoleForms(d);UI.err=checkRoleForms(d,age(d.naissance)<18)}
+  else if(s.step===4){d.cgu=chk('s_cgu');if(!d.cgu)UI.err='Acceptez les conditions pour créer le compte.';else return createAccount()}
+  if(!UI.err)s.step++;
+  draw();scrollTo(0,0);
+}
+function createAccount(){
+  const d=UI.su.d,a=newAcc();a.id=nid();a.nom=d.nom;a.email=d.email;a.pw=d.pw;a.ville=d.ville;a.naissance=d.naissance;a.photo=okImg(d.photo);
+  applyRoles(a,d);db.accounts[a.id]=a;db.cur=a.id;
+  notify(a.id,'Bienvenue sur Paddock, '+esc(a.nom.split(' ')[0])+'! Votre compte est prêt.','#moi');
+  if(a.roles.pilote){post(a.pilote.d,`Nouveau pilote sur Paddock : <b>${esc(a.nom)}</b> (${esc(a.pilote.serie)}${a.pilote.num?' · no '+esc(a.pilote.num):''}).`,pidOf(a));notify(a.id,'Vérification d’identité simulée : approuvée. Vous pouvez créer votre cagnotte.','#moi')}
+  if(a.roles.org)post('any',`Nouvel organisateur : <b>${esc(a.org.nom)}</b>.`);
+  if(a.roles.com)post('any',`Nouveau commanditaire : <b>${esc(a.com.nom)}</b> (${esc(a.com.sect)}).`);
+  if(!persist()){a.photo='';persist()}
+  UI.su={step:1,d:{}};UI.err='';location.hash='moi';toast('Compte créé. Bienvenue, '+a.nom.split(' ')[0]+'!');
+}
+function doLogin(){
+  const e=val('le').toLowerCase(),p=$('#lp').value,a=Object.values(db.accounts).find(x=>x.email===e);
+  if(!a){UI.err='Aucun compte avec ce courriel sur cet appareil.';UI.lemail=e;return draw()}
+  if(a.pw!==hpw(p)){UI.err='Mot de passe incorrect.';UI.lemail=e;return draw()}
+  db.cur=a.id;UI.err='';UI.lemail='';persist();applyTheme();location.hash='fil';toast('Bon retour, '+a.nom.split(' ')[0]+'!');
+}
+function logout(){db.cur=null;persist();closeSheet();applyTheme();location.hash='bienvenue';toast('Vous êtes déconnecté.')}
+
+/* ---------- Fil ---------- */
+function feed(){
+  const a=me(),top=Object.entries(a.visits).sort((x,y)=>y[1]-x[1]).slice(0,2).map(x=>D[x[0]]?D[x[0]][0]:'').filter(Boolean);
+  const it=[
+   {d:'ra',dt:'2026-11-03',real:1,p:'r1',h:`<b>Jean-Sébastien Besner</b> et Hubert Gaudreau remportent le <a href="#e-e18">Rallye de Charlevoix</a>.`},
+   {d:'mn',dt:'2026-11-18',real:1,h:`Le <a href="#e-e20">Grand Prix Ski-Doo de Valcourt</a> célébrera sa 45e édition du 12 au 14 février 2027.`},
+   {d:'dr',dt:'2026-11-23',p:'f1',h:`<b>Maxime Lavoie</b> a publié une preuve de dépense : facture Pneus Sirois, 16 pneus (1 640 $).`},
+   {d:'mn',dt:'2026-11-22',p:'f3',h:`<b>Gabriel Fortier</b> a confirmé sa présence au <a href="#e-e20">Grand Prix Ski-Doo de Valcourt</a>.`},
+   {d:'ka',dt:'2026-11-21',p:'f2',h:`<b>Léa Gagnon</b> a atteint son objectif « Frais d’inscription 2027 » (900 $).`},
+   {d:'gl',dt:'2026-11-20',p:'f4',h:`<b>Antoine Roy</b> a confirmé sa présence au <a href="#e-x1">Défi Glace — manche 1</a>.`},
+   {d:'ra',dt:'2026-09-21',real:1,p:'r1',h:`<b>Jean-Sébastien Besner</b> et Hubert Gaudreau gagnent le <a href="#e-e15">Rallye Beauce-Appalaches</a>, nouveau au calendrier national.`},
+   {d:'any',dt:'2026-11-19',h:`<b>Pneus Sirois</b> offre une <a href="#marche">commandite pneus 2027</a> à 2 pilotes.`}].concat(db.feed.filter(i=>!i.p||P[i.p]));
+  const sc=i=>(a.visits[i.d]||0)*2+(i.p&&a.follow[i.p]?5:0)+(i.user?3:0)-((TODAY-pd(i.dt))/864e5)/7;
+  it.sort((x,y)=>sc(y)-sc(x));
+  const soon=E.filter(e=>!past(e)).slice(0,3);
+  return `<h1>Votre fil</h1><p class="sm mut" style="margin:0">${top.length?`Trié selon vos visites (${top.join(', ')}) et les pilotes que vous suivez.`:'Visitez des pilotes et des événements : votre fil s’adapte à vos habitudes.'}</p>
+  ${it.map(i=>{const ec=i.d==='any'||!D[i.d]?'var(--yel)':D[i.d][1],lab=i.d==='any'||!D[i.d]?'Paddock':D[i.d][0];return `<div class="card fc" style="--ec:${ec}">${i.p&&P[i.p]?`<a class="row" href="#p-${i.p}" style="text-decoration:none;margin-bottom:8px">${P[i.p].photo?`<img class="av" src="${P[i.p].photo}" alt="">`:plate(i.p,1)}<span class="sm mut">${lab} · ${ago(i.dt)}</span><span class="sp">${tagOf(i)}</span></a>`:`<div class="row sm mut" style="margin-bottom:6px"><span>${lab} · ${ago(i.dt)}</span><span class="sp">${tagOf(i)}</span></div>`}<p>${i.h}</p></div>`}).join('')}
+  <h2>Prochains événements</h2>${soon.map(e=>erow(e)).join('')||'<p class="mut">Aucun.</p>'}`;
+}
+
+/* ---------- Calendrier ---------- */
+function filtered(){const f=UI.f;return E.filter(e=>(f.dist>=5000||dist(e)<=f.dist)&&T[e.tr].cap>=f.cap&&(!f.ds.length||f.ds.includes(e.d))&&(f.per==='tous'||(f.per==='venir'?!past(e):past(e))))}
+function cal(){
+  const y=UI.cy,m=UI.cm,first=new Date(y,m,1),off=(first.getDay()+6)%7,n=new Date(y,m+1,0).getDate();
+  const ev=filtered(),f=UI.f,nf=(f.dist<5000)+(f.cap>0)+(f.ds.length>0)+(f.per!=='tous');
+  let cells='';for(let i=0;i<off;i++)cells+='<div class="dc blank"></div>';
+  for(let d=1;d<=n;d++){const k=key(new Date(y,m,d)),l=ev.filter(e=>days(e).includes(k));
+    cells+=`<button class="dc${l.length?' has':''}${k===key(TODAY)?' today':''}" ${l.length?`style="--hc:${D[l[0].d][1]}"`:''} data-day="${k}" aria-label="${d}, ${l.length} événement(s)">${d}<span class="dots">${l.map(e=>`<span class="dot" style="background:${D[e.d][1]}"></span>`).join('')}</span></button>`}
+  const month=new Date(y,m,1).toLocaleDateString('fr-CA',{month:'long',year:'numeric'});
+  const list=ev.filter(e=>days(e).some(k=>{const d=pd(k);return d.getFullYear()===y&&d.getMonth()===m}));
+  const DV=v=>v>=5000?'partout':'jusqu’à '+v.toLocaleString('fr-CA')+' km';const a=me();
+  return `<div class="mh"><button class="btn" data-act="mprev" aria-label="Mois précédent">‹</button><h1>${month}</h1><button class="btn" data-act="mnext" aria-label="Mois suivant">›</button></div>
+  <div class="row" style="margin-bottom:10px"><button class="btn${UI.showF?' on':''}" data-act="tf">Filtres${nf?` (${nf})`:''}</button><button class="btn" data-act="today">Aujourd’hui</button>${a.roles.org?'<a class="btn yel" href="#creer-evenement">+ Événement</a>':''}</div>
+  ${UI.showF?`<div class="card fl">
+   <label class="f">Distance de ${home().nom} : <span id="dv">${DV(f.dist)}</span><input type="range" id="fd" min="50" max="5000" step="50" value="${f.dist}"></label>
+   <label class="f">Capacité de spectateurs (déclarée par l’organisateur)<select id="fc">${[[0,'Toutes'],[2000,'2 000 et plus'],[5000,'5 000 et plus'],[10000,'10 000 et plus']].map(([v,t])=>`<option value="${v}"${f.cap==v?' selected':''}>${t}</option>`).join('')}</select></label>
+   <label class="f">Période<select id="fp">${[['tous','Tous les événements'],['venir','À venir seulement'],['passes','Terminés seulement']].map(([v,t])=>`<option value="${v}"${f.per===v?' selected':''}>${t}</option>`).join('')}</select></label>
+   <div><div class="sm" style="font-weight:600;margin-bottom:6px">Type d’événement</div><div class="row" style="gap:6px">${Object.entries(D).map(([k,v])=>`<button class="chip${f.ds.includes(k)?' on':''}" data-fd="${k}"><span class="dot" style="background:${v[1]}"></span>${v[0]}</button>`).join('')}</div></div>
+   <button class="btn" data-act="fr">Effacer les filtres</button></div>`:''}
+  <div class="grid7">${['Lu','Ma','Me','Je','Ve','Sa','Di'].map(x=>`<div class="wd">${x}</div>`).join('')}${cells}</div>
+  <p class="sm mut">Touchez une journée pour l’agrandir. ${list.length} événement(s) ce mois-ci.</p>
+  <h2>Ce mois-ci</h2>${list.length?list.map(e=>erow(e)).join(''):'<div class="card mut">Aucun événement ne correspond à vos filtres ce mois-ci.</div>'}`;
+}
+function dayHTML(k){
+  const all=E.filter(e=>days(e).includes(k)),l=filtered().filter(e=>days(e).includes(k)),d=pd(k),hid=all.length-l.length;
+  return `<div class="in"><button class="back" data-act="dz">‹ Retour au calendrier</button>
+  <div class="row" style="align-items:flex-end;gap:14px"><div class="bign">${d.getDate()}</div><div><div style="font:700 26px/1.1 var(--cf);text-transform:capitalize">${d.toLocaleDateString('fr-CA',{weekday:'long'})}</div><div class="mut" style="text-transform:capitalize">${d.toLocaleDateString('fr-CA',{month:'long',year:'numeric'})}</div></div></div>
+  <p class="mut">${l.length?l.length+' événement(s) cette journée':'Aucun événement cette journée.'}${hid?` · ${hid} masqué(s) par vos filtres`:''}</p>
+  ${l.map(e=>erow(e,`<div class="row sm" style="margin-top:6px;gap:6px">${past(e)?`<span class="tag">${e.res.length?'Résultats disponibles':'Terminé'}</span>`:`<span class="tag">${e.p.length} pilote(s) confirmé(s)</span><span class="tag">${e.b[0]?'Billets dès '+fmt(e.b[1]):'Billetterie de l’organisateur'}</span>`}${tagOf(e)}</div>`)).join('')}
+  ${me().roles.org&&!past({date:k})?`<a class="btn yel w" href="#creer-evenement" data-date="${k}">+ Créer un événement cette journée</a>`:''}</div>`;
+}
+let zc=null;const rm=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+function openDay(k,cell){
+  const z=$('#dayz'),r=cell.getBoundingClientRect();z.innerHTML=dayHTML(k);z.hidden=false;z.scrollTop=0;zc=cell;
+  if(rm())return;
+  z.style.transition='none';z.style.transformOrigin='0 0';
+  z.style.transform=`translate(${r.left}px,${r.top}px) scale(${r.width/innerWidth},${r.height/innerHeight})`;z.style.opacity='.5';z.style.borderRadius='40px';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{z.style.transition='transform .4s cubic-bezier(.2,.8,.2,1),opacity .25s,border-radius .4s';z.style.transform='none';z.style.opacity='1';z.style.borderRadius='0'}));
+}
+function closeDay(now){
+  const z=$('#dayz');if(z.hidden)return;
+  if(now||!zc||!zc.isConnected||rm()){z.hidden=true;z.style.transform='none';return}
+  const r=zc.getBoundingClientRect();z.style.transform=`translate(${r.left}px,${r.top}px) scale(${r.width/innerWidth},${r.height/innerHeight})`;z.style.opacity='0';
+  setTimeout(()=>{z.hidden=true;z.style.transform='none'},380);
+}
+
+/* ---------- Pilote ---------- */
+function pilot(id){
+  const p=P[id];if(!p)return notfound();const a=me(),mine=p.user===a.id;
+  const up=E.filter(e=>e.p.includes(id)&&!past(e)),sub=a.sub[id],dc=D[p.d][1];
+  const head=`${back}<div class="band" style="--dc:${dc}"><div class="hero">${p.photo?`<img class="av l" src="${p.photo}" alt="">`:''}${plate(id)}<div><h1>${p.nom} ${p.v?VER:''}</h1><div class="mut">${D[p.d][0]}${p.ville?' · '+p.ville:''}${p.eq?` · <a href="#q-${p.eq}">${Q[p.eq].nom}</a>`:''}${p.eqt?' · '+p.eqt:''}</div><div style="margin-top:6px">${tagOf(p)}</div></div></div></div>`;
+  const series=`<h2>Séries et numéros</h2><div class="card" style="padding:4px 12px"><table><tr><th>Discipline</th><th>Série · classe</th><th class="r">No</th></tr>${p.ser.map(s=>`<tr><td>${s[0]}</td><td>${s[1]} · ${s[2]}</td><td class="r"><b>${s[3]??'—'}</b></td></tr>`).join('')}</table>${p.co||p.auto?`<p class="sm mut" style="margin:8px 0">${p.co?'Copilote : '+p.co:''}${p.co&&p.auto?' · ':''}${p.auto?'Voiture : '+p.auto:''}</p>`:''}</div>`;
+  const results=p.res.length?`<h2>Résultats</h2><div class="card" style="padding:4px 12px"><table><tr><th>Course</th><th>Lieu</th><th class="r">Pos.</th></tr>${p.res.map(r=>`<tr><td>${r[3]?`<a href="#e-${r[3]}">${r[0]}</a>`:r[0]}</td><td>${r[1]}</td><td class="r"><b>${r[2]}</b></td></tr>`).join('')}</table></div>`:'';
+  const fol=mine?'<a class="btn" href="#moi">Gérer mon profil</a>':`<button class="btn${a.follow[id]?' on':''}" data-act="follow" data-id="${id}">${a.follow[id]?'Suivi ✓':'Suivre'}</button>`;
+  if(p.real)return `${head}
+  <div class="card claim sm"><b>Profil public non réclamé.</b> Bâti à partir de résultats publiés. Ce pilote n’est pas inscrit sur Paddock : les dons et abonnements s’activent seulement quand il réclame son profil et fait vérifier son identité.</div>
+  <div class="row" style="margin:12px 0">${fol}<button class="btn yel" data-act="claim">C’est moi : réclamer ce profil</button></div>
+  ${series}${results}${up.length?`<h2>Événements à venir</h2>${up.map(e=>erow(e)).join('')}`:''}`;
+  const [c,am]=tot(p);
+  return `${head}
+  ${p.minor?`<div class="card sm" style="background:var(--rs);border-color:transparent">Compte de pilote mineur géré par un parent : <b>${p.minor}</b>. Les fonds sont versés au compte du parent.</div>`:''}
+  ${!p.v?`<div class="card sm">Vérification d’identité en cours. Les dons seront possibles une fois le compte vérifié.</div>`:''}
+  ${p.bio?`<p>${p.bio}</p>`:''}
+  <div class="row" style="margin:12px 0">${fol}${mine?'':`<button class="btn yel" data-act="sub" data-id="${id}" ${p.v?'':'disabled'}>${sub?'Abonné · '+fmt(sub)+'/mois':'S’abonner'}</button><button class="btn" data-act="contact" data-id="${id}">Message</button>`}</div>
+  <div class="stats"><div><b>${p.suiv}</b><span>suiveurs</span></div><div><b>${p.ab}</b><span>abonnés</span></div><div><b>${p.res.length+up.length}</b><span>courses</span></div><div><b>${p.res.filter(r=>/^1/.test(r[2])).length}</b><span>victoires</span></div></div>
+  ${series}
+  <h2>Commanditaires</h2>${p.com.length?`<div class="row" style="gap:6px">${p.com.map(k=>`<a class="chip" href="#c-${k}">${C[k].nom}</a>`).join('')}</div>`:'<p class="mut">Aucun pour l’instant. <a href="#marche">Voir le marché des commandites</a></p>'}
+  <h2>Besoins pour la saison</h2>
+  ${p.obj.length?`<div class="card"><div class="row"><b style="font:700 30px var(--cf)">${fmt(am)}</b><span class="mut">sur ${fmt(c)}</span><span class="sp tag">${pct(am,c)} %</span></div><div class="bar" style="margin-top:8px"><i style="width:${pct(am,c)}%"></i></div>
+  <p class="sm mut">Le pilote reçoit tout ce qui est amassé, même si l’objectif n’est pas atteint, moins 5 % de frais de gestion. Chaque dépense est appuyée par une preuve.</p></div>
+  ${p.obj.map((o,i)=>`<div class="card"><div class="row"><h3>${o[0]}</h3><span class="sp sm mut">${fmt(o[2])} / ${fmt(o[1])}</span></div><div class="bar" style="margin:8px 0"><i style="width:${pct(o[2],o[1])}%"></i></div>
+   ${o[3].map(pr=>`<div class="proof">${pr[3]?`<img src="${pr[3]}" alt="">`:ic('f').replace('<svg','<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"')}<div><b>Preuve de dépense</b> · ${pr[0]} · ${pr[1]}<div class="mut">${pr[2]}</div></div></div>`).join('')}
+   <div class="row" style="margin-top:8px">${o[2]>=o[1]?'<span class="sm" style="color:var(--grn);font-weight:600">Objectif atteint</span>':''}${mine?`<button class="btn sp sm2" data-act="proof" data-i="${i}">+ Preuve</button>`:`<button class="btn sp${p.v?' pri':''}" data-act="don" data-id="${id}" data-i="${i}" ${p.v?'':'disabled'}>Donner</button>`}</div></div>`).join('')}`:`<p class="mut">${mine?'Vous n’avez pas encore d’objectif. ':'Aucun objectif publié pour l’instant.'}${mine?'<a href="#moi">Créer ma cagnotte</a>':''}</p>`}
+  <h2>Événements à venir</h2>${up.length?up.map(e=>erow(e)).join(''):'<p class="mut">Aucune présence confirmée.</p>'}
+  ${results}
+  ${p.post?`<h2>Publications</h2><div class="card"><div class="sm mut">${p.nom}</div><p>${p.post}</p></div>`:''}`;
+}
+
+/* ---------- Événement ---------- */
+function event(id){
+  const e=EV[id];if(!e)return notfound();const t=T[e.tr],ps=past(e),a=me(),mp=a.roles.pilote?pidOf(a):null,conf=mp&&e.p.includes(mp),mine=e.org===a.id;
+  const tix=ps?`<div class="card"><h3>Événement terminé</h3><p class="sm mut">${e.res.length?'Les résultats sont plus bas.':'Les résultats n’ont pas encore été ajoutés par l’organisateur.'}</p></div>`
+   :`<div class="card"><h3>Billets</h3>${e.b[0]?`<p class="sm mut">Adulte ${fmt(e.b[1])}${e.b[2]?' · Enfant '+fmt(e.b[2]):' · Enfant gratuit'}. Billet électronique avec code QR.</p><button class="btn pri w" data-act="tix" data-id="${id}" ${mine?'disabled':''}>Acheter des billets</button>`:`<p class="sm mut">Cet organisateur vend ses billets sur sa propre billetterie${e.url?' ('+e.url+')':''}.</p><button class="btn w" data-act="ext" data-id="${id}">Billetterie de l’organisateur ↗</button>`}
+   ${mp?`<button class="btn w${conf?' on':' yel'}" style="margin-top:8px" data-act="conf" data-id="${id}">${conf?'Présence confirmée ✓ (annuler)':'Je serai présent comme pilote'}</button>`:''}
+   ${e.ins&&mp&&!conf?`<button class="btn w" style="margin-top:8px" data-act="ins" data-id="${id}">Payer mon inscription (${fmt(e.ins)})</button>`:''}
+   ${!e.ins&&!mine?'<p class="sm mut" style="margin-top:8px">Inscriptions des pilotes auprès de l’organisateur.</p>':''}</div>`;
+  return `${back}<div class="band" style="--dc:${D[e.d][1]}"><div class="row" style="gap:6px"><span class="chip" style="cursor:default;background:${D[e.d][1]};border-color:${D[e.d][1]};color:#fff">${D[e.d][0]}</span><span class="chip" style="cursor:default">${e.s}</span></div>
+  <h1>${e.t}</h1><p class="mut" style="margin:0;text-transform:capitalize">${drange(e)}</p>
+  <p style="margin:6px 0 0"><a href="#t-${e.tr}">${t.nom}</a>${t.host?'':', '+t.ville} · ${dist(e).toLocaleString('fr-CA')} km de ${home().nom}</p><div style="margin-top:8px">${tagOf(e)}</div></div>
+  <p class="sm mut">Organisé par <b style="color:var(--ink)">${e.o}</b> ${e.real?'· profil d’organisateur non réclamé':VER} · capacité déclarée ${t.cap.toLocaleString('fr-CA')} spectateurs</p>
+  ${mine?`<div class="card claim sm row"><span>Vous êtes l’organisateur de cet événement.</span><button class="btn sm2 dan sp" data-act="delev" data-id="${id}">Supprimer</button></div>`:''}
+  ${e.desc?`<p>${e.desc}</p>`:''}
+  ${tix}
+  ${ps&&e.res.length?`<h2>Résultats</h2>${e.res.map(r=>prow(r[0],r[1])).join('')}`:''}
+  ${!ps?`<h2>Horaire</h2><ul class="sched card" style="padding:4px 14px">${sched(e).map(s=>`<li><b>${s[0]}</b><span>${s[1]}</span></li>`).join('')}</ul>${e.hor&&e.hor.length?'':'<p class="sm mut">Horaire indicatif.</p>'}`:''}
+  <h2>${ps?'Pilotes présents sur Paddock':'Pilotes confirmés'} (${e.p.length})</h2>${e.p.length?e.p.map(x=>prow(x)).join(''):'<p class="mut">Aucun pilote n’a encore confirmé.</p>'}
+  <h2>Infos pratiques</h2><div class="card sm"><p>${t.desc}</p>${e.url?`<p class="mut">Site officiel : ${e.url}</p>`:''}</div>`;
+}
+function newEvent(){
+  const a=me(),d=UI.ne||{};const tro=Object.entries(T).sort((x,y)=>x[1].nom.localeCompare(y[1].nom)).map(([k,v])=>`<option value="${k}"${d.tr===k?' selected':''}>${v.nom}${v.host?'':' ('+v.ville+')'}</option>`).join('');
+  return `${back}<h1>Créer un événement</h1><p class="mut">Publié par ${esc(a.org.nom)}. Il apparaîtra tout de suite dans le calendrier.</p>
+  ${UI.err?`<div class="err">${esc(UI.err)}</div>`:''}
+  <div class="fl" style="margin-top:12px">
+  <label class="f">Nom de l’événement<input type="text" id="n_t" maxlength="80" value="${esc(d.t||'')}"></label>
+  <label class="f">Discipline<select id="n_d">${Object.entries(D).map(([k,x])=>`<option value="${k}"${d.d===k?' selected':''}>${x[0]}</option>`).join('')}</select></label>
+  <label class="f">Série ou championnat<input type="text" id="n_s" list="dl_ser2" value="${esc(d.s||'')}"><datalist id="dl_ser2">${SERIES.map(s=>`<option value="${s}">`).join('')}</datalist></label>
+  <div class="row" style="flex-wrap:nowrap"><label class="f" style="flex:1">Début<input type="date" id="n_date" value="${esc(d.date||'')}"></label><label class="f" style="flex:1">Fin (facultatif)<input type="date" id="n_end" value="${esc(d.end||'')}"></label></div>
+  <label class="f">Lieu<select id="n_tr"><option value="_new"${d.tr==='_new'?' selected':''}>+ Nouveau lieu…</option>${tro}</select></label>
+  <div class="card fl" id="n_newv" style="margin:0${d.tr&&d.tr!=='_new'?';display:none':''}"><label class="f">Nom du lieu<input type="text" id="n_vn" value="${esc(d.vn||'')}" placeholder="Ex. Autodrome de la Rive-Nord"></label>
+   <label class="f">Ville<select id="n_vc">${Object.keys(CITIES).map(c=>`<option${c===(d.vc||a.ville)?' selected':''}>${c}</option>`).join('')}</select></label>
+   <label class="f">Capacité de spectateurs<input type="number" id="n_cap" min="0" step="100" value="${esc(d.cap||'2000')}"></label></div>
+  <label class="f">Billets<select id="n_bm"><option value="site"${d.bm!=='ext'?' selected':''}>Vendus sur Paddock</option><option value="ext"${d.bm==='ext'?' selected':''}>Billetterie externe de l’organisateur</option></select></label>
+  <div class="row" id="n_bsite" style="flex-wrap:nowrap${d.bm==='ext'?';display:none':''}"><label class="f" style="flex:1">Prix adulte ($)<input type="number" id="n_pa" min="0" value="${esc(d.pa??'20')}"></label><label class="f" style="flex:1">Prix enfant ($)<input type="number" id="n_pe" min="0" value="${esc(d.pe??'5')}"></label></div>
+  <label class="f" id="n_bext" style="${d.bm==='ext'?'':'display:none'}">Adresse de la billetterie<input type="text" id="n_url" value="${esc(d.url||'')}" placeholder="Ex. billets.monclub.ca"></label>
+  <label class="f">Frais d’inscription des pilotes ($, 0 si aucun)<input type="number" id="n_ins" min="0" value="${esc(d.ins??'75')}"></label>
+  <label class="f">Description<textarea id="n_desc" maxlength="600">${esc(d.desc||'')}</textarea></label>
+  <div><div class="sm" style="font-weight:600;margin-bottom:6px">Horaire de la journée (facultatif)</div>
+  ${[0,1,2,3,4].map(i=>`<div class="row" style="flex-wrap:nowrap;margin-bottom:6px"><input type="text" id="n_h${i}" style="width:7em;flex:none" placeholder="${['8 h','10 h','13 h','16 h','19 h'][i]}" value="${esc((d.hor||[])[i]?.[0]||'')}"><input type="text" id="n_l${i}" placeholder="${['Ouverture des puits','Essais','Qualifications','Finales','Remise des prix'][i]}" value="${esc((d.hor||[])[i]?.[1]||'')}"></div>`).join('')}</div>
+  <button class="btn pri w" data-act="nesave">Publier l’événement</button></div>`;
+}
+function readNE(){const d={t:val('n_t'),d:val('n_d'),s:val('n_s'),date:val('n_date'),end:val('n_end'),tr:val('n_tr'),vn:val('n_vn'),vc:val('n_vc'),cap:val('n_cap'),bm:val('n_bm'),pa:val('n_pa'),pe:val('n_pe'),url:val('n_url'),ins:val('n_ins'),desc:val('n_desc'),hor:[]};
+  for(let i=0;i<5;i++){const h=val('n_h'+i),l=val('n_l'+i);if(h||l)d.hor.push([h,l])}return d}
+function saveNE(){
+  const a=me(),d=readNE();UI.ne=d;UI.err='';
+  if(!d.t)UI.err='Donnez un nom à l’événement.';else if(!d.date)UI.err='Choisissez la date de début.';else if(d.end&&d.end<d.date)UI.err='La date de fin doit suivre la date de début.';
+  else if(d.tr==='_new'&&!d.vn)UI.err='Donnez un nom au nouveau lieu.';
+  if(UI.err){draw();scrollTo(0,0);return}
+  let tr=d.tr;if(tr==='_new'){tr='v'+nid();const c=CITIES[d.vc]||CITIES['Québec'];db.ven[tr]={nom:d.vn,ville:d.vc,lat:c[0],lon:c[1],cap:Math.max(0,+d.cap||0)}}
+  const id='u'+nid();
+  db.ev.push({id,date:d.date,end:d.end&&d.end!==d.date?d.end:'',t:d.t,tr,o:a.org.nom,d:d.d,s:d.s||'Événement',b:d.bm==='ext'?[0]:[1,Math.max(0,+d.pa||0),Math.max(0,+d.pe||0)],ins:Math.max(0,+d.ins||0),url:d.bm==='ext'?d.url:'',desc:d.desc,hor:d.hor,org:a.id});
+  post(d.d,`<b>${esc(a.org.nom)}</b> a publié un nouvel événement : <a href="#e-${id}">${esc(d.t)}</a> (${esc(dl(d.date,{day:'numeric',month:'long',year:'numeric'}))}).`);
+  for(const o of Object.values(db.accounts))if(o.id!==a.id&&o.set.notif.near)notify(o.id,`Nouvel événement : ${esc(d.t)}`,'#e-'+id);
+  persist();UI.ne=null;const dt=pd(d.date);UI.cy=dt.getFullYear();UI.cm=dt.getMonth();location.hash='e-'+id;toast('Événement publié dans le calendrier.');
+}
+
+/* ---------- Lieux, écuries, commanditaires, marché ---------- */
+function track(id){const t=T[id];if(!t)return notfound();const l=E.filter(e=>e.tr===id);
+  return `${back}<h1>${t.nom}</h1><p class="mut">${t.ville} · ${km(home(),t).toLocaleString('fr-CA')} km de ${home().nom} · capacité déclarée ${t.cap.toLocaleString('fr-CA')}</p>${t.user?USR:t.fic?FIC:''}<p>${t.desc}</p><h2>Événements</h2>${l.map(e=>erow(e)).join('')||'<p class="mut">Aucun.</p>'}`}
+function team(id){const q=Q[id];if(!q)return notfound();
+  return `${back}<h1>${q.nom}</h1><p class="mut">Écurie · ${q.ville}</p>${FIC}<p>${q.desc}</p><h2>Pilotes</h2>${q.m.map(x=>prow(x)).join('')}`}
+function sponsor(id){const c=C[id];if(!c)return notfound();const ps=Object.keys(P).filter(k=>(P[k].com||[]).includes(id)),mine=c.user===me().id;
+  return `${back}<h1>${c.nom} ${VER}</h1><p class="mut">Commanditaire · ${c.sect} · ${c.ville}</p>${tagOf(c)}<p>${c.desc}</p>
+  ${mine?'<button class="btn yel" data-act="newoff">+ Publier une offre</button>':''}
+  <div class="stats" style="grid-template-columns:repeat(2,minmax(0,1fr))"><div><b>${ps.length}</b><span>pilotes appuyés</span></div><div><b>${M.filter(m=>m.c===id).length}</b><span>offre(s) ouverte(s)</span></div></div>
+  ${ps.length?`<h2>Pilotes commandités</h2>${ps.map(x=>prow(x)).join('')}`:''}${M.filter(m=>m.c===id).map(offer).join('')}`}
+const offer=m=>{const mine=C[m.c]&&C[m.c].user===me().id;return `<div class="card fc" style="--ec:var(--yel)"><div class="row sm mut"><span>${C[m.c].nom} · ${m.d} · ${m.n}</span><span class="sp">${m.user?USR:FIC}</span></div><h3>${m.t}</h3><p class="sm">${m.x}</p>${mine?`<button class="btn sm2 dan" data-act="deloff" data-id="${m.id}">Retirer l’offre</button>`:`<button class="btn pri" data-act="apply" data-c="${m.c}" data-t="${m.t}">Proposer ma candidature</button>`}</div>`};
+function market(){const a=me();return `${back}<h1>Marché des commandites</h1><p class="mut">Les commanditaires publient leurs offres, les pilotes publient leurs besoins.</p>
+  ${a.roles.com?'<button class="btn yel" data-act="newoff">+ Publier une offre</button>':''}
+  <h2>Offres des commanditaires</h2>${M.slice().reverse().map(offer).join('')}
+  <h2>Pilotes qui cherchent un commanditaire</h2>${MD.map(d=>`<div class="card"><a class="row" href="#p-${d.p}" style="text-decoration:none">${plate(d.p,1)}<div><h3>${P[d.p].nom}</h3><div class="sm mut">${sub1(P[d.p])}</div></div></a><p><b>${d.t}</b><br><span class="sm">${d.x}</span></p><button class="btn" data-act="contact" data-id="${d.p}">Contacter le pilote</button></div>`).join('')}
+  ${Object.values(P).filter(p=>p.user&&p.obj.length&&p.user!==a.id).map(p=>`<div class="card"><a class="row" href="#p-u${p.user}" style="text-decoration:none">${p.photo?`<img class="av" src="${p.photo}" alt="">`:plate('u'+p.user,1)}<div><h3>${p.nom}</h3><div class="sm mut">${sub1(p)}</div></div><span class="sp">${USR}</span></a><p class="sm">Cagnotte ouverte : ${p.obj.map(o=>o[0]).join(', ')}.</p><button class="btn" data-act="contact" data-id="u${p.user}">Contacter le pilote</button></div>`).join('')}`}
+function discover(){
+  const tabs=[['pilotes','Pilotes'],['series','Séries'],['equipes','Écuries'],['pistes','Lieux'],['comm','Commanditaires']];const q=UI.q.toLowerCase();const m=s=>!q||s.toLowerCase().includes(q);
+  let body='';
+  if(UI.tab==='pilotes'){const ks=Object.keys(P).filter(k=>P[k].pub!==0&&m(P[k].nom+(P[k].ville||'')+D[P[k].d][0]+P[k].ser.map(s=>s[1]).join(' ')));ks.sort((x,y)=>(P[y].user?1:0)-(P[x].user?1:0));body=ks.map(x=>prow(x)).join('')}
+  if(UI.tab==='series'){const SR=[['Championnat canadien des rallyes (CRC)','ra','Huit rallyes d’un océan à l’autre, sanctionnés par CARS.'],['Championnat des rallyes de l’Est canadien (ECRC)','ra','Québec, Ontario et Nouvelle-Écosse.'],['DMCC — Drift Mania Canadian Championship','dr','Pro, Pro-Am et Contender, partout au Québec.'],['Coupe de Montréal','ka','Sept fins de semaine de karting au Québec.'],['Grand Prix Ski-Doo de Valcourt','mn','Snocross et ovale de glace, chaque février.']];
+    body=SR.filter(s=>m(s[0])).map(s=>`<div class="card fc" style="--ec:${D[s[1]][1]}"><h3>${s[0]}</h3><p class="sm mut" style="margin:2px 0 0">${D[s[1]][0]} · ${s[2]}</p></div>`).join('')}
+  if(UI.tab==='equipes')body=Object.entries(Q).filter(([k,v])=>m(v.nom)).map(([k,v])=>`<a class="card link" href="#q-${k}"><h3>${v.nom}</h3><div class="sm mut">${v.ville} · ${v.m.length} pilote(s)</div></a>`).join('');
+  if(UI.tab==='pistes')body=Object.entries(T).filter(([k,v])=>m(v.nom+v.ville)).map(([k,v])=>`<a class="card link" href="#t-${k}"><h3>${v.nom}</h3><div class="sm mut">${v.ville} · ${km(home(),v).toLocaleString('fr-CA')} km${v.fic?' · lieu fictif':v.user?' · créé dans la démo':''}</div></a>`).join('');
+  if(UI.tab==='comm')body=Object.entries(C).filter(([k,v])=>m(v.nom+v.sect)).map(([k,v])=>`<a class="card link" href="#c-${k}"><h3>${v.nom} ${VER}</h3><div class="sm mut">${v.sect} · ${v.ville} · ${v.user?'créé dans la démo':'fictif'}</div></a>`).join('');
+  return `<h1>Découvrir</h1><input type="search" id="q" placeholder="Nom, ville, série, discipline" value="${esc(UI.q)}" aria-label="Rechercher">
+  <div class="tabs" style="margin-top:10px">${tabs.map(([k,t])=>`<button class="chip${UI.tab===k?' on':''}" data-tab="${k}">${t}</button>`).join('')}<a class="chip" href="#marche">Marché des commandites</a></div>
+  <div id="res">${body||'<p class="mut">Aucun résultat.</p>'}</div>`;
+}
+
+/* ---------- Mon profil ---------- */
+function mePage(){
+  const a=me(),L=lvl(a.total),nx=thr(L+1),pv=L?thr(L):0,subs=Object.entries(a.sub).filter(([k])=>P[k]),fol=Object.keys(a.follow).filter(k=>P[k]);
+  const show=Array.from({length:5},(_,i)=>Math.max(1,L-1)+i),pid=pidOf(a),pl=a.roles.pilote?P[pid]:null;
+  const myEv=E.filter(e=>e.org===a.id),myOff=M.filter(m=>m.user&&C[m.c]&&C[m.c].user===a.id);
+  return `<div class="row" style="margin-top:6px">${avatar(a,1)}<div style="flex:1"><h1 style="margin:0">${esc(a.nom)}</h1><div class="mut sm">${roleTxt(a)} · ${esc(a.ville)}</div></div><button class="btn sm2" data-act="editprof">Modifier</button></div>
+  <div class="lv"><div class="plate" style="--pc:var(--yel)">${L}</div><div><div style="font:700 26px/1.1 var(--cf)">Partisan niveau ${L}</div><div class="sm" style="color:#d5d8dc">${fmt(a.total)} en encouragements · encore ${fmt(nx-a.total)} pour le niveau ${L+1}</div><div class="bar" style="margin-top:8px;background:#3a3e44"><i style="width:${pct(a.total-pv,nx-pv)}%"></i></div></div></div>
+  <p class="sm mut">${a.set.priv.lvl?'Votre profil public affiche votre niveau, jamais les montants.':'Votre niveau est masqué sur votre profil public (Paramètres).'} Chaque niveau demande le double du précédent.</p>
+  <div class="lvl">${show.map(n=>`<div class="${n<=L?'ok':''}"><b>Niv. ${n}</b>${fmt(thr(n))}</div>`).join('')}</div>
+  ${pl?`<h2>Mon profil pilote</h2>${prow(pid)}
+   <div class="card"><div class="row"><h3>Ma cagnotte</h3><button class="btn yel sm2 sp" data-act="newobj">+ Objectif</button></div>
+   ${pl.obj.length?pl.obj.map((o,i)=>`<div style="margin-top:12px"><div class="row"><b>${o[0]}</b><span class="sp sm mut">${fmt(o[2])} / ${fmt(o[1])}</span></div><div class="bar" style="margin:6px 0"><i style="width:${pct(o[2],o[1])}%"></i></div><div class="row"><span class="sm mut">${o[3].length} preuve(s)</span><button class="btn sm2 sp" data-act="proof" data-i="${i}">+ Preuve</button><button class="btn sm2 dan" data-act="delobj" data-i="${i}" aria-label="Supprimer l’objectif">${ic('x').replace('<svg','<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"')}</button></div></div>`).join(''):'<p class="sm mut">Ajoutez vos besoins (pneus, transport, nourriture…). Les visiteurs pourront donner pour chaque objectif.</p>'}</div>
+   <div class="row"><button class="btn" data-act="newpost">Publier une nouvelle</button><button class="btn" data-act="editpil">Modifier mes infos de pilote</button></div>`:''}
+  ${a.roles.org?`<h2>Mes événements · ${esc(a.org.nom)}</h2>${myEv.map(e=>erow(e)).join('')||'<p class="mut">Aucun événement publié.</p>'}<a class="btn yel w" href="#creer-evenement">+ Créer un événement</a>`:''}
+  ${a.roles.com?`<h2>Mon entreprise · ${esc(a.com.nom)}</h2><a class="card link" href="#c-uc${a.id}"><h3>${esc(a.com.nom)} ${VER}</h3><div class="sm mut">${esc(a.com.sect)} · ${myOff.length} offre(s)</div></a><button class="btn yel w" data-act="newoff">+ Publier une offre de commandite</button>`:''}
+  <h2>Abonnements</h2>${subs.length?subs.map(([k,v])=>prow(k,`Palier ${TIERS.find(t=>t[0]==v)[1]} · ${fmt(v)}/mois`)).join(''):'<p class="mut">Aucun abonnement.</p>'}
+  <h2>Pilotes suivis</h2>${fol.length?fol.map(x=>prow(x)).join(''):'<p class="mut">Vous ne suivez personne. <a href="#decouvrir">Découvrir des pilotes</a></p>'}
+  <h2>Mes encouragements</h2>${a.hist.length?`<div class="card" style="padding:4px 12px"><table>${a.hist.map(h=>`<tr><td>${esc(h[0])}<div class="sm mut">${esc(h[2])}</div></td><td class="r">${fmt(+h[1])}</td></tr>`).join('')}</table></div>`:'<p class="mut">Vos dons, abonnements et billets apparaîtront ici.</p>'}
+  ${!a.roles.pilote||!a.roles.org||!a.roles.com?`<h2>Ajouter un rôle</h2><div class="row">${!a.roles.pilote?'<button class="btn" data-act="addrole" data-r="pil">Pilote</button>':''}${!a.roles.org?'<button class="btn" data-act="addrole" data-r="org">Organisateur</button>':''}${!a.roles.com?'<button class="btn" data-act="addrole" data-r="com">Commanditaire</button>':''}</div>`:''}`;
+}
+
+/* ---------- Notifications ---------- */
+function notifs(){const a=me(),l=db.notifs[a.id]||[];const h=`${back}<div class="row"><h1 style="flex:1">Notifications</h1>${l.length?'<button class="btn sm2" data-act="clrn">Tout effacer</button>':''}</div>
+  ${l.length?l.map((n,i)=>`<a class="nt${n.read?'':' un'}" href="${n.link||'#notifs'}"><span class="d${n.read?' o':''}"></span><span style="flex:1">${n.txt}<br><span class="sm mut">${ago(n.dt)}</span></span></a>`).join(''):'<p class="mut">Aucune notification. Suivez des pilotes pour être averti quand ils confirment leur présence.</p>'}`;
+  l.forEach(n=>n.read=1);persist();return h}
+
+/* ---------- Paramètres ---------- */
+function settings(){
+  const a=me(),s=a.set,cards=a.cards.length?a.cards.length+' carte(s)':'Aucune';
+  return `${back}<h1>Paramètres</h1>
+  <div class="gt">Compte</div><div class="grp">
+   ${li('u','Modifier mon profil','data-act="editprof"','Nom, ville, photo')}
+   ${li('e','Courriel','data-act="editemail"',esc(a.email))}
+   ${li('k','Mot de passe','data-act="editpw"','Modifier')}
+   ${li('s','Mes rôles','data-act="roles"',roleTxt(a))}</div>
+  <div class="gt">Notifications</div><div class="grp">
+   ${sw('notif.conf',s.notif.conf,'Présences des pilotes suivis','Quand un pilote que vous suivez confirme un événement')}
+   ${sw('notif.near',s.notif.near,'Nouveaux événements','Événements publiés par les organisateurs')}
+   ${sw('notif.obj',s.notif.obj,'Cagnottes et preuves de dépense','Objectifs atteints, nouvelles preuves')}
+   ${sw('notif.off',s.notif.off,'Offres de commandite')}
+   ${sw('notif.push',s.notif.push,'Notifications sur le téléphone')}
+   ${sw('notif.email',s.notif.email,'Résumé par courriel','Une fois par semaine')}</div>
+  <div class="gt">Confidentialité</div><div class="grp">
+   ${sw('priv.pub',s.priv.pub,'Profil public','Visible dans Découvrir et sur les événements')}
+   ${sw('priv.lvl',s.priv.lvl,'Afficher mon niveau de partisan')}
+   ${sw('priv.anon',s.priv.anon,'Dons anonymes par défaut')}</div>
+  <div class="gt">Paiements</div><div class="grp">
+   ${li('p','Moyens de paiement','data-act="cards"',cards)}
+   ${lia('f','Historique des encouragements','#moi',fmt(a.total))}</div>
+  <div class="gt">Préférences</div><div class="grp">
+   ${li('l','Ville de référence','data-act="city"',esc(a.ville))}
+   <div class="li" style="cursor:default">${ic('t')}<span>Thème</span><div class="seg sp" style="width:200px">${[['auto','Auto'],['light','Clair'],['dark','Sombre']].map(([k,t])=>`<button class="${s.theme===k?'on':''}" data-th="${k}">${t}</button>`).join('')}</div></div>
+   ${li('w','Langue','data-act="lang"','Français')}</div>
+  <div class="gt">Soutien</div><div class="grp">
+   ${li('h','Centre d’aide','data-act="help"')}
+   ${li('i','Signaler un problème','data-act="report"')}
+   ${li('f','Conditions d’utilisation','data-act="terms"')}
+   ${li('k','Politique de confidentialité','data-act="privacy"')}
+   ${li('i','À propos de Paddock','data-act="about"','Version 0.3 démo')}</div>
+  <div class="gt">Démo</div><div class="grp">
+   ${li('r','Réinitialiser la démo','data-act="resetq"','Efface tous les comptes','dan')}</div>
+  <button class="btn pri w" data-act="logout">Se déconnecter</button>
+  <button class="btn w dan" style="margin-top:10px;background:none" data-act="delaccq">Supprimer mon compte</button>`;
+}
+function drawerHTML(){const a=me(),un=(db.notifs[a.id]||[]).filter(n=>!n.read).length;
+  return `<div class="bd" data-act="cs"></div><nav class="drawer" aria-label="Menu"><div class="dh"><div class="row">${avatar(a,1)}<div><div style="font:700 24px/1.1 var(--cf)">${esc(a.nom)}</div><div class="sm" style="color:#d5d8dc">${esc(a.email)}</div><div class="sm" style="color:var(--yel);font-weight:600">Partisan niveau ${lvl(a.total)}</div></div></div></div>
+  ${lia('u','Mon profil','#moi')}${a.roles.pilote?lia('s','Ma page pilote','#p-'+pidOf(a)):''}${a.roles.org?lia('c','Créer un événement','#creer-evenement'):''}${a.roles.com?lia('m','Mon entreprise','#c-uc'+a.id):''}
+  ${lia('b','Notifications','#notifs',un?`<span class="tag">${un}</span>`:'')}${lia('m','Marché des commandites','#marche')}${lia('g','Paramètres','#parametres')}${li('h','Centre d’aide','data-act="help"')}
+  ${li('r','Changer de compte','data-act="switch"')}${li('o','Se déconnecter','data-act="logout"','','dan')}</nav>`}
+
+/* ---------- Rendu ---------- */
+const OPEN=['bienvenue','connexion','inscription'];
+function route(){const h=(location.hash||'').slice(1);const [a,b]=h.split(/-(.+)/);return {h,a:a||'',b}}
+function draw(){
+  hydrate();const {h,a,b}=route(),u=me();let html,n=a;
+  document.body.classList.toggle('out',!u);
+  if(!u){if(!OPEN.includes(h)){location.replace('#bienvenue');return}
+    html=h==='connexion'?login():h==='inscription'?signup():welcome();n=''}
+  else if(OPEN.includes(h)){location.replace('#fil');return}
+  else if(h==='fil'||!h)html=feed(),n='fil';else if(h==='calendrier')html=cal();else if(h==='decouvrir')html=discover();else if(h==='moi')html=mePage();
+  else if(h==='marche')html=market(),n='decouvrir';else if(h==='notifs')html=notifs(),n='';else if(h==='parametres')html=settings(),n='';
+  else if(h==='creer-evenement'){html=u.roles.org?newEvent():notfound();n='calendrier'}
+  else if(a==='p'){html=pilot(b);n='decouvrir';if(P[b]&&P[b].user!==u.id){u.visits[P[b].d]=(u.visits[P[b].d]||0)+1;persist()}}
+  else if(a==='e'){html=event(b);n='calendrier';if(EV[b]){u.visits[EV[b].d]=(u.visits[EV[b].d]||0)+1;persist()}}
+  else if(a==='t')html=track(b),n='decouvrir';else if(a==='q')html=team(b),n='decouvrir';else if(a==='c')html=sponsor(b),n='decouvrir';else html=notfound(),n='';
+  $('#view').innerHTML=html;document.querySelectorAll('nav.bot a').forEach(x=>x.classList.toggle('on',x.dataset.n===n));
+  const c=$('#cnt');if(u){const un=(db.notifs[u.id]||[]).filter(x=>!x.read).length;c.hidden=!un;c.textContent=un>9?'9+':un}else c.hidden=true;
+}
+function render(){closeDay(true);closeSheet();UI.err='';draw();scrollTo(0,0)}
+const rerender=()=>{const y=scrollY;draw();scrollTo(0,y)};
+const notfound=()=>`${back}<h1>Page introuvable</h1>`;
+function applyTheme(){const u=me(),t=u?u.set.theme:'auto',r=document.documentElement;if(t==='auto')r.removeAttribute('data-theme');else r.dataset.theme=t}
+
+/* ---------- Feuilles ---------- */
+function toast(t){document.querySelectorAll('.toast').forEach(x=>x.remove());const d=document.createElement('div');d.className='toast';d.setAttribute('role','status');d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),3800)}
+function openSheet(h){$('#ov').innerHTML=`<div class="bd" data-act="cs"></div><div class="sheet" role="dialog" aria-modal="true">${h}</div>`}
+function closeSheet(){$('#ov').innerHTML=''}
+const sum=(amt,who)=>`<div class="sum"><div><span>Montant</span><b>${fmt(amt)}</b></div><div class="mut"><span>Frais de gestion (5 %)</span><b>${money(amt*.05)}</b></div><div><span>${who} reçoit</span><b>${money(amt*.95)}</b></div></div>`;
+const lvlUp=b=>{const x=lvl(b),y=lvl(me().total);return y>x?` Vous passez au niveau ${y}!`:''};
+const payLine=()=>{const c=me().cards;return `<p class="sm mut" style="margin:4px 0">Payer avec : <b>${c.length?esc(c[0].brand)+' •••• '+esc(c[0].last4):'carte de démonstration'}</b></p>`};
+const sheetH=(t,sub)=>`<h2 style="margin-top:0">${t}</h2>${sub?`<p class="mut sm" style="margin-top:-4px">${sub}</p>`:''}`;
+const errBox='<div class="err" id="serr" hidden></div>';
+const serr=m=>{const e=$('#serr');if(e){e.textContent=m;e.hidden=!m}};
+let don={},sb={},tx={},pf={};
+function donSheet(){const p=P[don.id],o=p.obj[don.i];
+  openSheet(`${sheetH('Donner à '+p.nom,'Pour : '+o[0]+' · reste '+fmt(Math.max(0,o[1]-o[2])))}
+  <div class="amts">${[10,20,50,100].map(x=>`<button class="btn${don.a===x?' on':''}" data-amt="${x}">${x} $</button>`).join('')}</div>
+  <label class="f">Autre montant<input type="number" id="ca" min="2" step="1" inputmode="numeric" value="${[10,20,50,100].includes(don.a)?'':don.a}"></label>
+  <div id="sm">${sum(don.a,'Le pilote')}</div>${payLine()}
+  <label class="row sm" style="margin:6px 0 12px"><input type="checkbox" id="anon" style="width:20px;height:20px" ${don.anon?'checked':''}> Don anonyme</label>
+  <button class="btn pri w" data-act="dok">Donner ${fmt(don.a)}</button><p class="sm mut" style="text-align:center">Paiement simulé pour la démo.</p>`)}
+function subSheet(){const p=P[sb.id];
+  openSheet(`${sheetH('S’abonner à '+p.nom,'Prélevé chaque mois, annulable en tout temps.')}
+  ${TIERS.map(t=>`<button class="tier${sb.t===t[0]?' on':''}" data-tier="${t[0]}"><span class="badge" style="background:${t[3]}">${t[1][0]}</span><span><b>${t[1]}</b><br><span class="sm mut">${t[2]}</span></span><b>${fmt(t[0])}/mois</b></button>`).join('')}
+  ${sum(sb.t,'Le pilote')}${payLine()}<button class="btn pri w" data-act="sok">Confirmer l’abonnement</button>
+  ${me().sub[sb.id]?'<button class="btn w" style="margin-top:8px" data-act="sstop">Annuler mon abonnement</button>':''}`)}
+function tixSheet(){const e=EV[tx.id],amt=tx.a*e.b[1]+tx.k*e.b[2];
+  openSheet(`${sheetH('Billets — '+e.t,drange(e))}
+  <div class="row" style="justify-content:space-between;margin:10px 0"><span>Adulte · ${fmt(e.b[1])}</span><span class="step"><button class="btn" data-q="a-" aria-label="Moins">−</button><b>${tx.a}</b><button class="btn" data-q="a+" aria-label="Plus">+</button></span></div>
+  <div class="row" style="justify-content:space-between;margin:10px 0"><span>Enfant · ${e.b[2]?fmt(e.b[2]):'gratuit'}</span><span class="step"><button class="btn" data-q="k-" aria-label="Moins">−</button><b>${tx.k}</b><button class="btn" data-q="k+" aria-label="Plus">+</button></span></div>
+  ${sum(amt,'L’organisateur')}${payLine()}<button class="btn pri w" data-act="tok" ${tx.a+tx.k?'':'disabled'}>Payer ${fmt(amt)}</button><p class="sm mut" style="text-align:center">Billets électroniques envoyés par courriel. Paiement simulé.</p>`)}
+function proofSheet(){const o=me().pilote.obj[pf.i];
+  openSheet(`${sheetH('Ajouter une preuve de dépense','Objectif : '+esc(o[0]))}${errBox}<div class="fl">
+  <label class="f">Description<input type="text" id="pr_d" maxlength="90" placeholder="Ex. Facture — 4 pneus"></label>
+  <label class="f">Montant ($)<input type="number" id="pr_m" min="1" inputmode="numeric"></label>
+  <div class="row">${pf.photo?`<img src="${pf.photo}" alt="" style="width:72px;height:72px;object-fit:cover;border-radius:8px">`:''}<label class="btn">${pf.photo?'Changer la photo':'Photo de la facture'}<input type="file" accept="image/*" data-photo="proof" hidden></label></div>
+  <button class="btn pri w" data-act="prok">Publier la preuve</button></div>`)}
+function profSheet(){const a=me();
+  openSheet(`${sheetH('Modifier mon profil')}${errBox}<div class="fl">
+  <div class="row">${avatar(Object.assign({},a,{photo:UI.ph??a.photo}),1)}<label class="btn">Changer la photo<input type="file" accept="image/*" data-photo="prof" hidden></label>${(UI.ph??a.photo)?'<button class="btn" data-act="nophoto">Retirer</button>':''}</div>
+  <label class="f">Prénom et nom<input type="text" id="e_nom" value="${esc(a.nom)}"></label>
+  <label class="f">Ville<select id="e_ville">${Object.keys(CITIES).map(c=>`<option${c===a.ville?' selected':''}>${c}</option>`).join('')}</select></label>
+  <button class="btn pri w" data-act="profok">Enregistrer</button></div>`)}
+
+/* ---------- Actions ---------- */
+function readPhoto(file,max,cb){if(!file||!/^image\//.test(file.type))return toast('Choisissez une image.');const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const s=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',.82))};img.onerror=()=>toast('Image illisible.');img.src=r.result};r.readAsDataURL(file)}
+function giveTo(pid,i,amt,anon){const p=P[pid],a=me();
+  if(p.user){const ow=db.accounts[p.user];ow.pilote.obj[i][2]=(+ow.pilote.obj[i][2]||0)+amt;notify(ow.id,`${anon?'Un donateur anonyme':esc(a.nom)} a donné ${fmt(amt)} pour « ${esc(ow.pilote.obj[i][0])} » (vous recevez ${money(amt*.95)}).`,'#p-'+pid);
+    const o=ow.pilote.obj[i];if(+o[2]>=+o[1]&&+o[2]-amt<+o[1]){post(ow.pilote.d,`<b>${esc(ow.nom)}</b> a atteint son objectif « ${esc(o[0])} » (${fmt(+o[1])}).`,pid);for(const x of Object.values(db.accounts))if(x.follow[pid]&&x.set.notif.obj&&x.id!==ow.id)notify(x.id,`${esc(ow.nom)} a atteint son objectif « ${esc(o[0])} ».`,'#p-'+pid)}}
+  else{db.don[pid]=db.don[pid]||{};db.don[pid][i]=(db.don[pid][i]||0)+amt}
+}
+const roleSheet=r=>{UI.rd={pil:r==='pil',org:r==='org',com:r==='com'};openSheet(`${sheetH('Ajouter un rôle')}${errBox}${roleForms(UI.rd,age(me().naissance)<18)}<button class="btn pri w" data-act="roleok">Ajouter ce rôle</button><p class="sm mut" style="text-align:center">Vérification d’identité simulée.</p>`)};
+const TXT={
+ help:['Centre d’aide','<p><b>Comment donner à un pilote?</b><br>Ouvrez son profil, choisissez un objectif et touchez « Donner ».</p><p><b>Où va mon argent?</b><br>Le pilote reçoit 95 % du montant, même si l’objectif n’est pas atteint. Il doit publier une preuve de chaque dépense.</p><p><b>Comment être averti?</b><br>Touchez « Suivre » sur le profil d’un pilote : vous recevez une notification quand il confirme un événement.</p><p><b>Je suis pilote mineur.</b><br>Un parent gère le compte et reçoit les fonds.</p><p><b>Mes données de démo</b><br>Les comptes sont enregistrés seulement sur ce téléphone.</p>'],
+ terms:['Conditions d’utilisation','<p>Version de démonstration. Dans la version complète : frais de gestion de 5 % sur toute transaction, vérification d’identité obligatoire pour recevoir des fonds, preuves de dépense exigées pour chaque cagnotte, comptes de mineurs gérés par un parent, remboursement des billets selon la politique de l’organisateur.</p><p class="mut">Texte à faire valider par un avocat avant le lancement.</p>'],
+ privacy:['Politique de confidentialité','<p>Dans cette démo, toutes les données restent sur cet appareil. Aucune information n’est envoyée à un serveur. Les mots de passe sont brouillés, mais la démo n’offre pas la sécurité d’une vraie application : n’utilisez pas un vrai mot de passe.</p>'],
+ about:['À propos de Paddock','<p>Paddock, le réseau social du sport motorisé. Version 0.3 démo.</p><p class="mut">Les séries, lieux, dates et résultats marqués « Données réelles » proviennent de sources publiques (CARS, DMCC, Coupe de Montréal, Grand Prix Ski-Doo de Valcourt). Les pilotes réels n’ont pas de cagnotte : leurs profils sont non réclamés. Les éléments « Exemple fictif » sont inventés. Paiements simulés.</p>']};
+
+document.addEventListener('submit',ev=>{ev.preventDefault();if(ev.target.id==='flogin')doLogin()});
+document.addEventListener('click',ev=>{
+  const g=ev.target.closest('[data-go]');if(g){UI.err='';location.hash=g.dataset.go;return}
+  const lk=ev.target.closest('a[href^="#"]');if(lk&&(lk.closest('.drawer')||lk.closest('#dayz'))){closeSheet();closeDay(true);if(lk.dataset.date)UI.ne={date:lk.dataset.date,end:''}}
+  if(lk&&lk.getAttribute('href')==='#creer-evenement'&&!lk.dataset.date)UI.ne=null;
+  const t=ev.target.closest('[data-act],[data-day],[data-fd],[data-tab],[data-amt],[data-tier],[data-q],[data-th]');if(!t)return;
+  const A=t.dataset.act,id=t.dataset.id,a=me();
+  if(t.dataset.day){openDay(t.dataset.day,t);return}
+  if(t.dataset.th){a.set.theme=t.dataset.th;persist();applyTheme();rerender();return}
+  if(t.dataset.fd){const k=t.dataset.fd,ds=UI.f.ds;UI.f.ds=ds.includes(k)?ds.filter(x=>x!==k):[...ds,k];rerender();return}
+  if(t.dataset.tab){UI.tab=t.dataset.tab;rerender();return}
+  if(t.dataset.amt){don.a=+t.dataset.amt;don.anon=$('#anon').checked;donSheet();return}
+  if(t.dataset.tier){sb.t=+t.dataset.tier;subSheet();return}
+  if(t.dataset.q){const w=t.dataset.q[0],o=t.dataset.q[1];tx[w]=Math.max(0,Math.min(10,tx[w]+(o==='+'?1:-1)));tixSheet();return}
+  switch(A){
+   case 'back':if(history.length>1)history.back();else location.hash='fil';break;
+   case 'menu':$('#ov').innerHTML=drawerHTML();break;
+   case 'bell':location.hash='notifs';break;
+   case 'cs':closeSheet();break;
+   /* auth */
+   case 'suback':UI.err='';if(UI.su.step===1){UI.su={step:1,d:{}};location.hash='bienvenue'}else{UI.su.step--;draw()}break;
+   case 'sunext':suNext();break;
+   case 'sunophoto':UI.su.d.photo='';draw();break;
+   case 'pick':UI.lemail=db.accounts[id].email;UI.err='';draw();setTimeout(()=>{const p=$('#lp');if(p)p.focus()},50);break;
+   case 'forgot':toast('Dans la version complète, un lien de réinitialisation est envoyé par courriel.');break;
+   case 'logout':logout();break;
+   case 'switch':db.cur=null;persist();closeSheet();applyTheme();location.hash='connexion';break;
+   /* calendrier */
+   case 'mprev':UI.cm--;if(UI.cm<0){UI.cm=11;UI.cy--}rerender();break;
+   case 'mnext':UI.cm++;if(UI.cm>11){UI.cm=0;UI.cy++}rerender();break;
+   case 'today':UI.cy=TODAY.getFullYear();UI.cm=TODAY.getMonth();rerender();break;
+   case 'tf':UI.showF=!UI.showF;rerender();break;
+   case 'fr':UI.f={dist:5000,cap:0,ds:[],per:'tous'};rerender();break;
+   case 'dz':closeDay();break;
+   /* pilotes */
+   case 'follow':if(a.follow[id]){delete a.follow[id];toast('Vous ne suivez plus '+unesc(P[id].nom)+'.')}else{a.follow[id]=1;if(P[id].user)notify(P[id].user,`${esc(a.nom)} vous suit maintenant.`,'#moi');toast('Vous serez averti quand ce pilote confirme sa présence à un événement.')}persist();rerender();break;
+   case 'claim':toast('Réclamation : pièce d’identité et licence de course demandées, puis vérification par l’équipe Paddock (démo).');break;
+   case 'contact':openSheet(`${sheetH('Message à '+P[id].nom)}<textarea id="msg" placeholder="Votre message"></textarea><button class="btn pri w" style="margin-top:10px" data-act="msgok" data-id="${id}">Envoyer</button>`);break;
+   case 'msgok':{const m=val('msg');if(!m)return;if(P[id].user)notify(P[id].user,`Message de ${esc(a.nom)} : « ${esc(m.slice(0,140))} »`,'#notifs');persist();closeSheet();toast(P[id].user?'Message envoyé.':'Message envoyé (ce pilote n’a pas de compte dans la démo).');break}
+   case 'sub':sb={id,t:a.sub[id]||10};subSheet();break;
+   case 'sok':{const b=a.total;a.sub[sb.id]=sb.t;a.total+=sb.t;a.hist.unshift(['Abonnement '+TIERS.find(x=>x[0]==sb.t)[1]+' — '+unesc(P[sb.id].nom),String(sb.t),dl(key(TODAY),{day:'numeric',month:'short'})]);if(P[sb.id].user)notify(P[sb.id].user,`${esc(a.nom)} s’est abonné à votre profil (${fmt(sb.t)}/mois).`,'#moi');persist();closeSheet();toast('Abonnement confirmé : '+fmt(sb.t)+'/mois.'+lvlUp(b));rerender();break}
+   case 'sstop':delete a.sub[sb.id];persist();closeSheet();toast('Abonnement annulé.');rerender();break;
+   case 'don':don={id,i:+t.dataset.i,a:20,anon:!!a.set.priv.anon};donSheet();break;
+   case 'dok':{const b=a.total,an=$('#anon').checked,o=P[don.id].obj[don.i];giveTo(don.id,don.i,don.a,an);a.total+=don.a;a.hist.unshift(['Don à '+unesc(P[don.id].nom)+' — '+unesc(o[0])+(an?' (anonyme)':''),String(don.a),dl(key(TODAY),{day:'numeric',month:'short'})]);persist();closeSheet();toast('Merci! Le pilote reçoit '+money(don.a*.95)+'.'+lvlUp(b));rerender();break}
+   /* événements */
+   case 'tix':tx={id,a:2,k:0};tixSheet();break;
+   case 'tok':{const e=EV[tx.id],amt=tx.a*e.b[1]+tx.k*e.b[2],b=a.total;a.total+=amt;a.hist.unshift(['Billets — '+unesc(e.t),String(amt),dl(key(TODAY),{day:'numeric',month:'short'})]);if(e.org)notify(e.org,`${esc(a.nom)} a acheté ${tx.a+tx.k} billet(s) pour ${e.t} (${fmt(amt)}).`,'#e-'+e.id);persist();closeSheet();toast((tx.a+tx.k)+' billet(s) achetés. Code QR envoyé par courriel (démo).'+lvlUp(b));rerender();break}
+   case 'ext':toast('Redirection vers la billetterie de l’organisateur : désactivée dans la démo.');break;
+   case 'conf':{const pid=pidOf(a),l=db.conf[id]=db.conf[id]||[],e=EV[id];if(l.includes(pid)||e.p.includes(pid)){db.conf[id]=l.filter(x=>x!==pid);toast('Présence annulée.')}else{l.push(pid);post(a.pilote.d,`<b>${esc(a.nom)}</b> a confirmé sa présence : <a href="#e-${id}">${e.t}</a>.`,pid);
+      for(const x of Object.values(db.accounts))if(x.follow[pid]&&x.set.notif.conf&&x.id!==a.id)notify(x.id,`${esc(a.nom)} sera présent à ${e.t} (${dshort(e)}).`,'#e-'+id);if(e.org&&e.org!==a.id)notify(e.org,`${esc(a.nom)} a confirmé sa présence à ${e.t}.`,'#e-'+id);toast('Présence confirmée. Vos suiveurs sont avertis.')}persist();rerender();break}
+   case 'ins':{const e=EV[id];openSheet(`${sheetH('Inscription pilote',e.t+' · '+e.s)}${sum(e.ins,'L’organisateur')}${payLine()}<button class="btn pri w" data-act="iok" data-id="${id}">Payer l’inscription ${fmt(e.ins)}</button><p class="sm mut" style="text-align:center">Paiement simulé. Votre présence sera confirmée.</p>`);break}
+   case 'iok':{const e=EV[id],pid=pidOf(a);(db.conf[id]=db.conf[id]||[]).includes(pid)||db.conf[id].push(pid);a.hist.unshift(['Inscription — '+unesc(e.t),String(e.ins),dl(key(TODAY),{day:'numeric',month:'short'})]);if(e.org)notify(e.org,`${esc(a.nom)} a payé son inscription à ${e.t} (${fmt(e.ins)}).`,'#e-'+id);
+      for(const x of Object.values(db.accounts))if(x.follow[pid]&&x.set.notif.conf&&x.id!==a.id)notify(x.id,`${esc(a.nom)} sera présent à ${e.t}.`,'#e-'+id);persist();closeSheet();toast('Inscription payée et présence confirmée.');rerender();break}
+   case 'nesave':saveNE();break;
+   case 'delev':openSheet(`${sheetH('Supprimer cet événement?','Les billets vendus seraient remboursés dans la version complète.')}<button class="btn pri w" data-act="delevok" data-id="${id}">Supprimer</button><button class="btn w" style="margin-top:8px" data-act="cs">Annuler</button>`);break;
+   case 'delevok':db.ev=db.ev.filter(e=>!(e.id===id&&e.org===a.id));delete db.conf[id];persist();closeSheet();location.hash='calendrier';toast('Événement supprimé.');break;
+   /* commandites */
+   case 'apply':{const c=C[t.dataset.c];if(!a.roles.pilote){toast('Seuls les pilotes peuvent proposer leur candidature. Ajoutez le rôle pilote dans Mon profil.');break}if(c.user)notify(c.user,`${esc(a.nom)} propose sa candidature pour « ${esc(t.dataset.t)} ».`,'#p-'+pidOf(a));persist();toast('Candidature envoyée à '+unesc(c.nom)+'.');break}
+   case 'newoff':openSheet(`${sheetH('Publier une offre de commandite')}${errBox}<div class="fl"><label class="f">Titre<input type="text" id="of_t" maxlength="70" placeholder="Ex. Commandite pneus 2027"></label><label class="f">Disciplines visées<input type="text" id="of_d" placeholder="Ex. Rallye, Drift"></label><label class="f">Nombre de pilotes<input type="text" id="of_n" placeholder="Ex. 2 pilotes"></label><label class="f">Ce que vous offrez et demandez<textarea id="of_x" maxlength="400"></textarea></label><button class="btn pri w" data-act="offok">Publier</button></div>`);break;
+   case 'offok':{const o={id:'o'+nid(),c:'uc'+a.id,t:val('of_t'),d:val('of_d')||'Toutes',n:val('of_n')||'—',x:val('of_x')};if(!o.t||!o.x)return serr('Ajoutez un titre et une description.');db.off.push(o);post('any',`<b>${esc(a.com.nom)}</b> publie une offre : <a href="#marche">${esc(o.t)}</a>.`);for(const x of Object.values(db.accounts))if(x.id!==a.id&&x.roles.pilote&&x.set.notif.off)notify(x.id,`Nouvelle offre de ${esc(a.com.nom)} : ${esc(o.t)}`,'#marche');persist();closeSheet();toast('Offre publiée dans le marché.');rerender();break}
+   case 'deloff':db.off=db.off.filter(o=>!(o.id===id&&o.c==='uc'+a.id));persist();toast('Offre retirée.');rerender();break;
+   /* cagnotte */
+   case 'newobj':openSheet(`${sheetH('Nouvel objectif','Ex. pneus, transport, nourriture, inscriptions')}${errBox}<div class="fl"><label class="f">Nom de l’objectif<input type="text" id="ob_n" maxlength="50"></label><label class="f">Montant visé ($)<input type="number" id="ob_c" min="10" inputmode="numeric"></label><button class="btn pri w" data-act="objok">Ajouter</button></div>`);break;
+   case 'objok':{const n=val('ob_n'),c=Math.round(+val('ob_c'));if(!n||!(c>=10))return serr('Donnez un nom et un montant d’au moins 10 $.');a.pilote.obj.push([n,c,0,[]]);post(a.pilote.d,`<b>${esc(a.nom)}</b> a ouvert un objectif : « ${esc(n)} » (${fmt(c)}).`,pidOf(a));persist();closeSheet();toast('Objectif ajouté à votre cagnotte.');rerender();break}
+   case 'delobj':a.pilote.obj.splice(+t.dataset.i,1);persist();rerender();toast('Objectif supprimé.');break;
+   case 'proof':pf={i:+t.dataset.i,photo:''};proofSheet();break;
+   case 'prok':{const d=val('pr_d'),m=Math.round(+val('pr_m'));if(!d||!(m>0))return serr('Ajoutez une description et un montant.');const o=a.pilote.obj[pf.i];o[3].push([d,fmt(m),dl(key(TODAY),{day:'numeric',month:'short',year:'numeric'}),pf.photo]);post(a.pilote.d,`<b>${esc(a.nom)}</b> a publié une preuve de dépense : ${esc(d)} (${fmt(m)}).`,pidOf(a));
+      for(const x of Object.values(db.accounts))if(x.follow[pidOf(a)]&&x.set.notif.obj&&x.id!==a.id)notify(x.id,`${esc(a.nom)} a publié une preuve de dépense.`,'#p-'+pidOf(a));if(!persist()){o[3][o[3].length-1][3]='';persist()}closeSheet();toast('Preuve publiée.');rerender();break}
+   case 'newpost':openSheet(`${sheetH('Publier une nouvelle')}<textarea id="po" maxlength="300" placeholder="Ex. Moteur prêt pour la saison!"></textarea><button class="btn pri w" style="margin-top:10px" data-act="postok">Publier</button>`);break;
+   case 'postok':{const m=val('po');if(!m)return;a.pilote.post=m;post(a.pilote.d,`<b>${esc(a.nom)}</b> : « ${esc(m)} »`,pidOf(a));persist();closeSheet();toast('Publié dans le fil.');rerender();break}
+   case 'editpil':{const p=a.pilote;UI.rd={pil:1,p_d:p.d,p_serie:p.serie,p_classe:p.classe,p_num:p.num,p_eq:p.eq,p_bio:p.bio,p_par:p.parent,p_parm:p.parentEmail};openSheet(`${sheetH('Mes infos de pilote')}${errBox}${roleForms(UI.rd,age(a.naissance)<18)}<button class="btn pri w" data-act="roleok">Enregistrer</button>`);break}
+   /* rôles et profil */
+   case 'addrole':roleSheet(t.dataset.r);break;
+   case 'roles':openSheet(`${sheetH('Mes rôles',roleTxt(a))}${!a.roles.pilote?'<button class="btn w" style="margin-bottom:8px" data-act="addrole" data-r="pil">+ Pilote</button>':''}${!a.roles.org?'<button class="btn w" style="margin-bottom:8px" data-act="addrole" data-r="org">+ Organisateur</button>':''}${!a.roles.com?'<button class="btn w" data-act="addrole" data-r="com">+ Commanditaire</button>':''}${a.roles.pilote&&a.roles.org&&a.roles.com?'<p class="mut">Vous avez tous les rôles.</p>':''}`);break;
+   case 'roleok':{const d=UI.rd;readRoleForms(d);const minor=age(a.naissance)<18;if(minor&&(d.org||d.com))return serr('Réservé aux 18 ans et plus.');const e=checkRoleForms(d,minor);if(e)return serr(e);const had=a.roles.pilote;applyRoles(a,d);
+      if(d.pil&&!had)post(a.pilote.d,`Nouveau pilote sur Paddock : <b>${esc(a.nom)}</b> (${esc(a.pilote.serie)}).`,pidOf(a));persist();closeSheet();toast('Profil mis à jour.');rerender();break}
+   case 'editprof':UI.ph=undefined;profSheet();break;
+   case 'nophoto':UI.ph='';profSheet();break;
+   case 'profok':{const n=val('e_nom');if(!n||n.length<2)return serr('Entrez votre nom.');a.nom=n;a.ville=val('e_ville');if(UI.ph!==undefined)a.photo=okImg(UI.ph);if(!persist()){a.photo='';persist()}closeSheet();toast('Profil enregistré.');rerender();break}
+   case 'editemail':openSheet(`${sheetH('Courriel')}${errBox}<label class="f">Nouveau courriel<input type="email" id="em" value="${esc(a.email)}"></label><button class="btn pri w" style="margin-top:10px" data-act="emok">Enregistrer</button>`);break;
+   case 'emok':{const e=val('em').toLowerCase();if(!/^\S+@\S+\.\S+$/.test(e))return serr('Courriel invalide.');if(Object.values(db.accounts).some(x=>x.email===e&&x.id!==a.id))return serr('Ce courriel est déjà utilisé sur cet appareil.');a.email=e;persist();closeSheet();toast('Courriel mis à jour.');rerender();break}
+   case 'editpw':openSheet(`${sheetH('Mot de passe')}${errBox}<div class="fl"><label class="f">Mot de passe actuel<input type="password" id="pw0"></label><label class="f">Nouveau mot de passe<input type="password" id="pw1"></label><button class="btn pri w" data-act="pwok">Enregistrer</button></div>`);break;
+   case 'pwok':{if(hpw($('#pw0').value)!==a.pw)return serr('Mot de passe actuel incorrect.');const n=$('#pw1').value;if(n.length<6)return serr('6 caractères ou plus.');a.pw=hpw(n);persist();closeSheet();toast('Mot de passe modifié.');break}
+   case 'cards':openSheet(`${sheetH('Moyens de paiement','Démo : seuls les 4 derniers chiffres sont conservés, aucun paiement réel.')}${a.cards.map((c,i)=>`<div class="li" style="padding:0">${ic('p')}<span>${esc(c.brand)} •••• ${esc(c.last4)}${i===0?' <span class="tag r">Par défaut</span>':''}</span><button class="btn sm2 dan sp" data-act="delcard" data-i="${i}">Retirer</button></div>`).join('')||'<p class="mut">Aucune carte enregistrée.</p>'}
+     ${errBox}<div class="fl" style="margin-top:12px"><label class="f">Numéro de carte (test : 4242 4242 4242 4242)<input type="text" id="cn" inputmode="numeric" autocomplete="off"></label><button class="btn pri w" data-act="cardok">Ajouter la carte</button></div>`);break;
+   case 'cardok':{const n=(val('cn')||'').replace(/\D/g,'');if(n.length<12||n.length>19)return serr('Numéro invalide.');a.cards.push({brand:n[0]==='4'?'Visa':n[0]==='5'?'Mastercard':n[0]==='3'?'Amex':'Carte',last4:n.slice(-4)});persist();closeSheet();toast('Carte ajoutée (démo).');rerender();break}
+   case 'delcard':a.cards.splice(+t.dataset.i,1);persist();closeSheet();rerender();break;
+   case 'city':openSheet(`${sheetH('Ville de référence','Sert à calculer la distance des événements.')}<select id="cty">${Object.keys(CITIES).map(c=>`<option${c===a.ville?' selected':''}>${c}</option>`).join('')}</select><button class="btn pri w" style="margin-top:10px" data-act="cityok">Enregistrer</button>`);break;
+   case 'cityok':a.ville=val('cty');persist();closeSheet();rerender();break;
+   case 'lang':openSheet(`${sheetH('Langue')}<button class="tier on"><span class="badge" style="background:var(--yel)">FR</span><span><b>Français</b></span><span>✓</span></button><button class="tier" disabled style="opacity:.5"><span class="badge" style="background:var(--line)">EN</span><span><b>English</b><br><span class="sm mut">Bientôt</span></span><span></span></button>`);break;
+   case 'help':case 'terms':case 'privacy':case 'about':openSheet(sheetH(TXT[A][0])+TXT[A][1]);break;
+   case 'report':openSheet(`${sheetH('Signaler un problème')}<textarea id="rp" placeholder="Décrivez le problème"></textarea><button class="btn pri w" style="margin-top:10px" data-act="repok">Envoyer</button>`);break;
+   case 'repok':closeSheet();toast('Merci! Votre signalement a été envoyé (démo).');break;
+   case 'clrn':db.notifs[a.id]=[];persist();rerender();break;
+   case 'resetq':openSheet(`${sheetH('Réinitialiser la démo?','Tous les comptes, événements, offres, dons et notifications créés sur ce téléphone seront effacés.')}<button class="btn pri w" data-act="resetok">Tout effacer</button><button class="btn w" style="margin-top:8px" data-act="cs">Annuler</button>`);break;
+   case 'resetok':try{localStorage.removeItem(LS)}catch(e){}db={accounts:{},cur:null,don:{},ev:[],ven:{},off:[],conf:{},notifs:{},feed:[],seq:1};closeSheet();applyTheme();location.hash='bienvenue';draw();toast('Démo réinitialisée.');break;
+   case 'delaccq':openSheet(`${sheetH('Supprimer mon compte?','Votre profil, vos événements et vos offres seront effacés de cet appareil.')}<button class="btn pri w" data-act="delaccok">Supprimer définitivement</button><button class="btn w" style="margin-top:8px" data-act="cs">Annuler</button>`);break;
+   case 'delaccok':{const pid=pidOf(a);db.ev=db.ev.filter(e=>e.org!==a.id);db.off=db.off.filter(o=>o.c!=='uc'+a.id);for(const k in db.conf)db.conf[k]=db.conf[k].filter(x=>x!==pid);db.feed=db.feed.filter(f=>f.p!==pid);for(const x of Object.values(db.accounts)){delete x.follow[pid];delete x.sub[pid]}delete db.notifs[a.id];delete db.accounts[a.id];db.cur=null;persist();closeSheet();applyTheme();location.hash='bienvenue';toast('Compte supprimé.');break}
+  }
+});
+document.addEventListener('change',ev=>{const t=ev.target,a=me();
+  if(t.dataset.set&&a){const [g,k]=t.dataset.set.split('.');a.set[g][k]=t.checked?1:0;persist();if(g==='priv'&&k==='pub')toast(t.checked?'Profil public.':'Profil masqué de Découvrir.');return}
+  if(t.dataset.photo){const f=t.files&&t.files[0],w=t.dataset.photo;readPhoto(f,w==='proof'?720:360,url=>{if(w==='su'){UI.su.d.photo=url;draw()}else if(w==='prof'){UI.ph=url;profSheet()}else if(w==='proof'){const d=val('pr_d'),m=val('pr_m');pf.photo=url;proofSheet();$('#pr_d').value=d||'';$('#pr_m').value=m||''}});return}
+  if(t.id==='fd')rerender();if(t.id==='fc'){UI.f.cap=+t.value;rerender()}if(t.id==='fp'){UI.f.per=t.value;rerender()}
+  if(t.id==='n_tr'){$('#n_newv').style.display=t.value==='_new'?'':'none'}
+  if(t.id==='n_bm'){$('#n_bsite').style.display=t.value==='ext'?'none':'';$('#n_bext').style.display=t.value==='ext'?'':'none'}
+});
+document.addEventListener('input',ev=>{const t=ev.target;
+  if(t.id==='fd'){UI.f.dist=+t.value;$('#dv').textContent=t.value>=5000?'partout':'jusqu’à '+(+t.value).toLocaleString('fr-CA')+' km'}
+  if(t.id==='q'){UI.q=t.value;const pos=t.selectionStart;rerender();const n=$('#q');n.focus();n.setSelectionRange(pos,pos)}
+  if(t.id==='ca'){const v=Math.round(+t.value||0);if(v>=2){don.a=v;$('#sm').innerHTML=sum(v,'Le pilote');document.querySelector('[data-act=dok]').textContent='Donner '+fmt(v);document.querySelectorAll('[data-amt]').forEach(b=>b.classList.remove('on'))}}
+});
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){closeSheet();closeDay()}});
+addEventListener('hashchange',render);
+if('serviceWorker' in navigator&&location.protocol==='https:'){try{navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}}
+applyTheme();render();
+
+}
+</script></body></html>

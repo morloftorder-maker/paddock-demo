@@ -1,0 +1,46 @@
+name: Construire l'APK Paddock
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Compiler l'APK
+        run: gradle assembleRelease --no-daemon
+
+      - name: Renommer le fichier
+        run: cp app/build/outputs/apk/release/app-release.apk Paddock-demo.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Paddock-demo
+          path: Paddock-demo.apk
+
+      - name: Publier la version téléchargeable
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: demo-${{ github.run_number }}
+          name: Paddock démo ${{ github.run_number }}
+          body: |
+            Ouvrez cette page sur le téléphone Samsung, touchez « Paddock-demo.apk » pour le télécharger, puis ouvrez-le pour l'installer.
+            Si Android le demande, autorisez l'installation depuis cette source (Chrome ou Mes fichiers).
+          files: Paddock-demo.apk
+          make_latest: true
