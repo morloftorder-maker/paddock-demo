@@ -154,6 +154,8 @@ body.out nav.bot,body.out .top .ib{display:none}
 .post{overflow:hidden}.pm{display:block;width:calc(100% + 30px);max-width:none;margin:-15px -15px 10px;max-height:520px;object-fit:cover;background:#000}video.pm{object-fit:contain}.pm.fm{width:100%;margin:8px 0 0;border-radius:10px}
 .top3{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}.rk{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 15px var(--cf);background:var(--line);flex:none}.rk1{background:var(--yel);color:#111}.rk2{background:#cfd3d8;color:#111}.rk3{background:#d9925b;color:#111}
 .stats.rev b{font-size:21px}
+.pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;margin:6px 0}.pgrid button{aspect-ratio:1;padding:0;border:0;background:#000;position:relative;overflow:hidden;cursor:pointer;border-radius:4px}.pgrid img,.pgrid video{width:100%;height:100%;object-fit:cover;display:block}.pgrid .vi{position:absolute;top:6px;right:8px;color:#fff;font-size:18px;text-shadow:0 1px 3px #000}.pgrid .lk{position:absolute;left:6px;bottom:4px;color:#fff;font:600 13px Barlow,sans-serif;text-shadow:0 1px 3px #000}
+.cms{border-top:1px solid var(--line);margin-top:10px;padding-top:6px}.cm{display:flex;gap:8px;align-items:flex-start;padding:6px 0;font-size:15px}.avi.s{width:30px;height:30px;font-size:13px;border-width:1px}.lnk{background:none;border:0;color:var(--mut);font:600 14px Barlow,sans-serif;padding:6px 0;cursor:pointer;min-height:36px}
 .updbar{position:fixed;left:8px;right:8px;bottom:calc(66px + env(safe-area-inset-bottom));z-index:35;max-width:544px;margin:0 auto;background:var(--yel);color:#111;border-radius:12px;padding:8px 8px 8px 14px;display:flex;align-items:center;gap:10px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.3)}.updbar span{flex:1}
 @media(prefers-reduced-motion:reduce){.sheet,.drawer{animation:none}.dayz{transition:none!important}}
 </style></head><body>
@@ -301,8 +303,9 @@ f6:[['2026-11-24','Entraînement sur neige ce week-end au Motoparc, venez voir!'
 f7:[['2026-11-15','Victoire en Coupe Capitale! On garde le rythme cet hiver.',38]],
 f13:[['2026-11-22','Tall Pines terminé : la Subaru a tenu jusqu’au bout.',12]]};
 const SEEDDON={f1:[['Pneus Sirois',600],['Marc-André Tremblay',250],['Anonyme',180]],f2:[['Quincaillerie Morin',300],['Grand-papa Gagnon',200],['Anonyme',95]],f3:[['Garage Fortin',400],['Steve Dion',150],['Anonyme',100]],f4:[['Pneus Sirois',500],['Julie Roy',220],['Anonyme',150]],f5:[['Anonyme',120],['Marie Bouchard',100],['Éric Lessard',50]],f6:[['Garage Fortin',350],['Anonyme',120],['Kevin Lalonde',80]],f7:[['Anonyme',300],['Patrick Pelletier',200],['Club Karting Québec',150]],f8:[['Pneus Sirois',250],['Anonyme',90],['Annie Côté',60]],f9:[['Quincaillerie Morin',400],['Anonyme',120],['Luc Tremblay',75]],f10:[['Anonyme',100],['Sophie Gagné',75],['Alex Morin',50]],f11:[['Anonyme',200],['Sylvie Fortin',150],['Jean Boucher',100]],f12:[['Garage Fortin',300],['Anonyme',100],['Nadia Roy',50]],f13:[['Anonyme',150],['Félix Bouchard',100],['Garage Rimouski',75]]};
+const SEEDCMT={'f1:s0':[['Pneus Sirois','Fiers de t’appuyer, bonne saison!','2026-11-23'],['Émile Bergeron','On se voit vendredi à Lévis!','2026-11-24']],'f1:s1':[['Mathis Gagné','Belle bataille en finale!','2026-11-15']],'f2:s0':[['Julie Gagnon','Tellement fière de toi!','2026-11-15'],['Sarah Pelletier','Bravo Léa!','2026-11-16']],'f6:s1':[['Maxime Lavoie','Bien mérité, bravo!','2026-11-15']],'f7:s0':[['William Fortin','Belle course Sarah!','2026-11-15']],'f4:s1':[['Nicolas Bouchard','La revanche s’en vient!','2026-11-08']]};
 
-const APPV=6;
+const APPV=7;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Math.round(n).toLocaleString('fr-CA')+' $';
@@ -334,7 +337,7 @@ const LS='paddock-db-v3';
 let db=null;
 try{db=JSON.parse(localStorage.getItem(LS)||'null')}catch(e){}
 if(!db||typeof db!=='object'||!db.accounts)db={accounts:{},cur:null,don:{},ev:[],ven:{},off:[],conf:{},notifs:{},feed:[],seq:1};
-for(const k of ['ledger','wd','donors','likes'])db[k]=db[k]||{};
+for(const k of ['ledger','wd','donors','likes','cmts'])db[k]=db[k]||{};
 for(const a of Object.values(db.accounts))if(a.pilote){if(!a.pilote.posts){a.pilote.posts=a.pilote.post?[{id:'p0',txt:a.pilote.post,dt:a.created||'2026-11-25'}]:[]}if(!db.ledger[a.id]){const t=(a.pilote.obj||[]).reduce((x,o)=>x+(+o[2]||0),0);db.ledger[a.id]=t?[{k:'don',l:'Dons reçus avant la version 6',g:t,n:t*.95,dt:a.created||'2026-11-25'}]:[]}}
 const persist=()=>{try{localStorage.setItem(LS,JSON.stringify(db));return true}catch(e){toast('Mémoire du téléphone pleine pour la démo : retirez une photo.');return false}};
 const nid=()=>(db.seq++).toString(36);
@@ -354,6 +357,17 @@ const mediaPut=(id,b)=>idbOpen().then(d=>new Promise((res,rej)=>{const t=d.trans
 const mediaGet=id=>idbOpen().then(d=>new Promise(res=>{const r=d.transaction('m').objectStore('m').get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>res(null)}));
 const mediaDel=id=>idbOpen().then(d=>{d.transaction('m','readwrite').objectStore('m').delete(id)}).catch(()=>{});
 function hydrateMedia(){document.querySelectorAll('[data-mid]').forEach(el=>{const id=el.dataset.mid;if(murl[id]){el.src=murl[id];return}mediaGet(id).then(b=>{if(b){murl[id]=URL.createObjectURL(b);el.src=murl[id]}}).catch(()=>{})})}
+const cmtsOf=k=>(SEEDCMT[k]||[]).map(c=>({n:esc(c[0]),txt:esc(c[1]),dt:c[2]})).concat((db.cmts[k]||[]).map((c,i)=>({n:db.accounts[c.a]?esc(db.accounts[c.a].nom):'Ancien membre',txt:esc(c.txt),dt:c.dt,a:c.a,i})));
+const likeN=(k,seed)=>(seed||0)+Object.keys(db.likes[k]||{}).length;
+const findPost=k=>{const [pid,poid]=k.split(':');const p=P[pid];return p&&p.posts?p.posts.find(x=>x.id===poid):null};
+const cmtRow=(c,k)=>`<div class="cm"><div class="avi s">${esc(ini(unesc(c.n)))}</div><div style="flex:1"><b>${c.n}</b> ${c.txt}<div class="sm mut">${ago(c.dt)}</div></div>${c.a&&c.a===db.cur?`<button class="btn sm2" data-act="delcmt" data-k="${k}" data-i="${c.i}" aria-label="Supprimer le commentaire">×</button>`:''}</div>`;
+const actBar=(k,po)=>{const L=db.likes[k]||{},n=cmtsOf(k).length;return `<div class="row sm mut" style="margin-top:8px"><span>${ago(po.dt)}</span><button class="btn sm2 sp${L[db.cur]?' on':''}" data-act="like" data-k="${k}" aria-label="J’aime">♥ ${likeN(k,po.seed)}</button><button class="btn sm2" data-act="openpost" data-k="${k}">Commenter${n?' ('+n+')':''}</button></div>`};
+const postCard=(k,po,mine)=>{const cs=cmtsOf(k);return `<div class="card post">${mediaEl(po.m)}${po.txt?`<p>${po.txt}</p>`:''}${actBar(k,po)}${cs.length?`<div class="cms">${cs.slice(-2).map(c=>cmtRow(c,k)).join('')}${cs.length>2?`<button class="lnk" data-act="openpost" data-k="${k}">Voir les ${cs.length} commentaires</button>`:''}</div>`:''}${mine?`<div style="text-align:right;margin-top:6px"><button class="btn sm2 dan" data-act="delpost" data-i="${po.id}">Supprimer</button></div>`:''}</div>`};
+function postViewer(k){const po=findPost(k);if(!po)return;const pid=k.split(':')[0],p=P[pid],cs=cmtsOf(k);
+  openSheet(`<div class="row" style="margin-bottom:10px">${p.photo?`<img class="av" src="${p.photo}" alt="">`:plate(pid,1)}<div><b>${p.nom}</b><div class="sm mut">${ago(po.dt)}</div></div><button class="btn sm2 sp" data-act="cs" aria-label="Fermer">×</button></div>
+  ${po.m?mediaEl(po.m).replace('class="pm"','class="pm fm"'):''}${po.txt?`<p>${po.txt}</p>`:''}${actBar(k,po)}
+  <h3 style="margin:14px 0 6px">Commentaires (${cs.length})</h3><div class="cms" style="border:0;padding:0">${cs.map(c=>cmtRow(c,k)).join('')||'<p class="sm mut">Soyez le premier à commenter.</p>'}</div>
+  <div class="row" style="flex-wrap:nowrap;margin-top:10px"><input type="text" id="cm" maxlength="300" placeholder="Écrire un commentaire…"><button class="btn pri" data-act="cmt" data-k="${k}">Envoyer</button></div>`);UI.pv=k}
 const mediaEl=m=>m?(m.t==='v'?`<video class="pm" controls playsinline preload="metadata" data-mid="${m.id}"></video>`:`<img class="pm" data-mid="${m.id}" alt="">`):'';
 
 /* ---------- Hydratation: données de base + contenus créés ---------- */
@@ -606,8 +620,11 @@ function pilot(id){
   <div class="row" style="margin:12px 0">${fol}<button class="btn yel" data-act="claim">C’est moi : réclamer ce profil</button></div>
   ${series}${results}${up.length?`<h2>Événements à venir</h2>${up.map(e=>erow(e)).join('')}`:''}${pastList(id)}`;
   const [c,am]=tot(p),td=topDon(id);
-  const likeN=po=>po.seed+Object.keys(db.likes[id+':'+po.id]||{}).length,liked=po=>!!(db.likes[id+':'+po.id]||{})[a.id];
-  const posts=`<h2>Publications</h2>${mine?'<button class="btn yel w" data-act="newpost">+ Publier une photo, une vidéo ou un texte</button>':''}${p.posts.length?p.posts.map(po=>`<div class="card post">${mediaEl(po.m)}${po.txt?`<p>${po.txt}</p>`:''}<div class="row sm mut"><span>${ago(po.dt)}</span><button class="btn sm2 sp${liked(po)?' on':''}" data-act="like" data-k="${id}:${po.id}" aria-label="J’aime">♥ ${likeN(po)}</button>${mine?`<button class="btn sm2 dan" data-act="delpost" data-i="${po.id}">Supprimer</button>`:''}</div></div>`).join(''):`<p class="mut">${mine?'Vous n’avez encore rien publié.':'Aucune publication pour l’instant.'}</p>`}`;
+  const tab=UI.ptab||'tout',PT=[['tout','Tout',p.posts.length],['photos','Photos',p.posts.filter(x=>x.m&&x.m.t==='i').length],['videos','Vidéos',p.posts.filter(x=>x.m&&x.m.t==='v').length],['textes','Textes',p.posts.filter(x=>!x.m).length]];
+  const sel=tab==='photos'?p.posts.filter(x=>x.m&&x.m.t==='i'):tab==='videos'?p.posts.filter(x=>x.m&&x.m.t==='v'):tab==='textes'?p.posts.filter(x=>!x.m):p.posts;
+  const grid=()=>`<div class="pgrid">${sel.filter(po=>po.m).map(po=>`<button data-act="openpost" data-k="${id}:${po.id}" aria-label="Ouvrir">${po.m.t==='v'?`<video data-mid="${po.m.id}" muted playsinline preload="metadata"></video><span class="vi">▶</span>`:`<img data-mid="${po.m.id}" alt="">`}<span class="lk">♥ ${likeN(id+':'+po.id,po.seed)}</span></button>`).join('')}</div>`;
+  const empty=`<p class="mut">${tab==='photos'?'Aucune photo':tab==='videos'?'Aucune vidéo':tab==='textes'?'Aucun texte':'Aucune publication'} pour l’instant.</p>`;
+  const posts=`<h2>Publications</h2><div class="tabs">${PT.map(([k,l,n])=>`<button class="chip${tab===k?' on':''}" data-ptab="${k}">${l} · ${n}</button>`).join('')}</div>${mine?'<button class="btn yel w" style="margin-bottom:6px" data-act="newpost">+ Publier une photo, une vidéo ou un texte</button>':''}${sel.length?(tab==='photos'||tab==='videos'?grid():sel.map(po=>postCard(id+':'+po.id,po,mine)).join('')):empty}`;
   return `${head}
   ${p.minor?`<div class="card sm" style="background:var(--rs);border-color:transparent">Compte de pilote mineur géré par un parent : <b>${p.minor}</b>. Les fonds sont versés au compte du parent.</div>`:''}
   ${!p.v?`<div class="card sm">Vérification d’identité en cours. Les dons seront possibles une fois le compte vérifié.</div>`:''}
@@ -831,7 +848,7 @@ function draw(){
   hydrateMedia();
   const c=$('#cnt');if(u){const un=(db.notifs[u.id]||[]).filter(x=>!x.read).length;c.hidden=!un;c.textContent=un>9?'9+':un}else c.hidden=true;
 }
-function render(){closeDay(true);closeSheet();UI.err='';draw();scrollTo(0,0)}
+function render(){closeDay(true);closeSheet();UI.err='';if(route().a!=='p')UI.ptab='tout';draw();scrollTo(0,0)}
 const rerender=()=>{const y=scrollY;draw();scrollTo(0,y)};
 const notfound=()=>`${back}<h1>Page introuvable</h1>`;
 function applyTheme(){const u=me(),t=u?u.set.theme:'auto',r=document.documentElement;if(t==='auto')r.removeAttribute('data-theme');else r.dataset.theme=t}
@@ -845,8 +862,8 @@ function showUpd(){if(!UI.upd)return;let b=document.getElementById('updbar');if(
 
 /* ---------- Feuilles ---------- */
 function toast(t){document.querySelectorAll('.toast').forEach(x=>x.remove());const d=document.createElement('div');d.className='toast';d.setAttribute('role','status');d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),3800)}
-function openSheet(h){$('#ov').innerHTML=`<div class="bd" data-act="cs"></div><div class="sheet" role="dialog" aria-modal="true">${h}</div>`}
-function closeSheet(){$('#ov').innerHTML=''}
+function openSheet(h){$('#ov').innerHTML=`<div class="bd" data-act="cs"></div><div class="sheet" role="dialog" aria-modal="true">${h}</div>`;hydrateMedia()}
+function closeSheet(){$('#ov').innerHTML='';UI.pv=null}
 const sum=(amt,who)=>`<div class="sum"><div><span>Montant</span><b>${fmt(amt)}</b></div><div class="mut"><span>Frais de gestion (5 %)</span><b>${money(amt*.05)}</b></div><div><span>${who} reçoit</span><b>${money(amt*.95)}</b></div></div>`;
 const sumDon=(a,f)=>f?`<div class="sum"><div><span>Votre don</span><b>${money(a)}</b></div><div class="mut"><span>Frais de gestion payés par vous</span><b>${money(a/.95-a)}</b></div><div><span>Total payé</span><b>${money(a/.95)}</b></div><div><span>Le pilote reçoit</span><b>${money(a)}</b></div></div>`:sum(a,'Le pilote');
 const lvlUp=b=>{const x=lvl(b),y=lvl(me().total);return y>x?` Vous passez au niveau ${y}!`:''};
@@ -911,12 +928,13 @@ document.addEventListener('click',ev=>{
   const g=ev.target.closest('[data-go]');if(g){UI.err='';location.hash=g.dataset.go;return}
   const lk=ev.target.closest('a[href^="#"]');if(lk&&(lk.closest('.drawer')||lk.closest('#dayz'))){closeSheet();closeDay(true);if(lk.dataset.date)UI.ne={date:lk.dataset.date,end:''}}
   if(lk&&lk.getAttribute('href')==='#creer-evenement'&&!lk.dataset.date)UI.ne=null;
-  const t=ev.target.closest('[data-act],[data-day],[data-fd],[data-tab],[data-amt],[data-tier],[data-q],[data-th]');if(!t)return;
+  const t=ev.target.closest('[data-act],[data-day],[data-fd],[data-tab],[data-amt],[data-tier],[data-q],[data-th],[data-ptab]');if(!t)return;
   const A=t.dataset.act,id=t.dataset.id,a=me();
   if(t.dataset.day){openDay(t.dataset.day,t);return}
   if(t.dataset.th){a.set.theme=t.dataset.th;persist();applyTheme();rerender();return}
   if(t.dataset.fd){const k=t.dataset.fd,ds=UI.f.ds;UI.f.ds=ds.includes(k)?ds.filter(x=>x!==k):[...ds,k];rerender();return}
   if(t.dataset.tab){UI.tab=t.dataset.tab;rerender();return}
+  if(t.dataset.ptab){UI.ptab=t.dataset.ptab;rerender();return}
   if(t.dataset.amt){don.a=+t.dataset.amt;don.anon=$('#anon').checked;don.fees=$('#fees').checked;donSheet();return}
   if(t.dataset.tier){sb.t=+t.dataset.tier;subSheet();return}
   if(t.dataset.q){const w=t.dataset.q[0],o=t.dataset.q[1];tx[w]=Math.max(0,Math.min(10,tx[w]+(o==='+'?1:-1)));tixSheet();return}
@@ -982,7 +1000,10 @@ document.addEventListener('click',ev=>{
        if(!persist()){a.pilote.posts.pop();return serr('Mémoire pleine.')}UI.pm=null;closeSheet();toast('Publié sur votre profil et dans le fil.');rerender()};
      if(pm){const mid='m'+nid();const btn=t;btn.disabled=true;btn.textContent='Enregistrement…';mediaPut(mid,pm.blob).then(()=>{murl[mid]=pm.url;po.m={id:mid,t:pm.t};fin()}).catch(()=>{btn.disabled=false;btn.textContent='Publier';serr('Impossible d’enregistrer ce média sur le téléphone. Essayez un fichier plus léger.')})}else fin();break}
    case 'delpost':{const l=a.pilote.posts,ix=l.findIndex(x=>x.id===t.dataset.i);if(ix<0)break;const po=l[ix];l.splice(ix,1);if(po.m){mediaDel(po.m.id);db.feed=db.feed.filter(f=>!(f.m&&f.m.id===po.m.id))}persist();toast('Publication supprimée.');rerender();break}
-   case 'like':{const k=t.dataset.k,L=(db.likes[k]=db.likes[k]||{});if(L[a.id])delete L[a.id];else{L[a.id]=1;const ow=P[k.split(':')[0]];if(ow&&ow.user&&ow.user!==a.id)notify(ow.user,`${esc(a.nom)} aime votre publication.`,'#p-'+k.split(':')[0])}persist();rerender();break}
+   case 'like':{const k=t.dataset.k,L=(db.likes[k]=db.likes[k]||{});if(L[a.id])delete L[a.id];else{L[a.id]=1;const ow=P[k.split(':')[0]];if(ow&&ow.user&&ow.user!==a.id)notify(ow.user,`${esc(a.nom)} aime votre publication.`,'#p-'+k.split(':')[0])}persist();const pv=UI.pv;rerender();if(pv)postViewer(pv);break}
+   case 'openpost':hydrate();postViewer(t.dataset.k);break;
+   case 'cmt':{const k=t.dataset.k,v=val('cm');if(!v)break;(db.cmts[k]=db.cmts[k]||[]).push({a:a.id,txt:v,dt:key(TODAY)});const [pid]=k.split(':'),ow=P[pid];if(ow&&ow.user&&ow.user!==a.id)notify(ow.user,`${esc(a.nom)} a commenté votre publication : « ${esc(v.slice(0,80))} »`,'#p-'+pid);for(const ca of new Set(db.cmts[k].map(c=>c.a)))if(ca!==a.id&&ca!==(ow&&ow.user))notify(ca,`${esc(a.nom)} a aussi commenté une publication de ${ow?ow.nom:''}.`,'#p-'+pid);persist();rerender();postViewer(k);setTimeout(()=>{const s=document.querySelector('.sheet');if(s)s.scrollTop=s.scrollHeight},30);break}
+   case 'delcmt':{const k=t.dataset.k,i=+t.dataset.i,l=db.cmts[k]||[];if(l[i]&&l[i].a===a.id)l.splice(i,1);persist();rerender();postViewer(k);break}
    case 'wd':{const g=earn(a.id);openSheet(`${sheetH('Retirer mes revenus','Disponible : '+money(g.dispo))}${errBox}<div class="fl"><label class="f">Montant ($)<input type="number" id="wda" min="1" step="0.01" value="${(Math.floor(g.dispo*100)/100).toFixed(2)}"></label><label class="f">Vers<select id="wdt"><option>Compte bancaire •••• 4821 (démo)</option><option>Virement Interac (démo)</option></select></label><button class="btn pri w" data-act="wdok">Confirmer le retrait</button><p class="sm mut" style="text-align:center">Délai habituel : 2 à 3 jours ouvrables. Aucun argent réel dans la démo.</p></div>`);break}
    case 'wdok':{const g=earn(a.id),v=Math.round(+val('wda')*100)/100;if(!(v>0)||v>g.dispo+0.001)return serr('Montant invalide (maximum '+money(g.dispo)+').');(db.wd[a.id]=db.wd[a.id]||[]).push({a:v,dt:key(TODAY),to:val('wdt').replace(' (démo)','')});persist();closeSheet();toast('Retrait de '+money(v)+' en route (démo).');rerender();break}
    case 'editpil':{const p=a.pilote;UI.rd={pil:1,p_d:p.d,p_serie:p.serie,p_classe:p.classe,p_num:p.num,p_eq:p.eq,p_bio:p.bio,p_par:p.parent,p_parm:p.parentEmail};openSheet(`${sheetH('Mes infos de pilote')}${errBox}${roleForms(UI.rd,age(a.naissance)<18)}<button class="btn pri w" data-act="roleok">Enregistrer</button>`);break}
