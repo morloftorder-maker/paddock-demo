@@ -14,11 +14,21 @@ android {
         versionName '0.4-demo'
     }
 
+    // Clé fixe de la démo : chaque nouvel APK peut s'installer par-dessus le précédent.
+    // (Pour une vraie publication, utiliser une clé privée gardée hors du dépôt.)
+    signingConfigs {
+        demo {
+            storeFile file('paddock-demo.keystore')
+            storePassword 'paddockdemo'
+            keyAlias 'paddock'
+            keyPassword 'paddockdemo'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
-            // Signée avec la clé de débogage : installable directement, sans Play Store.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.demo
         }
     }
 
